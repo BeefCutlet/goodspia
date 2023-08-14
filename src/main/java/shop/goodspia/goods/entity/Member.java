@@ -1,6 +1,7 @@
 package shop.goodspia.goods.entity;
 
-import lombok.Getter;
+import lombok.*;
+import shop.goodspia.goods.dto.MemberDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,9 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
@@ -27,4 +31,14 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
+    public static Member createMember(MemberDto memberDto) {
+        return Member.builder()
+                .email(memberDto.getEmail())
+                .nickname(memberDto.getNickname())
+                .build();
+    }
+
+    public void registerArtist(Artist artist) {
+        this.artist = artist;
+    }
 }
