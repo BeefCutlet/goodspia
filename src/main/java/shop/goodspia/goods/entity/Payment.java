@@ -9,7 +9,7 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-public class Payment {
+public class Payment extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "payment_id")
@@ -19,7 +19,6 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private AccountBank accountBank;
     private String accountNumber;
-    private LocalDateTime createdTime;
 
     @ManyToOne(fetch = LAZY)
     private Goods goods;
