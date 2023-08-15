@@ -1,6 +1,7 @@
 package shop.goodspia.goods.entity;
 
-import lombok.Getter;
+import lombok.*;
+import shop.goodspia.goods.dto.CartDto;
 
 import javax.persistence.*;
 
@@ -8,6 +9,9 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Design {
 
     @Id
@@ -19,4 +23,11 @@ public class Design {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "goods_id")
     private Goods goods;
+
+    public static Design createDesign(String design, Goods goods) {
+        return Design.builder()
+                .design(design)
+                .goods(goods)
+                .build();
+    }
 }
