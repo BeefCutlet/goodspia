@@ -3,6 +3,8 @@ package shop.goodspia.goods.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 public class GoodsDto {
 
@@ -12,4 +14,5 @@ public class GoodsDto {
     private String content;
     private String category;
     private String image;
+    private List<String> designs;
 }
