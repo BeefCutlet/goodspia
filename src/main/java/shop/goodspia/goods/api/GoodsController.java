@@ -27,9 +27,8 @@ public class GoodsController {
      * @param mainImage 굿즈 메인 이미지
      * @return 이동할 URL 반환 - 아티스트 페이지
      */
-    @PostMapping("/add/{artistId}")
-    public String addGoods(@PathVariable long artistId,
-                           @RequestPart GoodsDto goodsDto,
+    @PostMapping("/add")
+    public String addGoods(@RequestPart GoodsDto goodsDto,
                            @RequestPart MultipartFile mainImage,
                            HttpSession session) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
@@ -59,9 +58,8 @@ public class GoodsController {
      * @param mainImage
      * @return
      */
-    @PatchMapping("/modify/{artistId}/{goodsId}")
-    public String modifyDetails(@PathVariable long artistId,
-                                @PathVariable long goodsId,
+    @PatchMapping("/modify/{goodsId}")
+    public String modifyDetails(@PathVariable long goodsId,
                                 @RequestPart GoodsDto goodsDto,
                                 @RequestPart MultipartFile mainImage) {
         String image = ImageUpload.uploadImage(mainImage);
