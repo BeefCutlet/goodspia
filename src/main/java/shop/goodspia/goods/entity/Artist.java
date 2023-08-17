@@ -24,7 +24,6 @@ public class Artist extends BaseTimeEntity {
     private AccountBank accountBank;
     private String accountNumber;
     private String phoneNumber;
-    private LocalDateTime createdTime;
 
     public static Artist createArtist(ArtistDto artistDto) {
         return Artist.builder()
