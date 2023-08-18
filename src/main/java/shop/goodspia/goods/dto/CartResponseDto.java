@@ -9,7 +9,7 @@ public class CartResponseDto {
 
     private int quantity;
     private String goodsName;
-    private String design;
+    private String designName;
     private int price;
     private String mainImage;
 }

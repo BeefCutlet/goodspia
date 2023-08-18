@@ -1,11 +1,10 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.CartDto;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -18,7 +17,7 @@ public class Design {
     @GeneratedValue
     @Column(name = "design_id")
     private Long id;
-    private String design;
+    private String designName;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "goods_id")
@@ -26,7 +25,7 @@ public class Design {
 
     public static Design createDesign(String design, Goods goods) {
         return Design.builder()
-                .design(design)
+                .designName(design)
                 .goods(goods)
                 .build();
     }
