@@ -14,5 +14,6 @@ public class GoodsDto {
     private String content;
     private String category;
     private String image;
+    private int price;
     private List<String> designs;
 }
