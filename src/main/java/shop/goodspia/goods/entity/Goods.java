@@ -25,6 +25,7 @@ public class Goods extends BaseTimeEntity {
     private String content;
     private String category;
     private String image;
+    private int price;
     private int isDeleted;
     private LocalDateTime deletedTime;
 
@@ -42,6 +43,7 @@ public class Goods extends BaseTimeEntity {
                 .content(goodsDto.getContent())
                 .category(goodsDto.getCategory())
                 .image(goodsDto.getImage())
+                .price(goodsDto.getPrice())
                 .isDeleted(0)
                 .artist(artist)
                 .build();
@@ -54,6 +56,7 @@ public class Goods extends BaseTimeEntity {
         this.content = goodsDto.getContent();
         this.category = goodsDto.getCategory();
         this.image = goodsDto.getImage();
+        this.price = goodsDto.getPrice();
     }
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경
