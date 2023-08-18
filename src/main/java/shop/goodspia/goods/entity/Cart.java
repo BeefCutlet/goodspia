@@ -12,7 +12,7 @@ import static javax.persistence.FetchType.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Cart {
+public class Cart extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "cart_id")
