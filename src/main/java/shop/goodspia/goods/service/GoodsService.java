@@ -1,19 +1,21 @@
 package shop.goodspia.goods.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.goodspia.goods.dto.GoodsDetailResponseDto;
 import shop.goodspia.goods.dto.GoodsDto;
+import shop.goodspia.goods.dto.GoodsResponseDto;
 import shop.goodspia.goods.entity.Design;
 import shop.goodspia.goods.entity.Goods;
-import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.exception.ArtistNotFoundException;
 import shop.goodspia.goods.exception.GoodsNotFoundException;
-import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.ArtistRepository;
 import shop.goodspia.goods.repository.DesignRepository;
+import shop.goodspia.goods.repository.GoodsQueryRepository;
 import shop.goodspia.goods.repository.GoodsRepository;
-import shop.goodspia.goods.repository.MemberRepository;
 
 import java.util.Optional;
 
@@ -22,10 +24,11 @@ import java.util.Optional;
 @Transactional
 public class GoodsService {
 
-    private final MemberRepository memberRepository;
     private final GoodsRepository goodsRepository;
     private final DesignRepository designRepository;
     private final ArtistRepository artistRepository;
+
+    private final GoodsQueryRepository goodsQueryRepository;
 
     /**
      * 굿즈 등록용 메서드
@@ -67,7 +70,15 @@ public class GoodsService {
         Optional.ofNullable(goodsRepository.findById(goodsId))
                 .ifPresentOrElse(
                         goods -> goods.get().delete(),
-                        () -> new GoodsNotFoundException("굿즈 정보가 없습니다.")
+                        () -> new GoodsNotFoundException("Goods Data Not Found")
                 );
+    }
+
+    public Page<GoodsResponseDto> getGoodsList(Pageable pageable) {
+        return goodsQueryRepository.findGoodsList(pageable);
+    }
+
+    public GoodsDetailResponseDto getGoods(long goodsId) {
+        return goodsQueryRepository.findGoodsById(goodsId);
     }
 }
