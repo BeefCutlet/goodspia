@@ -78,6 +78,10 @@ public class GoodsService {
         return goodsQueryRepository.findGoodsList(pageable);
     }
 
+    public Page<GoodsResponseDto> getArtistGoodsList(Pageable pageable, long artistId) {
+        return goodsQueryRepository.findArtistGoodsList(pageable, artistId);
+    }
+
     public GoodsDetailResponseDto getGoods(long goodsId) {
         return goodsQueryRepository.findGoodsById(goodsId);
     }
