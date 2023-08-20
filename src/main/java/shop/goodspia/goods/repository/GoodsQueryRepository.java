@@ -4,7 +4,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -30,11 +29,11 @@ public class GoodsQueryRepository {
     public Page<GoodsResponseDto> findGoodsList(Pageable pageable) {
         List<GoodsResponseDto> goodsList = queryFactory
                 .select(Projections.bean(GoodsResponseDto.class,
-                        goods.name,
-                        goods.price,
-                        goods.image,
-                        goods.category,
-                        goods.artist.nickname))
+                        goods.id.as("goodsId"),
+                        goods.name.as("goodsName"),
+                        goods.price.as("price"),
+                        goods.image.as("image"),
+                        goods.artist.nickname.as("artistName")))
                 .from(goods)
                 .join(goods.artist, artist)
                 .orderBy(goods.id.desc())
@@ -54,6 +53,7 @@ public class GoodsQueryRepository {
     public GoodsDetailResponseDto findGoodsById(long goodsId) {
         return queryFactory
                 .select(Projections.bean(GoodsDetailResponseDto.class,
+                        goods.id.as("goodsId"),
                         goods.name.as("name"),
                         goods.summary.as("summary"),
                         goods.image.as("mainImage"),
@@ -65,5 +65,30 @@ public class GoodsQueryRepository {
                 .join(goods.artist, artist)
                 .where(goods.id.eq(goodsId))
                 .fetchOne();
+    }
+
+    //굿즈 리스트 페이징 조회
+    public Page<GoodsResponseDto> findArtistGoodsList(Pageable pageable, long artistId) {
+        List<GoodsResponseDto> goodsList = queryFactory
+                .select(Projections.bean(GoodsResponseDto.class,
+                        goods.id.as("goodsId"),
+                        goods.name.as("goodsName"),
+                        goods.price.as("price"),
+                        goods.image.as("image")))
+                .from(goods)
+                .join(goods.artist, artist)
+                .where(goods.artist.id.eq(artistId))
+                .orderBy(goods.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(goods.count())
+                .from(goods)
+                .join(goods.artist, artist)
+                .where(goods.artist.id.eq(artistId));
+
+        return PageableExecutionUtils.getPage(goodsList, pageable, countQuery::fetchOne);
     }
 }
