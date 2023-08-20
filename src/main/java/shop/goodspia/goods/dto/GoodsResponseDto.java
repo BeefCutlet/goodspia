@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class GoodsResponseDto {
 
+    private Long goodsId;
     private String goodsName;
     private String image;
     private int price;
