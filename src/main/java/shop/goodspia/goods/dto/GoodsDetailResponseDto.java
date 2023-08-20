@@ -1,12 +1,13 @@
 package shop.goodspia.goods.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 public class GoodsDetailResponseDto {
 
+    private Long goodsId;
     private String name;
     private String summary;
     private String mainImage;
