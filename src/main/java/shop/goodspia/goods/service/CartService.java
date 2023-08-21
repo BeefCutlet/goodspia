@@ -16,7 +16,6 @@ import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
