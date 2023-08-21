@@ -34,11 +34,17 @@ public class Member extends BaseTimeEntity {
     public static Member createMember(MemberDto memberDto) {
         return Member.builder()
                 .email(memberDto.getEmail())
+                .password(memberDto.getPassword())
                 .nickname(memberDto.getNickname())
                 .build();
     }
 
     public void registerArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public void updateMember(MemberDto memberDto) {
+        this.password = memberDto.getPassword();
+        this.nickname = memberDto.getNickname();
     }
 }
