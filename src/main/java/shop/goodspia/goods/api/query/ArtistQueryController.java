@@ -1,12 +1,19 @@
 package shop.goodspia.goods.api.query;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.goodspia.goods.dto.ArtistResponseDto;
+import shop.goodspia.goods.dto.GoodsResponseDto;
 import shop.goodspia.goods.service.ArtistService;
+import shop.goodspia.goods.service.GoodsService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/artist")
@@ -14,9 +21,11 @@ import shop.goodspia.goods.service.ArtistService;
 public class ArtistQueryController {
 
     private final ArtistService artistService;
+    private final GoodsService goodsService;
 
     @GetMapping("/{artistId}")
-    public ArtistResponseDto getArtistInfo(@PathVariable long artistId) {
-        return artistService.getArtistInfo(artistId);
+    public ResponseEntity<ArtistResponseDto> getArtistInfo(@PathVariable long artistId) {
+        ArtistResponseDto artistInfo = artistService.getArtistInfo(artistId);
+        return ResponseEntity.ok(artistInfo);
     }
 }
