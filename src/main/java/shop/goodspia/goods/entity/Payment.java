@@ -1,6 +1,7 @@
 package shop.goodspia.goods.entity;
 
-import lombok.Getter;
+import lombok.*;
+import shop.goodspia.goods.dto.PaymentDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,9 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Payment extends BaseTimeEntity {
 
     @Id @GeneratedValue
@@ -19,6 +23,8 @@ public class Payment extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AccountBank accountBank;
     private String accountNumber;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     @ManyToOne(fetch = LAZY)
     private Goods goods;
@@ -27,4 +33,17 @@ public class Payment extends BaseTimeEntity {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    public static Payment createPayment(PaymentDto paymentDto) {
+        return Payment.builder()
+                .quantity(paymentDto.getQuantity())
+                .totalPrice(paymentDto.getTotalPrice())
+                .accountBank(AccountBank.covertToBank(paymentDto.getAccountBank()))
+                .accountNumber(paymentDto.getAccountNumber())
+                .paymentStatus(PaymentStatus.READY)
+                .goods(paymentDto.getGoods())
+                .member(paymentDto.getMember())
+                .delivery(paymentDto.getDelivery())
+                .build();
+    }
 }
