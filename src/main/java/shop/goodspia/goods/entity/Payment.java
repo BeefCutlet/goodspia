@@ -43,7 +43,14 @@ public class Payment extends BaseTimeEntity {
                 .paymentStatus(PaymentStatus.READY)
                 .goods(paymentDto.getGoods())
                 .member(paymentDto.getMember())
-                .delivery(paymentDto.getDelivery())
                 .build();
+    }
+
+    public void addDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public void changePaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }
