@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.dto.MemberDto;
+import shop.goodspia.goods.service.MemberService;
 
 @Slf4j
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
+
+    private final MemberService memberService;
 
     /**
      * 회원 등록 API
@@ -18,7 +21,7 @@ public class MemberController {
      */
     @PostMapping("/register")
     public String register(@RequestBody MemberDto memberDto) {
-
+        memberService.saveMember(memberDto);
         return "";
     }
 
