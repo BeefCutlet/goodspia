@@ -1,4 +1,4 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.goods;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class GoodsDto {
+public class GoodsRequestDto {
 
     private Long id;
     private String name;

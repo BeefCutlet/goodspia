@@ -1,10 +1,10 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.member;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MemberDto {
+public class MemberRequestDto {
 
     private Long id;
     private String email;

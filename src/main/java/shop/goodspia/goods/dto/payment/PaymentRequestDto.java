@@ -1,13 +1,12 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.payment;
 
 import lombok.Getter;
 import lombok.Setter;
-import shop.goodspia.goods.entity.Delivery;
 import shop.goodspia.goods.entity.Goods;
 import shop.goodspia.goods.entity.Member;
 
 @Getter @Setter
-public class PaymentDto {
+public class PaymentRequestDto {
 
     private int quantity;
     private int totalPrice;
@@ -15,9 +14,7 @@ public class PaymentDto {
     private String accountNumber;
     private Long goodsId;
     private Long memberId;
-    private Long deliveryId;
 
     private Goods goods;
     private Member member;
-    private Delivery delivery;
 }

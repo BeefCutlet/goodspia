@@ -1,4 +1,4 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.delivery;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Getter @Setter
-public class DeliveryDto {
+public class DeliveryRequestDto {
 
     private String deliveryNumber;
     private String zipcode;

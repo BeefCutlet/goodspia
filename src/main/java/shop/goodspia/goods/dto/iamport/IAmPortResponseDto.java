@@ -1,4 +1,4 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.iamport;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

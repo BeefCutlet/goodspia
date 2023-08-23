@@ -1,13 +1,11 @@
-package shop.goodspia.goods.dto;
+package shop.goodspia.goods.dto.artist;
 
-import lombok.Builder;
 import lombok.Getter;
-import shop.goodspia.goods.entity.AccountBank;
+import lombok.Setter;
 
-@Getter
-@Builder
-public class ArtistResponseDto {
-
+@Getter @Setter
+public class ArtistRequestDto {
+    private Long id;
     private String nickname;
     private String profileImage;
     private String accountBank;
