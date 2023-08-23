@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.GoodsDetailResponseDto;
-import shop.goodspia.goods.dto.GoodsDto;
-import shop.goodspia.goods.dto.GoodsResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsDetailResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsRequestDto;
+import shop.goodspia.goods.dto.goods.GoodsResponseDto;
 import shop.goodspia.goods.entity.Design;
 import shop.goodspia.goods.entity.Goods;
 import shop.goodspia.goods.exception.ArtistNotFoundException;
@@ -33,17 +33,17 @@ public class GoodsService {
     /**
      * 굿즈 등록용 메서드
      * @param artistId
-     * @param goodsDto
+     * @param goodsRequestDto
      * @return
      */
-    public Long addGoods(long artistId, GoodsDto goodsDto) {
+    public Long addGoods(long artistId, GoodsRequestDto goodsRequestDto) {
         //회원 조회 - 아티스트 등록 여부 파악용
         return artistRepository.findById(artistId).map(
                 artist -> {
                     //굿즈 엔티티 생성
-                    Goods goods = Goods.createGoods(goodsDto, artist);
+                    Goods goods = Goods.createGoods(goodsRequestDto, artist);
                     //작성한 디자인 옵션의 엔티티 생성 후 DB에 저장
-                    for (String design : goodsDto.getDesigns()) {
+                    for (String design : goodsRequestDto.getDesigns()) {
                         designRepository.save(Design.createDesign(design, goods));
                     }
                     return goodsRepository.save(goods).getId();
@@ -53,12 +53,12 @@ public class GoodsService {
 
     /**
      * 굿즈 정보 수정용 메서드
-     * @param goodsDto
+     * @param goodsRequestDto
      */
-    public void modifyGoods(GoodsDto goodsDto) {
-        Optional.ofNullable(goodsRepository.findById(goodsDto.getId()))
+    public void modifyGoods(GoodsRequestDto goodsRequestDto) {
+        Optional.ofNullable(goodsRepository.findById(goodsRequestDto.getId()))
                 .ifPresentOrElse(
-                        goods -> goods.get().updateGoods(goodsDto),
+                        goods -> goods.get().updateGoods(goodsRequestDto),
                         () -> new GoodsNotFoundException("굿즈 정보가 없습니다.")
                 );
     }

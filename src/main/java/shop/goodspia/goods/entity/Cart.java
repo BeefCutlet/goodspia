@@ -1,7 +1,6 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.CartDto;
 
 import javax.persistence.*;
 

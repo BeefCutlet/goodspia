@@ -2,7 +2,7 @@ package shop.goodspia.goods.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import shop.goodspia.goods.dto.CartDto;
+import shop.goodspia.goods.dto.cart.CartRequestDto;
 import shop.goodspia.goods.security.dto.SessionUser;
 import shop.goodspia.goods.service.CartService;
 
@@ -17,16 +17,16 @@ public class CartController {
 
     /**
      * 카트에 선택한 굿즈를 등록하는 API
-     * @param cartDto goodsId, designId
+     * @param cartRequestDto goodsId, designId
      * @param session
      * @return
      */
     @PostMapping("/add")
-    public String addCart(@RequestBody CartDto cartDto,
+    public String addCart(@RequestBody CartRequestDto cartRequestDto,
                           HttpSession session) {
         long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
-        cartDto.setMemberId(memberId);
-        cartService.addCart(cartDto);
+        cartRequestDto.setMemberId(memberId);
+        cartService.addCart(cartRequestDto);
         return "";
     }
 

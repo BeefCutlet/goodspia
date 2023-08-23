@@ -2,10 +2,9 @@ package shop.goodspia.goods.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import shop.goodspia.goods.dto.ArtistDto;
+import shop.goodspia.goods.dto.artist.ArtistRequestDto;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,22 +24,22 @@ public class Artist extends BaseTimeEntity {
     private String accountNumber;
     private String phoneNumber;
 
-    public static Artist createArtist(ArtistDto artistDto) {
+    public static Artist createArtist(ArtistRequestDto artistRequestDto) {
         return Artist.builder()
-                .nickname(artistDto.getNickname())
-                .profileImage(artistDto.getProfileImage())
-                .accountBank(AccountBank.covertToBank(artistDto.getAccountBank()))
-                .accountNumber(artistDto.getAccountNumber())
-                .phoneNumber(artistDto.getPhoneNumber())
+                .nickname(artistRequestDto.getNickname())
+                .profileImage(artistRequestDto.getProfileImage())
+                .accountBank(AccountBank.covertToBank(artistRequestDto.getAccountBank()))
+                .accountNumber(artistRequestDto.getAccountNumber())
+                .phoneNumber(artistRequestDto.getPhoneNumber())
                 .build();
     }
 
-    public void updateArtist(ArtistDto artistDto) {
-        this.nickname = artistDto.getNickname();
-        this.profileImage = artistDto.getProfileImage();
-        this.accountBank = AccountBank.covertToBank(artistDto.getAccountBank());
-        this.accountNumber = artistDto.getAccountNumber();
-        this.phoneNumber = artistDto.getPhoneNumber();
+    public void updateArtist(ArtistRequestDto artistRequestDto) {
+        this.nickname = artistRequestDto.getNickname();
+        this.profileImage = artistRequestDto.getProfileImage();
+        this.accountBank = AccountBank.covertToBank(artistRequestDto.getAccountBank());
+        this.accountNumber = artistRequestDto.getAccountNumber();
+        this.phoneNumber = artistRequestDto.getPhoneNumber();
     }
 
 }

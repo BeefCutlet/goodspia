@@ -3,7 +3,7 @@ package shop.goodspia.goods.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import shop.goodspia.goods.dto.MemberDto;
+import shop.goodspia.goods.dto.member.MemberRequestDto;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.MemberRepository;
@@ -17,22 +17,22 @@ public class MemberService {
 
     /**
      * 회원 정보 저장
-     * @param memberDto
+     * @param memberRequestDto
      * @return
      */
-    public Long saveMember(MemberDto memberDto) {
-        Member member = Member.createMember(memberDto);
+    public Long saveMember(MemberRequestDto memberRequestDto) {
+        Member member = Member.createMember(memberRequestDto);
         return memberRepository.save(member).getId();
     }
 
     /**
      * 회원 정보 수정
-     * @param memberDto
+     * @param memberRequestDto
      */
-    public void modifyMemberInfo(MemberDto memberDto) {
-        Member member = memberRepository.findById(memberDto.getId())
+    public void modifyMemberInfo(MemberRequestDto memberRequestDto) {
+        Member member = memberRepository.findById(memberRequestDto.getId())
                 .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
-        member.updateMember(memberDto);
+        member.updateMember(memberRequestDto);
     }
 
     /**

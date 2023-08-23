@@ -1,7 +1,7 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.DeliveryDto;
+import shop.goodspia.goods.dto.delivery.DeliveryRequestDto;
 
 import javax.persistence.*;
 
@@ -22,13 +22,13 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    public static Delivery createDelivery(DeliveryDto deliveryDto) {
+    public static Delivery createDelivery(DeliveryRequestDto deliveryRequestDto) {
         return Delivery.builder()
-                .deliveryNumber(deliveryDto.getDeliveryNumber())
-                .zipcode(deliveryDto.getZipcode())
-                .address1(deliveryDto.getAddress1())
-                .address2(deliveryDto.getAddress2())
-                .deliveryStatus(DeliveryStatus.convertToDeliveryStatus(deliveryDto.getDeliveryStatus()))
+                .deliveryNumber(deliveryRequestDto.getDeliveryNumber())
+                .zipcode(deliveryRequestDto.getZipcode())
+                .address1(deliveryRequestDto.getAddress1())
+                .address2(deliveryRequestDto.getAddress2())
+                .deliveryStatus(DeliveryStatus.convertToDeliveryStatus(deliveryRequestDto.getDeliveryStatus()))
                 .build();
     }
 }

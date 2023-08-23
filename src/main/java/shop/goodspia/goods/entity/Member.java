@@ -1,7 +1,7 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.MemberDto;
+import shop.goodspia.goods.dto.member.MemberRequestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,11 +31,11 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    public static Member createMember(MemberDto memberDto) {
+    public static Member createMember(MemberRequestDto memberRequestDto) {
         return Member.builder()
-                .email(memberDto.getEmail())
-                .password(memberDto.getPassword())
-                .nickname(memberDto.getNickname())
+                .email(memberRequestDto.getEmail())
+                .password(memberRequestDto.getPassword())
+                .nickname(memberRequestDto.getNickname())
                 .build();
     }
 
@@ -43,8 +43,8 @@ public class Member extends BaseTimeEntity {
         this.artist = artist;
     }
 
-    public void updateMember(MemberDto memberDto) {
-        this.password = memberDto.getPassword();
-        this.nickname = memberDto.getNickname();
+    public void updateMember(MemberRequestDto memberRequestDto) {
+        this.password = memberRequestDto.getPassword();
+        this.nickname = memberRequestDto.getNickname();
     }
 }

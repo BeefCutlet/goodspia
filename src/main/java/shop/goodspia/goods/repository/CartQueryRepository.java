@@ -3,7 +3,7 @@ package shop.goodspia.goods.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.CartResponseDto;
+import shop.goodspia.goods.dto.cart.CartResponseDto;
 
 import javax.persistence.EntityManager;
 import java.util.List;

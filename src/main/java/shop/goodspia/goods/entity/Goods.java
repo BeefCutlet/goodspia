@@ -1,7 +1,7 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.GoodsDto;
+import shop.goodspia.goods.dto.goods.GoodsRequestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,27 +36,27 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods")
     private final List<Design> designs = new ArrayList<>();
 
-    public static Goods createGoods(GoodsDto goodsDto, Artist artist) {
+    public static Goods createGoods(GoodsRequestDto goodsRequestDto, Artist artist) {
         return Goods.builder()
-                .name(goodsDto.getName())
-                .summary(goodsDto.getSummary())
-                .content(goodsDto.getContent())
-                .category(goodsDto.getCategory())
-                .image(goodsDto.getImage())
-                .price(goodsDto.getPrice())
+                .name(goodsRequestDto.getName())
+                .summary(goodsRequestDto.getSummary())
+                .content(goodsRequestDto.getContent())
+                .category(goodsRequestDto.getCategory())
+                .image(goodsRequestDto.getImage())
+                .price(goodsRequestDto.getPrice())
                 .isDeleted(0)
                 .artist(artist)
                 .build();
     }
 
     //굿즈 정보 갱신용 메서드
-    public void updateGoods(GoodsDto goodsDto) {
-        this.name = goodsDto.getName();
-        this.summary = goodsDto.getSummary();
-        this.content = goodsDto.getContent();
-        this.category = goodsDto.getCategory();
-        this.image = goodsDto.getImage();
-        this.price = goodsDto.getPrice();
+    public void updateGoods(GoodsRequestDto goodsRequestDto) {
+        this.name = goodsRequestDto.getName();
+        this.summary = goodsRequestDto.getSummary();
+        this.content = goodsRequestDto.getContent();
+        this.category = goodsRequestDto.getCategory();
+        this.image = goodsRequestDto.getImage();
+        this.price = goodsRequestDto.getPrice();
     }
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경

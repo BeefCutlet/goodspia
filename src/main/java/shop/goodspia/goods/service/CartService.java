@@ -3,8 +3,8 @@ package shop.goodspia.goods.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.CartDto;
-import shop.goodspia.goods.dto.CartResponseDto;
+import shop.goodspia.goods.dto.cart.CartRequestDto;
+import shop.goodspia.goods.dto.cart.CartResponseDto;
 import shop.goodspia.goods.entity.Cart;
 import shop.goodspia.goods.entity.Design;
 import shop.goodspia.goods.entity.Goods;
@@ -31,20 +31,20 @@ public class CartService {
 
     /**
      * 카트에 굿즈 추가
-     * @param cartDto
+     * @param cartRequestDto
      * @return
      */
-    public Long addCart(CartDto cartDto) {
-        Member member = memberRepository.findById(cartDto.getMemberId())
+    public Long addCart(CartRequestDto cartRequestDto) {
+        Member member = memberRepository.findById(cartRequestDto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
 
-        Goods goods = goodsRepository.findById(cartDto.getGoodsId())
+        Goods goods = goodsRepository.findById(cartRequestDto.getGoodsId())
                 .orElseThrow(() -> new GoodsNotFoundException("Goods Data Not Found"));
 
-        Design design = designRepository.findById(cartDto.getDesignId())
+        Design design = designRepository.findById(cartRequestDto.getDesignId())
                 .orElseThrow(() -> new DesignNotFoundException("Design Data Not Found"));
 
-        Cart cart = Cart.createCart(cartDto.getQuantity(), member, goods, design);
+        Cart cart = Cart.createCart(cartRequestDto.getQuantity(), member, goods, design);
         return cartRepository.save(cart).getId();
     }
 

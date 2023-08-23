@@ -3,7 +3,7 @@ package shop.goodspia.goods.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import shop.goodspia.goods.dto.MemberDto;
+import shop.goodspia.goods.dto.member.MemberRequestDto;
 import shop.goodspia.goods.service.MemberService;
 
 @Slf4j
@@ -16,23 +16,23 @@ public class MemberController {
 
     /**
      * 회원 등록 API
-     * @param memberDto
+     * @param memberRequestDto
      * @return
      */
     @PostMapping("/register")
-    public String register(@RequestBody MemberDto memberDto) {
-        memberService.saveMember(memberDto);
+    public String register(@RequestBody MemberRequestDto memberRequestDto) {
+        memberService.saveMember(memberRequestDto);
         return "";
     }
 
     /**
      * 회원 정보 수정 API
-     * @param memberDto
+     * @param memberRequestDto
      * @return
      */
     @PatchMapping("/modify/{memberId}")
     public String modifyMember(@PathVariable long memberId,
-                               @RequestBody MemberDto memberDto) {
+                               @RequestBody MemberRequestDto memberRequestDto) {
 
         return "";
     }

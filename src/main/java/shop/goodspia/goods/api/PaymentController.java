@@ -9,16 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shop.goodspia.goods.dto.IAmPortRequestDto;
-import shop.goodspia.goods.dto.IAmPortResponseDto;
-import shop.goodspia.goods.dto.PaymentDto;
-import shop.goodspia.goods.dto.PaymentListDto;
+import shop.goodspia.goods.dto.iamport.IAmPortRequestDto;
+import shop.goodspia.goods.dto.iamport.IAmPortResponseDto;
+import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.dto.payment.PaymentListRequestDto;
 import shop.goodspia.goods.security.dto.SessionUser;
 import shop.goodspia.goods.service.PaymentService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,28 +42,28 @@ public class PaymentController {
 
     /**
      * DB에 결제 정보 저장 (단건)
-     * @param paymentDto
+     * @param paymentRequestDto
      * @param session
      * @return
      */
     @PostMapping("/add")
-    public String addPayment(@RequestBody PaymentDto paymentDto, HttpSession session) {
+    public String  addPayment(@RequestBody PaymentRequestDto paymentRequestDto, HttpSession session) {
         SessionUser user = (SessionUser) session.getAttribute("user");
-        paymentService.addPayment(paymentDto, user.getMemberId());
-        return "";
+        paymentService.addPayment(paymentRequestDto, 2);
+        return "ok";
     }
 
     /**
      * DB에 결제 정보 저장 (리스트)
-     * @param paymentListDto
+     * @param paymentList
      * @param session
      * @return
      */
     @PostMapping("/add-list")
-    public String addPaymentList(@RequestBody PaymentListDto paymentListDto, HttpSession session) {
+    public String addPaymentList(@RequestBody PaymentListRequestDto paymentList, HttpSession session) {
         SessionUser user = (SessionUser) session.getAttribute("user");
-        paymentService.addPaymentList(paymentListDto, user.getMemberId());
-        return "";
+        paymentService.addPaymentList(paymentList, 2);
+        return "ok";
     }
 
     /**

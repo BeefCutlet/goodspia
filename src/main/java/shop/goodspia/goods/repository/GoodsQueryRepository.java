@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.GoodsDetailResponseDto;
-import shop.goodspia.goods.dto.GoodsResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsDetailResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsResponseDto;
 
 import javax.persistence.EntityManager;
 import java.util.List;

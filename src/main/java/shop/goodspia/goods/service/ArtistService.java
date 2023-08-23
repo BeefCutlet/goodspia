@@ -4,16 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.ArtistDto;
-import shop.goodspia.goods.dto.ArtistResponseDto;
+import shop.goodspia.goods.dto.artist.ArtistRequestDto;
+import shop.goodspia.goods.dto.artist.ArtistResponseDto;
 import shop.goodspia.goods.entity.Artist;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.exception.ArtistNotFoundException;
 import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.ArtistRepository;
 import shop.goodspia.goods.repository.MemberRepository;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,13 +43,13 @@ public class ArtistService {
     /**
      * 아티스트 등록 메서드
      */
-    public Long registerArtist(Long memberId, ArtistDto artistDto) {
+    public Long registerArtist(Long memberId, ArtistRequestDto artistRequestDto) {
         //회원 정보에 아티스트 번호 저장
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
 
         //아티스트 등록
-        Artist savedArtist = artistRepository.save(Artist.createArtist(artistDto));
+        Artist savedArtist = artistRepository.save(Artist.createArtist(artistRequestDto));
         //회원 정보에 아티스트 연관관계 추가
         member.registerArtist(savedArtist);
 
@@ -61,9 +59,9 @@ public class ArtistService {
     /**
      * 아티스트 정보 수정 메서드
      */
-    public void modifyArtist(ArtistDto artistDto) {
-        Artist artist = artistRepository.findById(artistDto.getId())
+    public void modifyArtist(ArtistRequestDto artistRequestDto) {
+        Artist artist = artistRepository.findById(artistRequestDto.getId())
                 .orElseThrow(() -> new ArtistNotFoundException("Artist Data Not Found"));
-        artist.updateArtist(artistDto);
+        artist.updateArtist(artistRequestDto);
     }
 }

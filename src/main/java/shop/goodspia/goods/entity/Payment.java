@@ -1,10 +1,9 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.PaymentDto;
+import shop.goodspia.goods.dto.payment.PaymentRequestDto;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.*;
 
@@ -34,15 +33,15 @@ public class Payment extends BaseTimeEntity {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    public static Payment createPayment(PaymentDto paymentDto) {
+    public static Payment createPayment(PaymentRequestDto paymentRequestDto) {
         return Payment.builder()
-                .quantity(paymentDto.getQuantity())
-                .totalPrice(paymentDto.getTotalPrice())
-                .accountBank(AccountBank.covertToBank(paymentDto.getAccountBank()))
-                .accountNumber(paymentDto.getAccountNumber())
+                .quantity(paymentRequestDto.getQuantity())
+                .totalPrice(paymentRequestDto.getTotalPrice())
+                .accountBank(AccountBank.covertToBank(paymentRequestDto.getAccountBank()))
+                .accountNumber(paymentRequestDto.getAccountNumber())
                 .paymentStatus(PaymentStatus.READY)
-                .goods(paymentDto.getGoods())
-                .member(paymentDto.getMember())
+                .goods(paymentRequestDto.getGoods())
+                .member(paymentRequestDto.getMember())
                 .build();
     }
 
