@@ -28,7 +28,7 @@ public class Artist extends BaseTimeEntity {
         return Artist.builder()
                 .nickname(artistRequestDto.getNickname())
                 .profileImage(artistRequestDto.getProfileImage())
-                .accountBank(AccountBank.covertToBank(artistRequestDto.getAccountBank()))
+                .accountBank(AccountBank.convertStringToBank(artistRequestDto.getAccountBank()))
                 .accountNumber(artistRequestDto.getAccountNumber())
                 .phoneNumber(artistRequestDto.getPhoneNumber())
                 .build();
@@ -37,7 +37,7 @@ public class Artist extends BaseTimeEntity {
     public void updateArtist(ArtistRequestDto artistRequestDto) {
         this.nickname = artistRequestDto.getNickname();
         this.profileImage = artistRequestDto.getProfileImage();
-        this.accountBank = AccountBank.covertToBank(artistRequestDto.getAccountBank());
+        this.accountBank = AccountBank.convertStringToBank(artistRequestDto.getAccountBank());
         this.accountNumber = artistRequestDto.getAccountNumber();
         this.phoneNumber = artistRequestDto.getPhoneNumber();
     }
