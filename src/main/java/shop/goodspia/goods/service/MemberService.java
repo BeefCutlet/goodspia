@@ -3,6 +3,7 @@ package shop.goodspia.goods.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.dto.member.MemberRequestDto;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.exception.MemberNotFoundException;
@@ -10,6 +11,7 @@ import shop.goodspia.goods.repository.MemberRepository;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 
