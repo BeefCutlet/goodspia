@@ -67,7 +67,7 @@ public class GoodsQueryRepository {
                 .fetchOne();
     }
 
-    //굿즈 리스트 페이징 조회
+    //아티스트가 등록한 굿즈 리스트 페이징 조회
     public Page<GoodsResponseDto> findArtistGoodsList(Pageable pageable, long artistId) {
         List<GoodsResponseDto> goodsList = queryFactory
                 .select(Projections.bean(GoodsResponseDto.class,
