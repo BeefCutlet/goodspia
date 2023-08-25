@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Delivery {
 
     @Id @GeneratedValue
-    @Column(name = "shipment_id")
+    @Column(name = "delivery_id")
     private Long id;
     private String deliveryNumber;
     private String zipcode;
@@ -22,13 +22,20 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
+    @OneToOne(mappedBy = "delivery")
+    private Orders orders;
+
     public static Delivery createDelivery(DeliveryRequestDto deliveryRequestDto) {
         return Delivery.builder()
                 .deliveryNumber(deliveryRequestDto.getDeliveryNumber())
                 .zipcode(deliveryRequestDto.getZipcode())
                 .address1(deliveryRequestDto.getAddress1())
                 .address2(deliveryRequestDto.getAddress2())
-                .deliveryStatus(DeliveryStatus.convertToDeliveryStatus(deliveryRequestDto.getDeliveryStatus()))
+                .deliveryStatus(DeliveryStatus.DELIVERY_READY)
                 .build();
+    }
+
+    public void addDelivery(Orders orders) {
+        this.orders = orders;
     }
 }
