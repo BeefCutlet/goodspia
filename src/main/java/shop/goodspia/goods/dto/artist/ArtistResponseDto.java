@@ -2,7 +2,6 @@ package shop.goodspia.goods.dto.artist;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.goodspia.goods.entity.AccountBank;
 
 @Getter
 @Builder
