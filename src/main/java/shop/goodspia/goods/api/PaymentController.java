@@ -25,19 +25,31 @@ public class PaymentController {
     @Value("${base-url}")
     private String baseUrl;
 
+    /**
+     * 결제 전 결제 정보 사전등록
+     * @param prepareDto
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/reservation")
     public Response<PaymentPrepareResponseDto> reservePayment(@RequestBody PaymentPrepareRequestDto prepareDto)
             throws Exception {
         PaymentPrepareResponseDto paymentPrepareResponseDto = paymentAgentService.reservePayment(prepareDto);
 
-        return Response.of(HttpStatus.OK.value(), "", paymentPrepareResponseDto);
+        return Response.of(HttpStatus.OK.value(), "결제 정보 사전등록에 성공하였습니다.", paymentPrepareResponseDto);
     }
 
+    /**
+     * 결제 후 금액 검증
+     * @param paymentUid
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/validation/{paymentUid}")
     public Response<UrlResponse> validatePayment(@PathVariable String paymentUid) throws Exception {
         PaymentRequestDto paymentRequestDto = paymentAgentService.validatePayment(paymentUid);
         paymentService.addPayment(paymentRequestDto);
 
-        return Response.of(HttpStatus.OK.value(), "결제를 성공하였습니다.", UrlResponse.of(baseUrl));
+        return Response.of(HttpStatus.OK.value(), "결제에 성공하였습니다.", UrlResponse.of(baseUrl));
     }
 }
