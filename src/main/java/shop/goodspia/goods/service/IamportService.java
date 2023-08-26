@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import shop.goodspia.goods.dto.payment.PaymentPrepareRequestDto;
 import shop.goodspia.goods.dto.payment.PaymentPrepareResponseDto;
 import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.exception.PaymentValidationFailureException;
 import shop.goodspia.goods.repository.OrderQueryRepository;
 
 import java.io.IOException;
@@ -49,14 +50,14 @@ public class IamportService implements PaymentAgentService {
         Long totalPrice = orderQueryRepository.findTotalPrice(paymentUid);
         Payment payment = iamportClient.paymentByImpUid(paymentUid).getResponse();
         if (totalPrice != payment.getAmount().longValue()) {
-            throw new IllegalStateException("주문 상품들의 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
+            throw new PaymentValidationFailureException("주문 상품들의 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
         }
 
         //사전등록된 결제 금액과 실제 결제 금액 비교
         Prepare prepare = iamportClient.getPrepare(payment.getMerchantUid()).getResponse();
         PaymentPrepareResponseDto prepareDto = parsingToPaymentPrepareResponseDto(prepare);
         if (payment.getAmount().intValue() != prepareDto.getAmount()) {
-            throw new IllegalStateException("사전등록된 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
+            throw new PaymentValidationFailureException("사전등록된 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
         }
 
         return PaymentRequestDto.builder()
