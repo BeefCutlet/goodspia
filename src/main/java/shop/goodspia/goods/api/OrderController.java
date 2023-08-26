@@ -42,8 +42,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/one/{orderId}")
-    public Response<String> deleteOrder(@PathVariable long orderId) {
+    public Response<?> deleteOrder(@PathVariable long orderId) {
         orderService.removeOrder(orderId);
-        return Response.of(HttpStatus.OK.value(), "", "");
+        return Response.of(HttpStatus.OK.value(), "SUCCESS", null);
     }
 }
