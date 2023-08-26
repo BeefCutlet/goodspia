@@ -14,6 +14,7 @@ import shop.goodspia.goods.exception.GoodsNotFoundException;
 import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.GoodsRepository;
 import shop.goodspia.goods.repository.MemberRepository;
+import shop.goodspia.goods.repository.OrderGoodsRepository;
 import shop.goodspia.goods.repository.OrderRepository;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class OrderService {
     private final GoodsRepository goodsRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final OrderGoodsRepository orderGoodsRepository;
 
     /**
      * 주문 목록에 리스트 추가
@@ -54,7 +56,7 @@ public class OrderService {
         orderRepository.save(orders);
     }
 
-    public void removeOrder(long orderId) {
-        orderRepository.deleteById(orderId);
+    public void removeOrder(Long orderGoodsId) {
+        orderGoodsRepository.deleteById(orderGoodsId);
     }
 }
