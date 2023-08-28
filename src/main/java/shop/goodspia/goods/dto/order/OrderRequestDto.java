@@ -1,12 +1,12 @@
 package shop.goodspia.goods.dto.order;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Builder
+@AllArgsConstructor
 public class OrderRequestDto {
 
     @NotNull
@@ -15,4 +15,6 @@ public class OrderRequestDto {
     private int totalPrice;
     @NotNull
     private Long goodsId;
+    @NotNull
+    private String goodsDesign;
 }
