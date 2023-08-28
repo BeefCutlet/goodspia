@@ -16,9 +16,7 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
     private String deliveryNumber;
-    private String zipcode;
-    private String address1;
-    private String address2;
+    private Address address;
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
@@ -28,9 +26,10 @@ public class Delivery {
     public static Delivery createDelivery(DeliveryRequestDto deliveryRequestDto) {
         return Delivery.builder()
                 .deliveryNumber(deliveryRequestDto.getDeliveryNumber())
-                .zipcode(deliveryRequestDto.getZipcode())
-                .address1(deliveryRequestDto.getAddress1())
-                .address2(deliveryRequestDto.getAddress2())
+                .address(new Address(
+                        deliveryRequestDto.getZipcode(),
+                        deliveryRequestDto.getAddressDistrict(),
+                        deliveryRequestDto.getAddressDetail()))
                 .deliveryStatus(DeliveryStatus.DELIVERY_READY)
                 .build();
     }
