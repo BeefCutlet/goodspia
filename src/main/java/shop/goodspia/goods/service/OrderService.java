@@ -2,20 +2,18 @@ package shop.goodspia.goods.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.order.OrderListRequestDto;
-import shop.goodspia.goods.dto.order.OrderRequestDto;
+import shop.goodspia.goods.dto.order.*;
 import shop.goodspia.goods.entity.Goods;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.entity.OrderGoods;
 import shop.goodspia.goods.entity.Orders;
 import shop.goodspia.goods.exception.GoodsNotFoundException;
 import shop.goodspia.goods.exception.MemberNotFoundException;
-import shop.goodspia.goods.repository.GoodsRepository;
-import shop.goodspia.goods.repository.MemberRepository;
-import shop.goodspia.goods.repository.OrderGoodsRepository;
-import shop.goodspia.goods.repository.OrderRepository;
+import shop.goodspia.goods.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +28,22 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final OrderGoodsRepository orderGoodsRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     /**
      * 주문 목록에 리스트 추가
      * @param orderListRequestDto
      */
-    public void addOrders(OrderListRequestDto orderListRequestDto, long memberId) {
+    public void addOrders(OrderListRequestDto orderListRequestDto, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+
+        //회원의 결제되지 않은 주문이 존재하는지 조회
+        Orders readyOrder = orderQueryRepository.findReadyOrderUid(memberId);
+        if (readyOrder != null) {
+            //기존에 결제되지 않은 주문이 존재하면 삭제
+            orderRepository.deleteById(readyOrder.getId());
+        }
 
         List<OrderGoods> orderGoodsList = new ArrayList<>();
         for (OrderRequestDto orderRequestDto : orderListRequestDto.getOrders()) {
@@ -48,7 +54,8 @@ public class OrderService {
                     .createOrderGoods(
                             goods,
                             orderRequestDto.getQuantity(),
-                            orderRequestDto.getTotalPrice());
+                            orderRequestDto.getTotalPrice(),
+                            orderRequestDto.getGoodsDesign());
             orderGoodsList.add(orderGoods);
         }
 
@@ -58,5 +65,50 @@ public class OrderService {
 
     public void removeOrder(Long orderGoodsId) {
         orderGoodsRepository.deleteById(orderGoodsId);
+    }
+
+    //현재 주문 목록 조회
+    public List<OrderResponseDto> getRequestedOrders(Long memberId) {
+        //아직 결제되지 않은 상품 리스트 조회
+        List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId);
+        List<OrderResponseDto> orders = new ArrayList<>();
+        for (OrderGoods readyOrder : readyOrders) {
+            OrderResponseDto order = OrderResponseDto.builder()
+                    .ordersGoodsId(readyOrder.getOrders().getId())
+                    .quantity(readyOrder.getQuantity())
+                    .totalPrice(readyOrder.getTotalPrice())
+                    .goodsId(readyOrder.getGoods().getId())
+                    .goodsName(readyOrder.getGoods().getName())
+                    .goodsPrice(readyOrder.getGoods().getPrice())
+                    .goodsImage(readyOrder.getGoodsDesign())
+                    .goodsDesign(readyOrder.getGoodsDesign())
+                    .build();
+            orders.add(order);
+        }
+
+        return orders;
+    }
+
+    //아티스트에게 들어온 주문 목록 조회
+    public Page<OrderReceivedResponseDto> getReceivedOrders(Long artistId, Pageable pageable) {
+        Page<OrderReceivedResponseDto> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
+        if (orderGoods == null || !orderGoods.hasContent()) {
+            throw new IllegalArgumentException("접수된 주문이 없습니다.");
+        }
+        return orderGoods;
+    }
+
+    //회원이 주문했던 주문 목록
+    public Page<OrderResponseDto> getCompleteOrders(Long memberId, Pageable pageable) {
+        Page<OrderResponseDto> completeOrders = orderQueryRepository.findCompleteOrders(memberId, pageable);
+        if (completeOrders == null || !completeOrders.hasContent()) {
+            throw new IllegalArgumentException("접수한 주문이 없습니다.");
+        }
+        return completeOrders;
+    }
+
+    //회원이 주문했던 주문 (단건)
+    public OrderDetailResponseDto getOrderDetail(Long orderGoodsId) {
+        return orderQueryRepository.findOrderDetail(orderGoodsId);
     }
 }
