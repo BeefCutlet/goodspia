@@ -27,12 +27,14 @@ public class OrderGoods extends BaseTimeEntity {
 
     private int quantity;
     private int totalPrice;
+    private String goodsDesign;
 
-    public static OrderGoods createOrderGoods(Goods goods, int quantity, int totalPrice) {
+    public static OrderGoods createOrderGoods(Goods goods, int quantity, int totalPrice, String goodsDesign) {
         return OrderGoods.builder()
                 .goods(goods)
                 .quantity(quantity)
                 .totalPrice(totalPrice)
+                .goodsDesign(goodsDesign)
                 .build();
     }
 
