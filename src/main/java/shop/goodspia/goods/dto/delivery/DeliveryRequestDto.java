@@ -1,18 +1,19 @@
 package shop.goodspia.goods.dto.delivery;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-@Getter @Setter
+@Getter
+@Builder
 public class DeliveryRequestDto {
 
     private String deliveryNumber;
     private String zipcode;
-    private String address1;
-    private String address2;
+    private String addressDistrict;
+    private String addressDetail;
     @Enumerated(EnumType.STRING)
     private String deliveryStatus;
 }
