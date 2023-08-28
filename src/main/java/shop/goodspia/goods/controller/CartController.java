@@ -1,4 +1,4 @@
-package shop.goodspia.goods.api;
+package shop.goodspia.goods.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

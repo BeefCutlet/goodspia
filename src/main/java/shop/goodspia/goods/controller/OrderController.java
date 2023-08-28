@@ -1,4 +1,4 @@
-package shop.goodspia.goods.api;
+package shop.goodspia.goods.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 @PropertySource(value = {"classpath:/secret.properties"})
 public class OrderController {
 
@@ -30,20 +30,26 @@ public class OrderController {
 
     /**
      * DB에 주문 정보 저장
+     * 굿즈 상세페이지의 결제하기 버튼, 장바구니의 결제하기 버튼 클릭 시 동작
      * @param orderList
      * @param session
-     * @return
+     * @return 주문 목록 페이지로 이동 URL
      */
-    @PostMapping("/list")
+    @PostMapping
     public Response<UrlResponse> addOrders(@RequestBody OrderListRequestDto orderList, HttpSession session) {
         SessionUser user = (SessionUser) session.getAttribute("user");
-        orderService.addOrders(orderList, 2);
+        orderService.addOrders(orderList, 2L);
         return Response.of(HttpStatus.OK.value(), "", UrlResponse.of(baseUrl));
     }
 
-    @DeleteMapping("/one/{orderId}")
-    public Response<?> deleteOrder(@PathVariable long orderId) {
-        orderService.removeOrder(orderId);
+    /**
+     * 주문 굿즈 목록에서 주문 굿즈 삭제
+     * @param orderGoodsId
+     * @return
+     */
+    @DeleteMapping("/{orderGoodsId}")
+    public Response<?> deleteOrder(@PathVariable Long orderGoodsId) {
+        orderService.removeOrder(orderGoodsId);
         return Response.of(HttpStatus.OK.value(), "SUCCESS", null);
     }
 }

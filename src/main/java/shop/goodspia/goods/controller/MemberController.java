@@ -1,4 +1,4 @@
-package shop.goodspia.goods.api;
+package shop.goodspia.goods.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

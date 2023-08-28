@@ -1,4 +1,4 @@
-package shop.goodspia.goods.api;
+package shop.goodspia.goods.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import shop.goodspia.goods.service.PaymentService;
 
 @Slf4j
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
 

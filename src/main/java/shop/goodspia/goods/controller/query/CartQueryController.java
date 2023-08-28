@@ -1,4 +1,4 @@
-package shop.goodspia.goods.api.query;
+package shop.goodspia.goods.controller.query;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
