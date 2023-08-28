@@ -1,15 +1,16 @@
 package shop.goodspia.goods.dto.order;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Builder
 public class OrderResponseDto {
 
-    private String merchantUid;
+    private Long ordersGoodsId;
     private int quantity;
     private int totalPrice;
-    private long goodsId;
+    private Long goodsId;
     private String goodsName;
     private int goodsPrice;
     private String goodsImage;
