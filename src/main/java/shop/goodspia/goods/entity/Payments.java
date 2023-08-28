@@ -1,9 +1,11 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import shop.goodspia.goods.dto.payment.PaymentRequestDto;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,6 +24,8 @@ public class Payments {
     private String cardNumber;
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+    @CreatedDate
+    private LocalDateTime createdTime;
 
     @OneToOne(mappedBy = "payments")
     private Orders orders;
