@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
-@RequestMapping("/artist")
+@RequestMapping("/artists")
 @RequiredArgsConstructor
 public class ArtistController {
 
@@ -23,7 +23,7 @@ public class ArtistController {
      * @param artistRequestDto
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping
     public String register(@RequestPart ArtistRequestDto artistRequestDto,
                            @RequestPart(required = false) MultipartFile profile,
                            HttpSession session) {
@@ -39,7 +39,7 @@ public class ArtistController {
      * @param artistRequestDto
      * @return 이동할 페이지 URL
      */
-    @PatchMapping("/modify/{artistId}")
+    @PatchMapping("/{artistId}")
     public String modify(@PathVariable Long artistId,
                          @RequestPart ArtistRequestDto artistRequestDto,
                          @RequestPart(required = false) MultipartFile profile) {
