@@ -73,16 +73,7 @@ public class OrderService {
         List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId);
         List<OrderResponseDto> orders = new ArrayList<>();
         for (OrderGoods readyOrder : readyOrders) {
-            OrderResponseDto order = OrderResponseDto.builder()
-                    .ordersGoodsId(readyOrder.getOrders().getId())
-                    .quantity(readyOrder.getQuantity())
-                    .totalPrice(readyOrder.getTotalPrice())
-                    .goodsId(readyOrder.getGoods().getId())
-                    .goodsName(readyOrder.getGoods().getName())
-                    .goodsPrice(readyOrder.getGoods().getPrice())
-                    .goodsImage(readyOrder.getGoodsDesign())
-                    .goodsDesign(readyOrder.getGoodsDesign())
-                    .build();
+            OrderResponseDto order = new OrderResponseDto(readyOrder);
             orders.add(order);
         }
 
@@ -109,6 +100,7 @@ public class OrderService {
 
     //회원이 주문했던 주문 (단건)
     public OrderDetailResponseDto getOrderDetail(Long orderGoodsId) {
-        return orderQueryRepository.findOrderDetail(orderGoodsId);
+        OrderGoods orderDetail = orderQueryRepository.findOrderDetail(orderGoodsId);
+        return new OrderDetailResponseDto(orderDetail);
     }
 }
