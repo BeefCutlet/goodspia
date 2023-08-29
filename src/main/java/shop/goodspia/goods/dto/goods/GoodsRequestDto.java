@@ -13,7 +13,7 @@ public class GoodsRequestDto {
     private String summary;
     private String content;
     private String category;
-    private String image;
+    private String thumbnail;
     private int price;
     private List<String> designs;
 }
