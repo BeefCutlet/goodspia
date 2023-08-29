@@ -1,15 +1,23 @@
 package shop.goodspia.goods.dto.artist;
 
-import lombok.Builder;
 import lombok.Getter;
+import shop.goodspia.goods.entity.AccountBank;
+import shop.goodspia.goods.entity.Artist;
 
 @Getter
-@Builder
 public class ArtistResponseDto {
 
-    private String nickname;
     private String profileImage;
-    private String accountBank;
-    private String accountNumber;
+    private String nickname;
     private String phoneNumber;
+    private AccountBank accountBank;
+    private String accountNumber;
+
+    public ArtistResponseDto(Artist artist) {
+        this.profileImage = artist.getProfileImage();
+        this.nickname = artist.getNickname();
+        this.phoneNumber = artist.getPhoneNumber();
+        this.accountBank = artist.getAccountBank();
+        this.accountNumber = artist.getAccountNumber();
+    }
 }
