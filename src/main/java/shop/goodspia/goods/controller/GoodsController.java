@@ -32,7 +32,7 @@ public class GoodsController {
                            HttpSession session) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
         String imageUrl = ImageUpload.uploadImage(mainImage);
-        goodsRequestDto.setImage(imageUrl);
+        goodsRequestDto.setThumbnail(imageUrl);
 
         //세션에서 아티스트 아이디 반환
         Long id = ((SessionUser) session.getAttribute("sessionUser")).getArtistId();
@@ -62,7 +62,7 @@ public class GoodsController {
                                 @RequestPart GoodsRequestDto goodsRequestDto,
                                 @RequestPart MultipartFile mainImage) {
         String image = ImageUpload.uploadImage(mainImage);
-        goodsRequestDto.setImage(image);
+        goodsRequestDto.setThumbnail(image);
         goodsRequestDto.setId(goodsId);
         goodsService.modifyGoods(goodsRequestDto);
         return "";
