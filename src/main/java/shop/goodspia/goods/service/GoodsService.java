@@ -17,8 +17,6 @@ import shop.goodspia.goods.repository.DesignRepository;
 import shop.goodspia.goods.repository.GoodsQueryRepository;
 import shop.goodspia.goods.repository.GoodsRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -56,26 +54,21 @@ public class GoodsService {
      * @param goodsRequestDto
      */
     public void modifyGoods(GoodsRequestDto goodsRequestDto) {
-        Optional.ofNullable(goodsRepository.findById(goodsRequestDto.getId()))
-                .ifPresentOrElse(
-                        goods -> goods.get().updateGoods(goodsRequestDto),
-                        () -> new GoodsNotFoundException("굿즈 정보가 없습니다.")
-                );
+        goodsRepository.findById(goodsRequestDto.getId())
+                .orElseThrow(() -> new GoodsNotFoundException("수정할 굿즈 정보가 없습니다."));
     }
 
     /**
      * 굿즈 삭제 메서드 - 상태 변경
      */
     public void delete(long goodsId) {
-        Optional.ofNullable(goodsRepository.findById(goodsId))
-                .ifPresentOrElse(
-                        goods -> goods.get().delete(),
-                        () -> new GoodsNotFoundException("Goods Data Not Found")
-                );
+        goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new GoodsNotFoundException("삭제할 굿즈 정보가 없습니다."));
     }
 
-    public Page<GoodsResponseDto> getGoodsList(Pageable pageable) {
-        return goodsQueryRepository.findGoodsList(pageable);
+    //전체 굿즈리스트 조회 (최신순)
+    public Page<GoodsResponseDto> getGoodsList(Pageable pageable, String category) {
+        return goodsQueryRepository.findGoodsList(pageable, category);
     }
 
     public Page<GoodsResponseDto> getArtistGoodsList(Pageable pageable, long artistId) {
@@ -83,6 +76,7 @@ public class GoodsService {
     }
 
     public GoodsDetailResponseDto getGoods(long goodsId) {
-        return goodsQueryRepository.findGoodsById(goodsId);
+        Goods goodsDetail = goodsQueryRepository.findGoodsDetail(goodsId);
+        return new GoodsDetailResponseDto(goodsDetail);
     }
 }
