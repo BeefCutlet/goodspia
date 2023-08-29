@@ -7,30 +7,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.order.OrderDetailResponseDto;
 import shop.goodspia.goods.dto.order.OrderReceivedResponseDto;
 import shop.goodspia.goods.dto.order.OrderResponseDto;
-import shop.goodspia.goods.entity.*;
+import shop.goodspia.goods.entity.OrderGoods;
+import shop.goodspia.goods.entity.OrderStatus;
+import shop.goodspia.goods.entity.Orders;
+import shop.goodspia.goods.entity.PaymentStatus;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static shop.goodspia.goods.entity.QDelivery.*;
-import static shop.goodspia.goods.entity.QGoods.*;
+import static shop.goodspia.goods.entity.QDelivery.delivery;
+import static shop.goodspia.goods.entity.QGoods.goods;
 import static shop.goodspia.goods.entity.QMember.member;
 import static shop.goodspia.goods.entity.QOrderGoods.orderGoods;
-import static shop.goodspia.goods.entity.QOrders.*;
 import static shop.goodspia.goods.entity.QOrders.orders;
-import static shop.goodspia.goods.entity.QPayments.*;
+import static shop.goodspia.goods.entity.QPayments.payments;
 
 @Repository
 public class OrderQueryRepository {
-
     private final JPAQueryFactory queryFactory;
 
     public OrderQueryRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
+
 
     //회원이 결제하지 않은 주문 상품들의 전체 가격
     public Long findTotalPrice(String orderUid) {
@@ -49,7 +50,7 @@ public class OrderQueryRepository {
                 .from(orderGoods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.goods, goods)
-                .where(orders.member.id.eq(memberId).and(orders.orderStatus.eq(OrderStatus.READY)))
+                .where(orders.member.id.eq(memberId), orders.orderStatus.eq(OrderStatus.READY))
                 .fetch();
     }
 
@@ -58,7 +59,7 @@ public class OrderQueryRepository {
         return queryFactory
                 .select(orders)
                 .from(orders)
-                .where(orders.member.id.eq(memberId).and(orders.orderStatus.eq(OrderStatus.READY)))
+                .where(orders.member.id.eq(memberId), orders.orderStatus.eq(OrderStatus.READY))
                 .fetchOne();
     }
 
@@ -81,7 +82,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
                 .join(orderGoods.orders.delivery, delivery)
-                .where(goods.artist.id.eq(artistId).and(payments.paymentStatus.eq(PaymentStatus.COMPLETE)))
+                .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -93,7 +94,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
                 .join(orderGoods.orders.delivery, delivery)
-                .where(goods.artist.id.eq(artistId).and(payments.paymentStatus.eq(PaymentStatus.COMPLETE)));
+                .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE));
 
         return PageableExecutionUtils.getPage(orderGoodsList, pageable, countQuery::fetchOne);
     }
@@ -108,13 +109,13 @@ public class OrderQueryRepository {
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.price.as("goodsPrice"),
-                        goods.image.as("goodsImage"),
+                        goods.thumbnail.as("goodsImage"),
                         goods.designs.as("goodsDesign")
                 ))
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders.member, member)
-                .where(member.id.eq(memberId).and(orders.orderStatus.eq(OrderStatus.COMPLETE)))
+                .where(member.id.eq(memberId) , orders.orderStatus.eq(OrderStatus.COMPLETE))
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
@@ -128,20 +129,9 @@ public class OrderQueryRepository {
     }
 
     //회원이 주문했던 상품 조회 (단건)
-    public OrderDetailResponseDto findOrderDetail(Long orderGoodsId) {
+    public OrderGoods findOrderDetail(Long orderGoodsId) {
         return queryFactory
-                .select(Projections.fields(OrderDetailResponseDto.class,
-                        orderGoods.createdTime.as("createdTime"),
-                        goods.id.as("goodsId"),
-                        goods.name.as("goodsName"),
-                        goods.summary.as("goodsSummary"),
-                        goods.image.as("goodsImage"),
-                        delivery.deliveryNumber.as("deliveryNumber"),
-                        delivery.deliveryStatus.as("deliveryStatus"),
-                        delivery.address.zipcode.as("deliveryZipcode"),
-                        delivery.address.district.as("deliveryDistrict"),
-                        delivery.address.detail.as("deliveryDetail")
-                ))
+                .select(orderGoods)
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
