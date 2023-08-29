@@ -31,13 +31,7 @@ public class ArtistService {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new ArtistNotFoundException("Artist Data Not Found"));
 
-        return ArtistResponseDto.builder()
-                .nickname(artist.getNickname())
-                .profileImage(artist.getProfileImage())
-                .accountBank(artist.getAccountBank().toString())
-                .accountNumber(artist.getAccountNumber())
-                .phoneNumber(artist.getPhoneNumber())
-                .build();
+        return new ArtistResponseDto(artist);
     }
 
     /**
