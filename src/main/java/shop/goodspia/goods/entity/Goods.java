@@ -24,7 +24,7 @@ public class Goods extends BaseTimeEntity {
     private String summary;
     private String content;
     private String category;
-    private String image;
+    private String thumbnail;
     private int price;
     private int isDeleted;
     private LocalDateTime deletedTime;
@@ -42,7 +42,7 @@ public class Goods extends BaseTimeEntity {
                 .summary(goodsRequestDto.getSummary())
                 .content(goodsRequestDto.getContent())
                 .category(goodsRequestDto.getCategory())
-                .image(goodsRequestDto.getImage())
+                .thumbnail(goodsRequestDto.getThumbnail())
                 .price(goodsRequestDto.getPrice())
                 .isDeleted(0)
                 .artist(artist)
@@ -55,7 +55,7 @@ public class Goods extends BaseTimeEntity {
         this.summary = goodsRequestDto.getSummary();
         this.content = goodsRequestDto.getContent();
         this.category = goodsRequestDto.getCategory();
-        this.image = goodsRequestDto.getImage();
+        this.thumbnail = goodsRequestDto.getThumbnail();
         this.price = goodsRequestDto.getPrice();
     }
 
