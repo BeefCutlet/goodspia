@@ -27,7 +27,7 @@ public class CartQueryRepository {
                         cart.quantity.as("quantity"),
                         cart.goods.name.as("goodsName"),
                         cart.goods.price.as("price"),
-                        cart.goods.image.as("mainImage"),
+                        cart.goods.thumbnail.as("mainImage"),
                         cart.design.designName.as("designName")
                 ))
                 .from(cart)

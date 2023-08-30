@@ -49,7 +49,7 @@ public class SampleData {
             for (int i = 0; i < 100; i++) {
                 Goods goods = Goods.builder()
                         .name("GoodsName" + i)
-                        .image("GoodsImage" + i)
+                        .thumbnail("GoodsImage" + i)
                         .category("GoodsCategory" + i)
                         .summary("GoodsSummary" + i)
                         .content("GoodsContent" + i)
