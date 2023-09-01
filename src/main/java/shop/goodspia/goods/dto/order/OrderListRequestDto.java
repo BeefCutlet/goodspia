@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -12,6 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderListRequestDto {
 
-    @NotNull
     private List<OrderRequestDto> orders;
 }

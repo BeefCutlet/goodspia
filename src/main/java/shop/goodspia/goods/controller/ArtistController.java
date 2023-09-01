@@ -9,6 +9,7 @@ import shop.goodspia.goods.service.ArtistService;
 import shop.goodspia.goods.util.ImageUpload;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -24,7 +25,7 @@ public class ArtistController {
      * @return
      */
     @PostMapping
-    public String register(@RequestPart ArtistRequestDto artistRequestDto,
+    public String register(@RequestPart @Valid ArtistRequestDto artistRequestDto,
                            @RequestPart(required = false) MultipartFile profile,
                            HttpSession session) {
         String profileImageName = ImageUpload.uploadImage(profile);
@@ -41,7 +42,7 @@ public class ArtistController {
      */
     @PatchMapping("/{artistId}")
     public String modify(@PathVariable Long artistId,
-                         @RequestPart ArtistRequestDto artistRequestDto,
+                         @RequestPart @Valid ArtistRequestDto artistRequestDto,
                          @RequestPart(required = false) MultipartFile profile) {
         String profileImageName = ImageUpload.uploadImage(profile);
         artistRequestDto.setProfileImage(profileImageName);

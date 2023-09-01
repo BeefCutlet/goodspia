@@ -8,7 +8,7 @@ import shop.goodspia.goods.service.MemberService;
 
 @Slf4j
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -19,7 +19,7 @@ public class MemberController {
      * @param memberRequestDto
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping
     public String register(@RequestBody MemberRequestDto memberRequestDto) {
         memberService.saveMember(memberRequestDto);
         return "";
@@ -30,9 +30,8 @@ public class MemberController {
      * @param memberRequestDto
      * @return
      */
-    @PatchMapping("/modify/{memberId}")
-    public String modifyMember(@PathVariable long memberId,
-                               @RequestBody MemberRequestDto memberRequestDto) {
+    @PatchMapping
+    public String modifyMember(@RequestBody MemberRequestDto memberRequestDto) {
 
         return "";
     }

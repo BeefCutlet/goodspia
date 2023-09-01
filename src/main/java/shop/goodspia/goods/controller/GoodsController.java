@@ -10,6 +10,7 @@ import shop.goodspia.goods.service.GoodsService;
 import shop.goodspia.goods.util.ImageUpload;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -23,15 +24,15 @@ public class GoodsController {
      * 굿즈 관련 정보를 저장하는 API
      * 굿즈 메인 이미지, 이름, 요약, 설명, 카테고리 저장
      * @param goodsRequestDto 굿즈 이름, 요약, 설명, 카테고리 저장
-     * @param mainImage 굿즈 메인 이미지
+     * @param thumbnail 굿즈 메인 이미지
      * @return 이동할 URL 반환 - 아티스트 페이지
      */
     @PostMapping("/add")
-    public String addGoods(@RequestPart GoodsRequestDto goodsRequestDto,
-                           @RequestPart MultipartFile mainImage,
+    public String addGoods(@RequestPart @Valid GoodsRequestDto goodsRequestDto,
+                           @RequestPart MultipartFile thumbnail,
                            HttpSession session) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
-        String imageUrl = ImageUpload.uploadImage(mainImage);
+        String imageUrl = ImageUpload.uploadImage(thumbnail);
         goodsRequestDto.setThumbnail(imageUrl);
 
         //세션에서 아티스트 아이디 반환

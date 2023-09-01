@@ -7,6 +7,7 @@ import shop.goodspia.goods.security.dto.SessionUser;
 import shop.goodspia.goods.service.CartService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/cart")
@@ -22,7 +23,7 @@ public class CartController {
      * @return
      */
     @PostMapping("/add")
-    public String addCart(@RequestBody CartRequestDto cartRequestDto,
+    public String addCart(@RequestBody @Valid CartRequestDto cartRequestDto,
                           HttpSession session) {
         long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
         cartRequestDto.setMemberId(memberId);
@@ -32,8 +33,8 @@ public class CartController {
 
 
     @PatchMapping("/fluctuate/{cartId}")
-    public String fluctuateQuantity(@PathVariable long cartId,
-                                    @RequestParam int quantity) {
+    public String fluctuateQuantity(@PathVariable Long cartId,
+                                    @RequestParam Integer quantity) {
         cartService.changeQuantity(cartId, quantity);
         return "";
     }
@@ -44,7 +45,7 @@ public class CartController {
      * @return
      */
     @DeleteMapping("/delete/{cartId}")
-    public String deleteCart(@PathVariable long cartId) {
+    public String deleteCart(@PathVariable Long cartId) {
         cartService.deleteCart(cartId);
         return "";
     }
