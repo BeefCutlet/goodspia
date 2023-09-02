@@ -1,14 +1,18 @@
 package shop.goodspia.goods.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import shop.goodspia.goods.dto.cart.CartRequestDto;
+import shop.goodspia.goods.dto.cart.CartSaveRequest;
 import shop.goodspia.goods.security.dto.SessionUser;
 import shop.goodspia.goods.service.CartService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+@Tag(name = "장바구니 등록/수정/삭제 API")
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
@@ -18,23 +22,31 @@ public class CartController {
 
     /**
      * 카트에 선택한 굿즈를 등록하는 API
-     * @param cartRequestDto goodsId, designId
+     * @param cart goodsId, designId
      * @param session
      * @return
      */
+    @Operation(summary = "장바구니 등록 API", description = "장바구니에 새로운 굿즈를 담는 API")
     @PostMapping("/add")
-    public String addCart(@RequestBody @Valid CartRequestDto cartRequestDto,
-                          HttpSession session) {
-        long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
-        cartRequestDto.setMemberId(memberId);
-        cartService.addCart(cartRequestDto);
+    public String addCart(@Parameter(name = "장바구니 정보", required = true)
+                          @RequestBody @Valid CartSaveRequest cart,
+                          @Parameter(hidden = true) HttpSession session) {
+        Long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
+        cart.setMemberId(memberId);
+        cartService.addCart(cart);
         return "";
     }
 
-
+    /**
+     * 장바구니에 담긴 굿즈의 수량 정보 수정 API
+     * @param cartId
+     * @param quantity
+     * @return
+     */
+    @Operation(summary = "장바구니 수량 수정 API", description = "장바구니에 담긴 굿즈의 수량을 수정하는 API")
     @PatchMapping("/fluctuate/{cartId}")
-    public String fluctuateQuantity(@PathVariable Long cartId,
-                                    @RequestParam Integer quantity) {
+    public String fluctuateQuantity(@Parameter(name = "장바구니 번호", description = "수정할 장바구니 굿즈의 번호") @PathVariable Long cartId,
+                                    @Parameter(name = "굿즈 수량", description = "수정될 굿즈 수량") @RequestParam Integer quantity) {
         cartService.changeQuantity(cartId, quantity);
         return "";
     }
@@ -44,8 +56,9 @@ public class CartController {
      * @param cartId
      * @return
      */
+    @Operation(summary = "장바구니 굿즈 삭제 API", description = "장바구니에 담긴 굿즈를 삭제하는 API")
     @DeleteMapping("/delete/{cartId}")
-    public String deleteCart(@PathVariable Long cartId) {
+    public String deleteCart(@Parameter(name = "장바구니 번호", example = "123") @PathVariable Long cartId) {
         cartService.deleteCart(cartId);
         return "";
     }
