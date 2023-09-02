@@ -3,7 +3,7 @@ package shop.goodspia.goods.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.cart.CartResponseDto;
+import shop.goodspia.goods.dto.cart.CartResponse;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -21,9 +21,9 @@ public class CartQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<CartResponseDto> findCartList(long memberId) {
+    public List<CartResponse> findCartList(long memberId) {
         return queryFactory
-                .select(Projections.bean(CartResponseDto.class,
+                .select(Projections.bean(CartResponse.class,
                         cart.quantity.as("quantity"),
                         cart.goods.name.as("goodsName"),
                         cart.goods.price.as("price"),

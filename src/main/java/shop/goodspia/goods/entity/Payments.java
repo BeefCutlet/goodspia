@@ -2,7 +2,7 @@ package shop.goodspia.goods.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.dto.payment.PaymentRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,12 +30,12 @@ public class Payments {
     @OneToOne(mappedBy = "payments")
     private Orders orders;
 
-    public static Payments createPayments(PaymentRequestDto paymentRequestDto) {
+    public static Payments createPayments(PaymentRequest paymentRequest) {
         return Payments.builder()
-                .paymentUid(paymentRequestDto.getPaymentUid())
-                .amount(paymentRequestDto.getAmount())
-                .accountBank(AccountBank.convertStringToBank(paymentRequestDto.getCardBank()))
-                .cardNumber(paymentRequestDto.getCardNumber())
+                .paymentUid(paymentRequest.getPaymentUid())
+                .amount(paymentRequest.getAmount())
+                .accountBank(AccountBank.convertStringToBank(paymentRequest.getCardBank()))
+                .cardNumber(paymentRequest.getCardNumber())
                 .paymentStatus(PaymentStatus.COMPLETE)
                 .build();
     }

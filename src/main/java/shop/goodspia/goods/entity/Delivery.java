@@ -1,7 +1,7 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.delivery.DeliveryRequestDto;
+import shop.goodspia.goods.dto.delivery.DeliverySaveRequest;
 
 import javax.persistence.*;
 
@@ -23,13 +23,13 @@ public class Delivery {
     @OneToOne(mappedBy = "delivery")
     private Orders orders;
 
-    public static Delivery createDelivery(DeliveryRequestDto deliveryRequestDto) {
+    public static Delivery createDelivery(DeliverySaveRequest deliverySaveRequest) {
         return Delivery.builder()
-                .deliveryNumber(deliveryRequestDto.getDeliveryNumber())
+                .deliveryNumber(deliverySaveRequest.getDeliveryNumber())
                 .address(new Address(
-                        deliveryRequestDto.getZipcode(),
-                        deliveryRequestDto.getAddressDistrict(),
-                        deliveryRequestDto.getAddressDetail()))
+                        deliverySaveRequest.getZipcode(),
+                        deliverySaveRequest.getAddressDistrict(),
+                        deliverySaveRequest.getAddressDetail()))
                 .deliveryStatus(DeliveryStatus.DELIVERY_READY)
                 .build();
     }

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.dto.UrlResponse;
-import shop.goodspia.goods.dto.payment.PaymentPrepareRequestDto;
-import shop.goodspia.goods.dto.payment.PaymentPrepareResponseDto;
-import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.dto.payment.PaymentPrepareRequest;
+import shop.goodspia.goods.dto.payment.PaymentPrepareResponse;
+import shop.goodspia.goods.dto.payment.PaymentRequest;
 import shop.goodspia.goods.service.PaymentAgentService;
 import shop.goodspia.goods.service.PaymentService;
 
@@ -33,11 +33,11 @@ public class PaymentController {
      * @throws Exception
      */
     @PostMapping("/reservation")
-    public ResponseEntity<PaymentPrepareResponseDto> reservePayment(@RequestBody @Valid PaymentPrepareRequestDto prepareDto)
+    public ResponseEntity<PaymentPrepareResponse> reservePayment(@RequestBody @Valid PaymentPrepareRequest prepareDto)
             throws Exception {
-        PaymentPrepareResponseDto paymentPrepareResponseDto = paymentAgentService.reservePayment(prepareDto);
+        PaymentPrepareResponse paymentPrepareResponse = paymentAgentService.reservePayment(prepareDto);
 
-        return ResponseEntity.ok(paymentPrepareResponseDto);
+        return ResponseEntity.ok(paymentPrepareResponse);
     }
 
     /**
@@ -48,8 +48,8 @@ public class PaymentController {
      */
     @PostMapping("/validation/{paymentUid}")
     public ResponseEntity<UrlResponse> validatePayment(@PathVariable String paymentUid) throws Exception {
-        PaymentRequestDto paymentRequestDto = paymentAgentService.validatePayment(paymentUid);
-        paymentService.addPayment(paymentRequestDto);
+        PaymentRequest paymentRequest = paymentAgentService.validatePayment(paymentUid);
+        paymentService.addPayment(paymentRequest);
 
         return ResponseEntity.ok(UrlResponse.of(baseUrl));
     }

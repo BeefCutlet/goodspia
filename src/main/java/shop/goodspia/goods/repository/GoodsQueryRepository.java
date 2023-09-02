@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.goods.GoodsResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsResponse;
 import shop.goodspia.goods.entity.Goods;
 
 import javax.persistence.EntityManager;
@@ -32,9 +32,9 @@ public class GoodsQueryRepository {
      * @param category
      * @return
      */
-    public Page<GoodsResponseDto> findGoodsList(Pageable pageable, String category) {
-        List<GoodsResponseDto> goodsList = queryFactory
-                .select(Projections.bean(GoodsResponseDto.class,
+    public Page<GoodsResponse> findGoodsList(Pageable pageable, String category) {
+        List<GoodsResponse> goodsList = queryFactory
+                .select(Projections.bean(GoodsResponse.class,
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.price.as("price"),
@@ -75,9 +75,9 @@ public class GoodsQueryRepository {
     }
 
     //아티스트가 등록한 굿즈 리스트 페이징 조회
-    public Page<GoodsResponseDto> findArtistGoodsList(Pageable pageable, long artistId) {
-        List<GoodsResponseDto> goodsList = queryFactory
-                .select(Projections.bean(GoodsResponseDto.class,
+    public Page<GoodsResponse> findArtistGoodsList(Pageable pageable, long artistId) {
+        List<GoodsResponse> goodsList = queryFactory
+                .select(Projections.bean(GoodsResponse.class,
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.price.as("price"),

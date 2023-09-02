@@ -3,16 +3,12 @@ package shop.goodspia.goods.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.cart.CartRequestDto;
-import shop.goodspia.goods.dto.cart.CartResponseDto;
+import shop.goodspia.goods.dto.cart.CartSaveRequest;
+import shop.goodspia.goods.dto.cart.CartResponse;
 import shop.goodspia.goods.entity.Cart;
 import shop.goodspia.goods.entity.Design;
 import shop.goodspia.goods.entity.Goods;
 import shop.goodspia.goods.entity.Member;
-import shop.goodspia.goods.exception.CartNotFoundException;
-import shop.goodspia.goods.exception.DesignNotFoundException;
-import shop.goodspia.goods.exception.GoodsNotFoundException;
-import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.*;
 
 import java.util.List;
@@ -26,25 +22,24 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final GoodsRepository goodsRepository;
     private final DesignRepository designRepository;
-
     private final CartQueryRepository cartQueryRepository;
 
     /**
      * 카트에 굿즈 추가
-     * @param cartRequestDto
+     * @param cartSaveRequest
      * @return
      */
-    public Long addCart(CartRequestDto cartRequestDto) {
-        Member member = memberRepository.findById(cartRequestDto.getMemberId())
-                .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+    public Long addCart(CartSaveRequest cartSaveRequest) {
+        Member member = memberRepository.findById(cartSaveRequest.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-        Goods goods = goodsRepository.findById(cartRequestDto.getGoodsId())
-                .orElseThrow(() -> new GoodsNotFoundException("Goods Data Not Found"));
+        Goods goods = goodsRepository.findById(cartSaveRequest.getGoodsId())
+                .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다."));
 
-        Design design = designRepository.findById(cartRequestDto.getDesignId())
-                .orElseThrow(() -> new DesignNotFoundException("Design Data Not Found"));
+        Design design = designRepository.findById(cartSaveRequest.getDesignId())
+                .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
 
-        Cart cart = Cart.createCart(cartRequestDto.getQuantity(), member, goods, design);
+        Cart cart = Cart.createCart(cartSaveRequest.getQuantity(), member, goods, design);
         return cartRepository.save(cart).getId();
     }
 
@@ -53,7 +48,7 @@ public class CartService {
      */
     public void changeQuantity(long cartId, int quantity) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("장바구니 정보를 찾을 수 없습니다."));
         cart.changeQuantity(quantity);
     }
 
@@ -62,12 +57,12 @@ public class CartService {
      */
     public void deleteCart(long cartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("장바구니 정보를 찾을 수 없습니다."));
         cartRepository.delete(cart);
     }
 
 
-    public List<CartResponseDto> getCartList(long memberId) {
+    public List<CartResponse> getCartList(long memberId) {
         return cartQueryRepository.findCartList(memberId);
     }
 }

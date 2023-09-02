@@ -1,7 +1,8 @@
 package shop.goodspia.goods.entity;
 
 import lombok.*;
-import shop.goodspia.goods.dto.goods.GoodsRequestDto;
+import shop.goodspia.goods.dto.goods.GoodsSaveRequest;
+import shop.goodspia.goods.dto.goods.GoodsUpdateRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,27 +37,27 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods")
     private final List<Design> designs = new ArrayList<>();
 
-    public static Goods createGoods(GoodsRequestDto goodsRequestDto, Artist artist) {
+    public static Goods createGoods(GoodsSaveRequest goodsSaveRequest, Artist artist) {
         return Goods.builder()
-                .name(goodsRequestDto.getName())
-                .summary(goodsRequestDto.getSummary())
-                .content(goodsRequestDto.getContent())
-                .category(goodsRequestDto.getCategory())
-                .thumbnail(goodsRequestDto.getThumbnail())
-                .price(goodsRequestDto.getPrice())
+                .name(goodsSaveRequest.getName())
+                .summary(goodsSaveRequest.getSummary())
+                .content(goodsSaveRequest.getContent())
+                .category(goodsSaveRequest.getCategory())
+                .thumbnail(goodsSaveRequest.getThumbnail())
+                .price(goodsSaveRequest.getPrice())
                 .isDeleted(0)
                 .artist(artist)
                 .build();
     }
 
     //굿즈 정보 갱신용 메서드
-    public void updateGoods(GoodsRequestDto goodsRequestDto) {
-        this.name = goodsRequestDto.getName();
-        this.summary = goodsRequestDto.getSummary();
-        this.content = goodsRequestDto.getContent();
-        this.category = goodsRequestDto.getCategory();
-        this.thumbnail = goodsRequestDto.getThumbnail();
-        this.price = goodsRequestDto.getPrice();
+    public void updateGoods(GoodsUpdateRequest goodsUpdateRequest) {
+        this.name = goodsUpdateRequest.getName();
+        this.summary = goodsUpdateRequest.getSummary();
+        this.content = goodsUpdateRequest.getContent();
+        this.category = goodsUpdateRequest.getCategory();
+        this.thumbnail = goodsUpdateRequest.getThumbnail();
+        this.price = goodsUpdateRequest.getPrice();
     }
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경

@@ -1,12 +1,12 @@
 package shop.goodspia.goods.service;
 
-import shop.goodspia.goods.dto.payment.PaymentPrepareRequestDto;
-import shop.goodspia.goods.dto.payment.PaymentPrepareResponseDto;
-import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.dto.payment.PaymentPrepareRequest;
+import shop.goodspia.goods.dto.payment.PaymentPrepareResponse;
+import shop.goodspia.goods.dto.payment.PaymentRequest;
 
 public interface PaymentAgentService {
 
-    PaymentPrepareResponseDto reservePayment(PaymentPrepareRequestDto paymentPrepareRequestDto)
+    PaymentPrepareResponse reservePayment(PaymentPrepareRequest paymentPrepareRequest)
             throws Exception;
-    PaymentRequestDto validatePayment(String paymentUid) throws Exception;
+    PaymentRequest validatePayment(String paymentUid) throws Exception;
 }

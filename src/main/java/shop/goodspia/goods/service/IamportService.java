@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-import shop.goodspia.goods.dto.payment.PaymentPrepareRequestDto;
-import shop.goodspia.goods.dto.payment.PaymentPrepareResponseDto;
-import shop.goodspia.goods.dto.payment.PaymentRequestDto;
+import shop.goodspia.goods.dto.payment.PaymentPrepareRequest;
+import shop.goodspia.goods.dto.payment.PaymentPrepareResponse;
+import shop.goodspia.goods.dto.payment.PaymentRequest;
 import shop.goodspia.goods.exception.PaymentValidationFailureException;
 import shop.goodspia.goods.repository.OrderQueryRepository;
 
@@ -34,18 +34,18 @@ public class IamportService implements PaymentAgentService {
     }
 
     @Override
-    public PaymentPrepareResponseDto reservePayment(PaymentPrepareRequestDto prepareDto)
+    public PaymentPrepareResponse reservePayment(PaymentPrepareRequest prepareDto)
             throws IamportResponseException, IOException {
 
         //아임포트 API로 주문번호과 결제금액 사전등록
         Prepare prepare = iamportClient.postPrepare(
-                new PrepareData(prepareDto.getMerchant_uid(), prepareDto.getAmount())).getResponse();
+                new PrepareData(prepareDto.getMerchantUid(), prepareDto.getAmount())).getResponse();
 
         return parsingToPaymentPrepareResponseDto(prepare);
     }
 
     @Override
-    public PaymentRequestDto validatePayment(String paymentUid) throws IamportResponseException, IOException {
+    public PaymentRequest validatePayment(String paymentUid) throws IamportResponseException, IOException {
         //DB에 저장된 결제 금액과 실제 결제 금액 비교
         Long totalPrice = orderQueryRepository.findTotalPrice(paymentUid);
         Payment payment = iamportClient.paymentByImpUid(paymentUid).getResponse();
@@ -55,12 +55,12 @@ public class IamportService implements PaymentAgentService {
 
         //사전등록된 결제 금액과 실제 결제 금액 비교
         Prepare prepare = iamportClient.getPrepare(payment.getMerchantUid()).getResponse();
-        PaymentPrepareResponseDto prepareDto = parsingToPaymentPrepareResponseDto(prepare);
+        PaymentPrepareResponse prepareDto = parsingToPaymentPrepareResponseDto(prepare);
         if (payment.getAmount().intValue() != prepareDto.getAmount()) {
             throw new PaymentValidationFailureException("사전등록된 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
         }
 
-        return PaymentRequestDto.builder()
+        return PaymentRequest.builder()
                 .paymentUid(payment.getImpUid())
                 .orderUid(payment.getMerchantUid())
                 .cardBank(payment.getBankCode())
@@ -70,8 +70,8 @@ public class IamportService implements PaymentAgentService {
     }
 
     //Prepare 객체를 PaymentPrepareResponseDto 객체로 파싱
-    private PaymentPrepareResponseDto parsingToPaymentPrepareResponseDto(Prepare prepare) {
+    private PaymentPrepareResponse parsingToPaymentPrepareResponseDto(Prepare prepare) {
         Gson gson = new Gson();
-        return gson.fromJson(gson.toJson(prepare), PaymentPrepareResponseDto.class);
+        return gson.fromJson(gson.toJson(prepare), PaymentPrepareResponse.class);
     }
 }

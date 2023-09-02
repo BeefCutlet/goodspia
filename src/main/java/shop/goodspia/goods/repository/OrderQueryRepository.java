@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import shop.goodspia.goods.dto.order.OrderReceivedResponseDto;
-import shop.goodspia.goods.dto.order.OrderResponseDto;
+import shop.goodspia.goods.dto.order.OrderReceivedResponse;
+import shop.goodspia.goods.dto.order.OrderResponse;
 import shop.goodspia.goods.entity.OrderGoods;
 import shop.goodspia.goods.entity.OrderStatus;
 import shop.goodspia.goods.entity.Orders;
@@ -64,9 +64,9 @@ public class OrderQueryRepository {
     }
 
     //아티스트가 받은 주문 목록 조회
-    public Page<OrderReceivedResponseDto> findArtistOrderGoodsList(Long artistId, Pageable pageable) {
-        List<OrderReceivedResponseDto> orderGoodsList = queryFactory
-                .select(Projections.fields(OrderReceivedResponseDto.class,
+    public Page<OrderReceivedResponse> findArtistOrderGoodsList(Long artistId, Pageable pageable) {
+        List<OrderReceivedResponse> orderGoodsList = queryFactory
+                .select(Projections.fields(OrderReceivedResponse.class,
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.designs.as("goodsDesign"),
@@ -100,9 +100,9 @@ public class OrderQueryRepository {
     }
 
     //회원이 주문 완료한 굿즈 목록
-    public Page<OrderResponseDto> findCompleteOrders(Long memberId, Pageable pageable) {
-        List<OrderResponseDto> orderList = queryFactory
-                .select(Projections.fields(OrderResponseDto.class,
+    public Page<OrderResponse> findCompleteOrders(Long memberId, Pageable pageable) {
+        List<OrderResponse> orderList = queryFactory
+                .select(Projections.fields(OrderResponse.class,
                         orderGoods.id.as("orderGoodsId"),
                         orderGoods.quantity.as("quantity"),
                         orderGoods.totalPrice.as("totalPrice"),

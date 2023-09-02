@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.dto.Response;
-import shop.goodspia.goods.dto.goods.GoodsDetailResponseDto;
-import shop.goodspia.goods.dto.goods.GoodsResponseDto;
+import shop.goodspia.goods.dto.goods.GoodsDetailResponse;
+import shop.goodspia.goods.dto.goods.GoodsResponse;
 import shop.goodspia.goods.service.GoodsService;
 
 @Slf4j
@@ -26,9 +26,9 @@ public class GoodsQueryController {
      * @return
      */
     @GetMapping("/list")
-    public Response<Page<GoodsResponseDto>> getGoodsList(@RequestParam(required = false) String category, Pageable pageable) {
+    public Response<Page<GoodsResponse>> getGoodsList(@RequestParam(required = false) String category, Pageable pageable) {
         log.info("전체 굿즈 리스트 조회, pageSize={}, pageNum={}", pageable.getPageSize(), pageable.getPageNumber());
-        Page<GoodsResponseDto> goodsList = goodsService.getGoodsList(pageable, category);
+        Page<GoodsResponse> goodsList = goodsService.getGoodsList(pageable, category);
         return Response.of(HttpStatus.OK.value(), "굿즈 리스트 조회 성공", goodsList);
     }
 
@@ -38,9 +38,9 @@ public class GoodsQueryController {
      * @return
      */
     @GetMapping("/detail/{goodsId}")
-    public Response<GoodsDetailResponseDto> getOneGoods(@PathVariable long goodsId) {
+    public Response<GoodsDetailResponse> getOneGoods(@PathVariable long goodsId) {
         log.info("굿즈 상세 정보 조회, goodsId={}", goodsId);
-        GoodsDetailResponseDto goods = goodsService.getGoods(goodsId);
+        GoodsDetailResponse goods = goodsService.getGoods(goodsId);
         return Response.of(HttpStatus.OK.value(), "굿즈 상세 정보 조회 성공", goods);
     }
 
@@ -51,9 +51,9 @@ public class GoodsQueryController {
      * @return
      */
     @GetMapping("/artist/{artistId}")
-    public Response<Page<GoodsResponseDto>> getArtistGoodsList(@PathVariable long artistId, Pageable pageable) {
+    public Response<Page<GoodsResponse>> getArtistGoodsList(@PathVariable long artistId, Pageable pageable) {
         log.info("아티스트가 제작한 굿즈 리스트 조회, artistId={}", artistId);
-        Page<GoodsResponseDto> artistGoodsList = goodsService.getArtistGoodsList(pageable, artistId);
+        Page<GoodsResponse> artistGoodsList = goodsService.getArtistGoodsList(pageable, artistId);
         return Response.of(HttpStatus.OK.value(), "제작된 굿즈 리스트 조회 성공", artistGoodsList);
     }
 }

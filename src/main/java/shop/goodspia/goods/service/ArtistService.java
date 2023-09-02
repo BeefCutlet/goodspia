@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.artist.ArtistRequestDto;
-import shop.goodspia.goods.dto.artist.ArtistResponseDto;
+import shop.goodspia.goods.dto.artist.ArtistSaveRequest;
+import shop.goodspia.goods.dto.artist.ArtistResponse;
+import shop.goodspia.goods.dto.artist.ArtistUpdateRequest;
 import shop.goodspia.goods.entity.Artist;
 import shop.goodspia.goods.entity.Member;
-import shop.goodspia.goods.exception.ArtistNotFoundException;
-import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.ArtistRepository;
 import shop.goodspia.goods.repository.MemberRepository;
 
@@ -27,23 +26,23 @@ public class ArtistService {
      * @param artistId
      * @return
      */
-    public ArtistResponseDto getArtistInfo(long artistId) {
+    public ArtistResponse getArtistInfo(long artistId) {
         Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new ArtistNotFoundException("Artist Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
 
-        return new ArtistResponseDto(artist);
+        return new ArtistResponse(artist);
     }
 
     /**
      * 아티스트 등록 메서드
      */
-    public Long registerArtist(Long memberId, ArtistRequestDto artistRequestDto) {
+    public Long registerArtist(Long memberId, ArtistSaveRequest artistSaveRequest) {
         //회원 정보에 아티스트 번호 저장
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         //아티스트 등록
-        Artist savedArtist = artistRepository.save(Artist.createArtist(artistRequestDto));
+        Artist savedArtist = artistRepository.save(Artist.createArtist(artistSaveRequest));
         //회원 정보에 아티스트 연관관계 추가
         member.registerArtist(savedArtist);
 
@@ -53,9 +52,9 @@ public class ArtistService {
     /**
      * 아티스트 정보 수정 메서드
      */
-    public void modifyArtist(ArtistRequestDto artistRequestDto) {
-        Artist artist = artistRepository.findById(artistRequestDto.getId())
-                .orElseThrow(() -> new ArtistNotFoundException("Artist Data Not Found"));
-        artist.updateArtist(artistRequestDto);
+    public void modifyArtist(ArtistUpdateRequest artistUpdateRequest) {
+        Artist artist = artistRepository.findById(artistUpdateRequest.getId())
+                .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
+        artist.updateArtist(artistUpdateRequest);
     }
 }

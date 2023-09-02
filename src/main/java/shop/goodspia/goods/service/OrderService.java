@@ -32,9 +32,9 @@ public class OrderService {
 
     /**
      * 주문 목록에 리스트 추가
-     * @param orderListRequestDto
+     * @param orderSaveListRequest
      */
-    public void addOrders(OrderListRequestDto orderListRequestDto, Long memberId) {
+    public void addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
 
@@ -46,16 +46,16 @@ public class OrderService {
         }
 
         List<OrderGoods> orderGoodsList = new ArrayList<>();
-        for (OrderRequestDto orderRequestDto : orderListRequestDto.getOrders()) {
-            Goods goods = goodsRepository.findById(orderRequestDto.getGoodsId())
+        for (OrderSaveRequest orderSaveRequest : orderSaveListRequest.getOrders()) {
+            Goods goods = goodsRepository.findById(orderSaveRequest.getGoodsId())
                     .orElseThrow(() -> new GoodsNotFoundException("Goods Data Not Found, try to find ID : "
-                            + orderRequestDto.getGoodsId()));
+                            + orderSaveRequest.getGoodsId()));
             OrderGoods orderGoods = OrderGoods
                     .createOrderGoods(
                             goods,
-                            orderRequestDto.getQuantity(),
-                            orderRequestDto.getTotalPrice(),
-                            orderRequestDto.getGoodsDesign());
+                            orderSaveRequest.getQuantity(),
+                            orderSaveRequest.getTotalPrice(),
+                            orderSaveRequest.getGoodsDesign());
             orderGoodsList.add(orderGoods);
         }
 
@@ -68,12 +68,12 @@ public class OrderService {
     }
 
     //현재 주문 목록 조회
-    public List<OrderResponseDto> getRequestedOrders(Long memberId) {
+    public List<OrderResponse> getRequestedOrders(Long memberId) {
         //아직 결제되지 않은 상품 리스트 조회
         List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId);
-        List<OrderResponseDto> orders = new ArrayList<>();
+        List<OrderResponse> orders = new ArrayList<>();
         for (OrderGoods readyOrder : readyOrders) {
-            OrderResponseDto order = new OrderResponseDto(readyOrder);
+            OrderResponse order = new OrderResponse(readyOrder);
             orders.add(order);
         }
 
@@ -81,8 +81,8 @@ public class OrderService {
     }
 
     //아티스트에게 들어온 주문 목록 조회
-    public Page<OrderReceivedResponseDto> getReceivedOrders(Long artistId, Pageable pageable) {
-        Page<OrderReceivedResponseDto> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
+    public Page<OrderReceivedResponse> getReceivedOrders(Long artistId, Pageable pageable) {
+        Page<OrderReceivedResponse> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
         if (orderGoods == null || !orderGoods.hasContent()) {
             throw new IllegalArgumentException("접수된 주문이 없습니다.");
         }
@@ -90,8 +90,8 @@ public class OrderService {
     }
 
     //회원이 주문했던 주문 목록
-    public Page<OrderResponseDto> getCompleteOrders(Long memberId, Pageable pageable) {
-        Page<OrderResponseDto> completeOrders = orderQueryRepository.findCompleteOrders(memberId, pageable);
+    public Page<OrderResponse> getCompleteOrders(Long memberId, Pageable pageable) {
+        Page<OrderResponse> completeOrders = orderQueryRepository.findCompleteOrders(memberId, pageable);
         if (completeOrders == null || !completeOrders.hasContent()) {
             throw new IllegalArgumentException("접수한 주문이 없습니다.");
         }
@@ -99,8 +99,8 @@ public class OrderService {
     }
 
     //회원이 주문했던 주문 (단건)
-    public OrderDetailResponseDto getOrderDetail(Long orderGoodsId) {
+    public OrderDetailResponse getOrderDetail(Long orderGoodsId) {
         OrderGoods orderDetail = orderQueryRepository.findOrderDetail(orderGoodsId);
-        return new OrderDetailResponseDto(orderDetail);
+        return new OrderDetailResponse(orderDetail);
     }
 }
