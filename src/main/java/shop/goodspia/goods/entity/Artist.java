@@ -2,7 +2,8 @@ package shop.goodspia.goods.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import shop.goodspia.goods.dto.artist.ArtistRequestDto;
+import shop.goodspia.goods.dto.artist.ArtistSaveRequest;
+import shop.goodspia.goods.dto.artist.ArtistUpdateRequest;
 
 import javax.persistence.*;
 
@@ -24,22 +25,22 @@ public class Artist extends BaseTimeEntity {
     private String accountNumber;
     private String phoneNumber;
 
-    public static Artist createArtist(ArtistRequestDto artistRequestDto) {
+    public static Artist createArtist(ArtistSaveRequest artistSaveRequest) {
         return Artist.builder()
-                .nickname(artistRequestDto.getNickname())
-                .profileImage(artistRequestDto.getProfileImage())
-                .accountBank(AccountBank.convertStringToBank(artistRequestDto.getAccountBank()))
-                .accountNumber(artistRequestDto.getAccountNumber())
-                .phoneNumber(artistRequestDto.getPhoneNumber())
+                .nickname(artistSaveRequest.getNickname())
+                .profileImage(artistSaveRequest.getProfileImage())
+                .accountBank(AccountBank.convertStringToBank(artistSaveRequest.getAccountBank()))
+                .accountNumber(artistSaveRequest.getAccountNumber())
+                .phoneNumber(artistSaveRequest.getPhoneNumber())
                 .build();
     }
 
-    public void updateArtist(ArtistRequestDto artistRequestDto) {
-        this.nickname = artistRequestDto.getNickname();
-        this.profileImage = artistRequestDto.getProfileImage();
-        this.accountBank = AccountBank.convertStringToBank(artistRequestDto.getAccountBank());
-        this.accountNumber = artistRequestDto.getAccountNumber();
-        this.phoneNumber = artistRequestDto.getPhoneNumber();
+    public void updateArtist(ArtistUpdateRequest artistUpdateRequest) {
+        this.nickname = artistUpdateRequest.getNickname();
+        this.profileImage = artistUpdateRequest.getProfileImage();
+        this.accountBank = AccountBank.convertStringToBank(artistUpdateRequest.getAccountBank());
+        this.accountNumber = artistUpdateRequest.getAccountNumber();
+        this.phoneNumber = artistUpdateRequest.getPhoneNumber();
     }
 
 }
