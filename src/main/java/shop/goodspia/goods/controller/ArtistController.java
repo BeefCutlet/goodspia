@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 
-@Tag(name = "아티스트 등록/수정 API")
+@Tag(name = "아티스트 등록/수정 API", description = "새로운 아티스트를 등록하거나 기존 아티스트의 정보를 수정하는 API")
 @Slf4j
 @RestController
 @RequestMapping("/artists")

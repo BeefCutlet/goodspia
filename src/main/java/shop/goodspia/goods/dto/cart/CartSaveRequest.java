@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@Schema(name = "장바구니 등록 굿즈 정보", description = "장바구니에 굿즈를 등록할 때 필요한 정보를 저장합니다.")
+@Schema(name = "장바구니 등록 굿즈 정보", description = "장바구니에 등록할 굿즈의 정보")
 @Getter @Setter
 public class CartSaveRequest {
 

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Schema(name = "굿즈 정보", description = "저장할 굿즈 정보")
+@Schema(name = "굿즈 정보", description = "아티스트가 새로 저장하는 굿즈 정보")
 @Getter @Setter
 public class GoodsSaveRequest {
 

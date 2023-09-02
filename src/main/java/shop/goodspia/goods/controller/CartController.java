@@ -12,7 +12,7 @@ import shop.goodspia.goods.service.CartService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-@Tag(name = "장바구니 등록/수정/삭제 API")
+@Tag(name = "장바구니 등록/수정/삭제 API", description = "장바구니에 새로운 굿즈를 등록 및 삭제, 수량을 수정하는 API")
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor

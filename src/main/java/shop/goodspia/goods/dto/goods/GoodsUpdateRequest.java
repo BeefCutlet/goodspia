@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Schema(name = "굿즈 정보", description = "수정할 굿즈 정보")
+@Schema(name = "굿즈 정보", description = "기존에 등록된 굿즈의 수정된 정보")
 @Getter @Setter
 public class GoodsUpdateRequest {
 

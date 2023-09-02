@@ -38,7 +38,7 @@ public class OrderController {
     @Operation(summary = "주문 등록 API", description = "새로운 주문을 등록하는 API")
     @PostMapping
     public ResponseEntity<?> addOrders(@Parameter(name = "주문 정보", description = "저장할 주문들의 정보") @RequestBody @Valid OrderSaveListRequest orderList,
-                                                 @RequestHeader("Authorization") String authorization) {
+                                       @RequestHeader("Authorization") String authorization) {
 
         orderService.addOrders(orderList, 2L);
         return ResponseEntity.created(URI.create(baseUrl + "")).build();
