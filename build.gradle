@@ -57,9 +57,9 @@ dependencies {
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 	//OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-	//Swagger
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	//Swagger-springdoc
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.7.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
