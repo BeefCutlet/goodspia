@@ -1,18 +1,21 @@
 package shop.goodspia.goods.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shop.goodspia.goods.dto.Response;
-import shop.goodspia.goods.dto.UrlResponse;
-import shop.goodspia.goods.dto.order.OrderListRequestDto;
+import shop.goodspia.goods.dto.order.OrderSaveListRequest;
 import shop.goodspia.goods.service.OrderService;
 
 import javax.validation.Valid;
+import java.net.URI;
 
+@Tag(name = "주문 등록/삭제 API", description = "새로운 주문을 등록, 기존의 주문을 삭제 처리하는 API")
 @Slf4j
 @RestController
 @RequestMapping("/orders")
@@ -32,12 +35,13 @@ public class OrderController {
      * @param authorization
      * @return 주문 목록 페이지로 이동 URL
      */
+    @Operation(summary = "주문 등록 API", description = "새로운 주문을 등록하는 API")
     @PostMapping
-    public Response<UrlResponse> addOrders(@RequestBody @Valid OrderListRequestDto orderList,
-                                           @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<?> addOrders(@Parameter(name = "주문 정보", description = "저장할 주문들의 정보") @RequestBody @Valid OrderSaveListRequest orderList,
+                                                 @RequestHeader("Authorization") String authorization) {
 
         orderService.addOrders(orderList, 2L);
-        return Response.of(HttpStatus.OK.value(), "", UrlResponse.of(baseUrl));
+        return ResponseEntity.created(URI.create(baseUrl + "")).build();
     }
 
     /**
@@ -45,9 +49,10 @@ public class OrderController {
      * @param orderGoodsId
      * @return
      */
+    @Operation(summary = "주문 삭제 API", description = "기존의 주문을 삭제 처리하는 API")
     @DeleteMapping("/{orderGoodsId}")
-    public Response<?> deleteOrder(@PathVariable Long orderGoodsId) {
+    public ResponseEntity<String> deleteOrder(@Parameter(name = "주문 번호", description = "삭제 처리할 주문의 번호") @PathVariable Long orderGoodsId) {
         orderService.removeOrder(orderGoodsId);
-        return Response.of(HttpStatus.OK.value(), "SUCCESS", null);
+        return ResponseEntity.ok("");
     }
 }

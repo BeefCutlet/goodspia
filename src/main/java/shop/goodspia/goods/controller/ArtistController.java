@@ -1,16 +1,29 @@
 package shop.goodspia.goods.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import shop.goodspia.goods.dto.artist.ArtistRequestDto;
+import shop.goodspia.goods.dto.artist.ArtistSaveRequest;
+import shop.goodspia.goods.dto.artist.ArtistUpdateRequest;
 import shop.goodspia.goods.service.ArtistService;
 import shop.goodspia.goods.util.ImageUpload;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 
+@Tag(name = "아티스트 등록/수정 API")
 @Slf4j
 @RestController
 @RequestMapping("/artists")
@@ -19,35 +32,55 @@ public class ArtistController {
 
     private final ArtistService artistService;
 
+    @Value("${base-url}")
+    private String baseUrl;
+
     /**
      * 아티스트 등록 API
-     * @param artistRequestDto
+     * @param artist
      * @return
      */
-    @PostMapping
-    public String register(@RequestPart @Valid ArtistRequestDto artistRequestDto,
-                           @RequestPart(required = false) MultipartFile profile,
-                           HttpSession session) {
+    @Operation(summary = "아티스트 등록 API", description = "새로운 아티스트 정보를 저장하는 API")
+    @ApiResponses(
+            @ApiResponse(responseCode = "200", description = "등록 후 생성될 자원의 URL", content = @Content(schema = @Schema(implementation = String.class)))
+    )
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> register(@Parameter(name = "아티스트 정보", required = true)
+                                      @RequestPart @Valid ArtistSaveRequest artist,
+                                      @Parameter(name = "프로필 이미지")
+                                      @RequestPart(required = false) MultipartFile profile,
+                                      @Parameter(hidden = true) HttpSession session) {
+        //아티스트의 프로필 이미지 저장
         String profileImageName = ImageUpload.uploadImage(profile);
-        artistRequestDto.setProfileImage(profileImageName);
+        artist.setProfileImage(profileImageName);
+
+        //현재 로그인 중인 회원 확인
         Long memberId = (Long) session.getAttribute("memberId");
-        artistService.registerArtist(memberId, artistRequestDto);
-        return "";
+        //현재 로그인 중인 회원을 아티스트로 등록
+        artistService.registerArtist(memberId, artist);
+        return ResponseEntity.created(URI.create(baseUrl + memberId)).build();
     }
 
     /**
      * 아티스트 정보 수정 API
-     * @param artistRequestDto
+     * @param artist
      * @return 이동할 페이지 URL
      */
-    @PatchMapping("/{artistId}")
-    public String modify(@PathVariable Long artistId,
-                         @RequestPart @Valid ArtistRequestDto artistRequestDto,
-                         @RequestPart(required = false) MultipartFile profile) {
+    @Operation(summary = "아티스트 정보 수정 API", description = "현재 아티스트의 정보를 수정하는 API")
+    @ApiResponses(
+            @ApiResponse(responseCode = "200", description = "아티스트 정보 수정 후 자원의 URL")
+    )
+    @PatchMapping(value = "/{artistId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> modify(@Parameter(name = "아티스트 번호", description = "정보를 수정할 아티스트의 번호") @PathVariable Long artistId,
+                         @Parameter(name = "아티스트 정보", description = "수정할 아티스트의 정보") @RequestPart @Valid ArtistUpdateRequest artist,
+                         @Parameter(name = "프로필 이미지", description = "수정할 아티스트의 프로필 이미지") @RequestPart(required = false) MultipartFile profile) {
+        //아티스트의 프로필 이미지 저장(갱신)
         String profileImageName = ImageUpload.uploadImage(profile);
-        artistRequestDto.setProfileImage(profileImageName);
-        artistRequestDto.setId(artistId);
-        artistService.modifyArtist(artistRequestDto);
-        return "";
+        artist.setProfileImage(profileImageName);
+        artist.setId(artistId);
+
+        //아티스트의 정보 수정
+        artistService.modifyArtist(artist);
+        return ResponseEntity.created(URI.create(baseUrl)).build();
     }
 }
