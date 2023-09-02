@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.dto.member.MemberRequestDto;
 import shop.goodspia.goods.entity.Member;
-import shop.goodspia.goods.exception.MemberNotFoundException;
 import shop.goodspia.goods.repository.MemberRepository;
 
 @Slf4j
@@ -33,7 +32,7 @@ public class MemberService {
      */
     public void modifyMemberInfo(MemberRequestDto memberRequestDto) {
         Member member = memberRepository.findById(memberRequestDto.getId())
-                .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
         member.updateMember(memberRequestDto);
     }
 
@@ -44,6 +43,6 @@ public class MemberService {
      */
     public Member getMemberInfo(long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
     }
 }
