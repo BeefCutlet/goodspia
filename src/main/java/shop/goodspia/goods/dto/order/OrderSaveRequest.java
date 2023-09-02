@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
-public class OrderRequestDto {
+public class OrderSaveRequest {
 
     @NotNull
     @Min(1)

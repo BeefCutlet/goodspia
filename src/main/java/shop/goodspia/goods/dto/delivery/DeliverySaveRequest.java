@@ -8,7 +8,7 @@ import javax.persistence.Enumerated;
 
 @Getter
 @Builder
-public class DeliveryRequestDto {
+public class DeliverySaveRequest {
 
     private String deliveryNumber;
     private String zipcode;

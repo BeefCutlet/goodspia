@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
-public class PaymentPrepareRequestDto {
+public class PaymentPrepareRequest {
 
     @NotBlank
     private String merchantUid; //주문 번호

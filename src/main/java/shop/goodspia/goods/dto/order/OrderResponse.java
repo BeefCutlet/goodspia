@@ -4,7 +4,7 @@ import lombok.Getter;
 import shop.goodspia.goods.entity.OrderGoods;
 
 @Getter
-public class OrderResponseDto {
+public class OrderResponse {
 
     private Long ordersGoodsId;
     private int quantity;
@@ -15,7 +15,7 @@ public class OrderResponseDto {
     private String goodsImage;
     private String goodsDesign;
 
-    public OrderResponseDto(OrderGoods orderGoods) {
+    public OrderResponse(OrderGoods orderGoods) {
         this.ordersGoodsId = orderGoods.getId();
         this.quantity = orderGoods.getQuantity();
         this.totalPrice = orderGoods.getTotalPrice();

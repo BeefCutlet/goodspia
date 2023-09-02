@@ -8,7 +8,7 @@ import shop.goodspia.goods.entity.OrderGoods;
 import java.time.LocalDateTime;
 
 @Getter
-public class OrderDetailResponseDto {
+public class OrderDetailResponse {
 
     private String orderUid;
     private LocalDateTime createdTime;
@@ -20,7 +20,7 @@ public class OrderDetailResponseDto {
     private DeliveryStatus deliveryStatus;
     private Address deliveryAddress;
 
-    public OrderDetailResponseDto(OrderGoods orderGoods) {
+    public OrderDetailResponse(OrderGoods orderGoods) {
         this.orderUid = orderGoods.getOrders().getOrderUid();
         this.createdTime = orderGoods.getOrders().getCreatedTime();
         this.goodsId = orderGoods.getGoods().getId();

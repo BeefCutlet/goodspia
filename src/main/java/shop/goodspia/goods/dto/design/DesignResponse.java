@@ -3,11 +3,11 @@ package shop.goodspia.goods.dto.design;
 import lombok.Getter;
 
 @Getter
-public class DesignResponseDto {
+public class DesignResponse {
 
     private String designName;
 
-    public DesignResponseDto(String designName) {
+    public DesignResponse(String designName) {
         this.designName = designName;
     }
 }

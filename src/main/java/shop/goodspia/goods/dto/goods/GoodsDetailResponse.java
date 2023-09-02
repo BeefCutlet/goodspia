@@ -1,14 +1,14 @@
 package shop.goodspia.goods.dto.goods;
 
 import lombok.Getter;
-import shop.goodspia.goods.dto.design.DesignResponseDto;
+import shop.goodspia.goods.dto.design.DesignResponse;
 import shop.goodspia.goods.entity.Goods;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class GoodsDetailResponseDto {
+public class GoodsDetailResponse {
 
     private Long goodsId;
     private String name;
@@ -18,9 +18,9 @@ public class GoodsDetailResponseDto {
     private String category;
     private int price;
     private String artistName;
-    private List<DesignResponseDto> goodsDesigns;
+    private List<DesignResponse> goodsDesigns;
 
-    public GoodsDetailResponseDto(Goods goods) {
+    public GoodsDetailResponse(Goods goods) {
         this.goodsId = goods.getId();
         this.name = goods.getName();
         this.summary = goods.getSummary();
@@ -30,7 +30,7 @@ public class GoodsDetailResponseDto {
         this.price = goods.getPrice();
         this.artistName = goods.getArtist().getNickname();
         this.goodsDesigns = goods.getDesigns().stream().map(
-                design -> new DesignResponseDto(design.getDesignName())
+                design -> new DesignResponse(design.getDesignName())
         ).collect(Collectors.toList());
     }
 }

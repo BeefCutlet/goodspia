@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder
-public class PaymentRequestDto {
+public class PaymentRequest {
 
     @NotBlank
     private String paymentUid;

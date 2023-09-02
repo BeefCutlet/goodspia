@@ -5,7 +5,7 @@ import shop.goodspia.goods.entity.AccountBank;
 import shop.goodspia.goods.entity.Artist;
 
 @Getter
-public class ArtistResponseDto {
+public class ArtistResponse {
 
     private String profileImage;
     private String nickname;
@@ -13,7 +13,7 @@ public class ArtistResponseDto {
     private AccountBank accountBank;
     private String accountNumber;
 
-    public ArtistResponseDto(Artist artist) {
+    public ArtistResponse(Artist artist) {
         this.profileImage = artist.getProfileImage();
         this.nickname = artist.getNickname();
         this.phoneNumber = artist.getPhoneNumber();

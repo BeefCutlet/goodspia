@@ -6,7 +6,7 @@ import shop.goodspia.goods.entity.Address;
 
 @Getter
 @Builder
-public class OrderReceivedResponseDto {
+public class OrderReceivedResponse {
 
     private Long goodsId;
     private String goodsName;

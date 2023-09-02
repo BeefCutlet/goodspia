@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PaymentPrepareResponseDto {
+public class PaymentPrepareResponse {
 
     private String merchant_uid;
     private int amount;
