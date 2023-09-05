@@ -38,11 +38,11 @@ public class MemberService {
 
     /**
      * 단일 회원 정보 조회용 메서드
-     * @param memberId
+     * @param email
      * @return
      */
-    public Member getMemberInfo(long memberId) {
-        return memberRepository.findById(memberId)
+    public Member getMemberInfo(String email) {
+        return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
     }
 }
