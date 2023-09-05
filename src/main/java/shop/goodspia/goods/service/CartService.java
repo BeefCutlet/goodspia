@@ -46,7 +46,7 @@ public class CartService {
     /**
      * 장바구니 개수 변경용 메서드
      */
-    public void changeQuantity(long cartId, int quantity) {
+    public void changeQuantity(Long cartId, int quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니 정보를 찾을 수 없습니다."));
         cart.changeQuantity(quantity);
@@ -55,14 +55,14 @@ public class CartService {
     /**
      * 장바구니 목록 삭제용 메서드
      */
-    public void deleteCart(long cartId) {
+    public void deleteCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니 정보를 찾을 수 없습니다."));
         cartRepository.delete(cart);
     }
 
 
-    public List<CartResponse> getCartList(long memberId) {
+    public List<CartResponse> getCartList(Long memberId) {
         return cartQueryRepository.findCartList(memberId);
     }
 }
