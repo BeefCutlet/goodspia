@@ -36,7 +36,7 @@ public class OrderService {
      */
     public void addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("Member Data Not Found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         //회원의 결제되지 않은 주문이 존재하는지 조회
         Orders readyOrder = orderQueryRepository.findReadyOrderUid(memberId);
@@ -48,7 +48,7 @@ public class OrderService {
         List<OrderGoods> orderGoodsList = new ArrayList<>();
         for (OrderSaveRequest orderSaveRequest : orderSaveListRequest.getOrders()) {
             Goods goods = goodsRepository.findById(orderSaveRequest.getGoodsId())
-                    .orElseThrow(() -> new GoodsNotFoundException("Goods Data Not Found, try to find ID : "
+                    .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다. : "
                             + orderSaveRequest.getGoodsId()));
             OrderGoods orderGoods = OrderGoods
                     .createOrderGoods(
@@ -84,7 +84,7 @@ public class OrderService {
     public Page<OrderReceivedResponse> getReceivedOrders(Long artistId, Pageable pageable) {
         Page<OrderReceivedResponse> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
         if (orderGoods == null || !orderGoods.hasContent()) {
-            throw new IllegalArgumentException("접수된 주문이 없습니다.");
+            throw new IllegalArgumentException("주문 정보를 찾을 수 없습니다.");
         }
         return orderGoods;
     }
