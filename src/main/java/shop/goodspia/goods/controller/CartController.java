@@ -28,8 +28,7 @@ public class CartController {
      */
     @Operation(summary = "장바구니 등록 API", description = "장바구니에 새로운 굿즈를 담는 API")
     @PostMapping("/add")
-    public String addCart(@Parameter(name = "장바구니 정보", required = true)
-                          @RequestBody @Valid CartSaveRequest cart,
+    public String addCart(@Parameter(name = "장바구니 정보", required = true) @RequestBody @Valid CartSaveRequest cart,
                           @Parameter(hidden = true) HttpSession session) {
         Long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
         cart.setMemberId(memberId);
@@ -45,8 +44,8 @@ public class CartController {
      */
     @Operation(summary = "장바구니 수량 수정 API", description = "장바구니에 담긴 굿즈의 수량을 수정하는 API")
     @PatchMapping("/fluctuate/{cartId}")
-    public String fluctuateQuantity(@Parameter(name = "장바구니 번호", description = "수정할 장바구니 굿즈의 번호") @PathVariable Long cartId,
-                                    @Parameter(name = "굿즈 수량", description = "수정될 굿즈 수량") @RequestParam Integer quantity) {
+    public String fluctuateQuantity(@Parameter(description = "수정할 장바구니 굿즈의 번호") @PathVariable Long cartId,
+                                    @Parameter(description = "수정될 굿즈 수량") @RequestParam Integer quantity) {
         cartService.changeQuantity(cartId, quantity);
         return "";
     }
@@ -58,7 +57,7 @@ public class CartController {
      */
     @Operation(summary = "장바구니 굿즈 삭제 API", description = "장바구니에 담긴 굿즈를 삭제하는 API")
     @DeleteMapping("/delete/{cartId}")
-    public String deleteCart(@Parameter(name = "장바구니 번호", example = "123") @PathVariable Long cartId) {
+    public String deleteCart(@Parameter(description = "삭제처리할 장바구니 번호", example = "123") @PathVariable Long cartId) {
         cartService.deleteCart(cartId);
         return "";
     }

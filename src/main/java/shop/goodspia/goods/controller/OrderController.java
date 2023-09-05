@@ -51,7 +51,7 @@ public class OrderController {
      */
     @Operation(summary = "주문 삭제 API", description = "기존의 주문을 삭제 처리하는 API")
     @DeleteMapping("/{orderGoodsId}")
-    public ResponseEntity<String> deleteOrder(@Parameter(name = "주문 번호", description = "삭제 처리할 주문의 번호") @PathVariable Long orderGoodsId) {
+    public ResponseEntity<String> deleteOrder(@Parameter(description = "삭제 처리할 주문의 번호") @PathVariable Long orderGoodsId) {
         orderService.removeOrder(orderGoodsId);
         return ResponseEntity.ok("");
     }
