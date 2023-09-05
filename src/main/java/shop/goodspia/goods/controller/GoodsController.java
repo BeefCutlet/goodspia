@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shop.goodspia.goods.dto.goods.GoodsSaveRequest;
@@ -33,7 +34,7 @@ public class GoodsController {
      * @return 이동할 URL 반환 - 아티스트 페이지
      */
     @Operation(summary = "굿즈 등록 API", description = "새로운 굿즈를 등록하는 API")
-    @PostMapping("/add")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String addGoods(@Parameter(name = "굿즈 정보", description = "등록할 굿즈 정보") @RequestPart @Valid GoodsSaveRequest goods,
                            @Parameter(name = "썸네일 이미지", description = "등록할 굿즈 썸네일 이미지") @RequestPart MultipartFile thumbnail,
                            @Parameter(hidden = true) HttpSession session) {
@@ -49,14 +50,14 @@ public class GoodsController {
 
     /**
      * 굿즈 설명에 들어가는 이미지를 저장하는 API
-     * @param detailImage
+     * @param contentImage
      * @return 저장된 이미지 URL
      */
     @Operation(summary = "굿즈 이미지 저장 API", description = "굿즈 내용에 들어가는 이미지를 저장하는 API")
-    @PostMapping("/save/image")
-    public String savePicture(@Parameter(name = "굿즈 내용 이미지", description = "굿즈 내용에 들어가는 이미지") @RequestPart MultipartFile detailImage) {
+    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String savePicture(@Parameter(name = "굿즈 내용 이미지", description = "굿즈 내용에 들어가는 이미지") @RequestPart MultipartFile contentImage) {
         //이미지 업로드 후 이미지 URL 반환
-        return ImageUpload.uploadImage(detailImage);
+        return ImageUpload.uploadImage(contentImage);
     }
 
     /**
@@ -66,8 +67,8 @@ public class GoodsController {
      * @return
      */
     @Operation(summary = "굿즈 수정 API", description = "기존에 등록한 굿즈의 정보를 수정하는 API")
-    @PatchMapping("/modify/{goodsId}")
-    public String modifyDetails(@Parameter(name = "굿즈 번호", description = "수정할 굿즈의 번호") @PathVariable Long goodsId,
+    @PatchMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String modifyDetails(@Parameter(description = "수정할 굿즈의 번호") @PathVariable Long goodsId,
                                 @Parameter(name = "굿즈 정보", description = "수정할 굿즈 정보") @RequestPart GoodsUpdateRequest goods,
                                 @Parameter(name = "굿즈 썸네일 이미지", description = "굿즈의 수정된 썸네일 이미지") @RequestPart MultipartFile thumbnail) {
         //굿즈 썸네일 저장
@@ -86,8 +87,8 @@ public class GoodsController {
      * @return
      */
     @Operation(summary = "굿즈 삭제 API", description = "등록한 굿즈를 삭제 처리하는 API")
-    @PatchMapping("/delete/{goodsId}")
-    public String delete(@Parameter(name = "굿즈 번호", description = "삭제 처리할 굿즈의 번호") @PathVariable Long goodsId) {
+    @PatchMapping("/remove/{goodsId}")
+    public String delete(@Parameter(description = "삭제 처리할 굿즈의 번호") @PathVariable Long goodsId) {
         goodsService.delete(goodsId);
         return "";
     }
