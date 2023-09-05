@@ -2,6 +2,7 @@ package shop.goodspia.goods;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.entity.*;
@@ -27,6 +28,7 @@ public class SampleData {
     static class Sample {
 
         private final EntityManager em;
+        private final PasswordEncoder passwordEncoder;
 
         public void sampleInit() {
             Artist artist = Artist.builder()
@@ -41,7 +43,7 @@ public class SampleData {
             Member member = Member.builder()
                     .nickname("MemberNickname")
                     .email("MemberEmail")
-                    .password("MemberPassword")
+                    .password(passwordEncoder.encode("MemberPassword"))
                     .artist(artist)
                     .build();
             em.persist(member);
