@@ -31,6 +31,12 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
+                .authorizeRequests()
+                .antMatchers("/login", "/login/**").permitAll()
+                .antMatchers("/goods/list", "/goods/detail/*").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler())
@@ -45,6 +51,7 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtUtil);
     }
 
+    //비밀번호 인코더
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
