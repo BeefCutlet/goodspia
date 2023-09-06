@@ -7,6 +7,7 @@ build/
 application.yml
 application.properties
 secret.properties
+jwt.properties
 
 ### STS ###
 .apt_generated
