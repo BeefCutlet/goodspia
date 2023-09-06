@@ -8,6 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import shop.goodspia.goods.security.dto.TokenName;
 
 import java.security.Key;
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -44,10 +46,10 @@ public class JwtUtil implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public String createAccessToken(String subject, Map<String, Long> claims) {
+    public String createAccessToken(Map<String, Long> claims) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(subject)
+                .setSubject(TokenName.ACCESS_TOKEN.name())
                 .setClaims(claims)
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
@@ -55,10 +57,11 @@ public class JwtUtil implements InitializingBean {
                 .compact();
     }
 
-    public String createRefreshToken(String subject) {
+    public String createRefreshToken(Map<String, Long> claims) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(subject)
+                .setSubject(TokenName.REFRESH_TOKEN.name())
+                .setClaims(claims)
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Date.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.HOURS)))
@@ -73,29 +76,25 @@ public class JwtUtil implements InitializingBean {
                 .getBody();
     }
 
+    //토큰 유효성 검사 메서드
     public boolean validateToken(String token) {
         try {
-            Jwt<Header, Claims> jwt = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
-            Header header = jwt.getHeader();
-            Claims claims = jwt.getBody();
-            //설정된 만료 시각이 현재 시각보다 이전(만료됨)이라면 예외 발생
-            if (claims.getExpiration().before(new Date())) {
-                throw new ExpiredJwtException(
-                        header,
-                        claims,
-                        "만료된 JWT 토큰입니다. 토큰 ID : " + claims.getId() + ", 토큰 이름 : " + claims.getSubject());
-            }
-
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
             return true;
         } catch (SecurityException | MalformedJwtException exception) {
             log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    public Map<String, Long> createClaims(Long memberId, Long artistId) {
+        Map<String, Long> claims = new HashMap<>();
+        claims.put("memberId", memberId);
+        claims.put("artistId", artistId);
+        return claims;
     }
 }
