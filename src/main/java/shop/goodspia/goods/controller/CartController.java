@@ -27,7 +27,7 @@ public class CartController {
      * @return
      */
     @Operation(summary = "장바구니 등록 API", description = "장바구니에 새로운 굿즈를 담는 API")
-    @PostMapping("/add")
+    @PostMapping
     public String addCart(@Parameter(name = "장바구니 정보", required = true) @RequestBody @Valid CartSaveRequest cart,
                           @Parameter(hidden = true) HttpSession session) {
         Long memberId = ((SessionUser) session.getAttribute("sessionUser")).getMemberId();
