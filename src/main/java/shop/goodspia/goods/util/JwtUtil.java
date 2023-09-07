@@ -7,17 +7,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import shop.goodspia.goods.security.dto.TokenName;
 
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -43,58 +46,72 @@ public class JwtUtil implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public String createAccessToken(Map<String, Long> claims) {
+    public String createAccessToken(Claims claims) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(TokenName.ACCESS_TOKEN.name())
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuer(issuer)
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Date.from(Instant.now().plus(accessTokenExpiration, ChronoUnit.HOURS)))
+                .setIssuedAt(Timestamp.from(Instant.now()))
+                .setExpiration(Timestamp.from(Instant.now().plus(accessTokenExpiration, ChronoUnit.SECONDS)))
                 .compact();
     }
 
-    public String createRefreshToken(Map<String, Long> claims) {
+    public String createRefreshToken(Claims claims) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(TokenName.REFRESH_TOKEN.name())
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuer(issuer)
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.HOURS)))
+                .setIssuedAt(Timestamp.from(Instant.now()))
+                .setExpiration(Timestamp.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.SECONDS)))
                 .compact();
     }
 
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes())
+                .setSigningKey(key)
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
     //토큰 유효성 검사 메서드
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
+            log.info("try to validate token={}", token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            log.info("token validate success, token={}", token);
             return true;
-        } catch (SecurityException | MalformedJwtException exception) {
+        } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
+            e.printStackTrace();
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
+            e.printStackTrace();
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+            e.printStackTrace();
         }
         return false;
     }
 
-    public Map<String, Long> createClaims(Long memberId, Long artistId) {
-        Map<String, Long> claims = new HashMap<>();
-        claims.put("memberId", memberId);
+    public Claims createClaims(String subject, String email, Long artistId) {
+        Claims claims = Jwts.claims();
+        claims.setSubject(subject);
+        claims.put("email", email);
         claims.put("artistId", artistId);
         return claims;
+    }
+
+    public Authentication getAuthenticationToken(String accessToken) {
+        Claims claims = getClaims(accessToken);
+        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new UsernamePasswordAuthenticationToken(
+                new User((String) claims.get("email"), accessToken, authorities), accessToken, authorities);
     }
 }
