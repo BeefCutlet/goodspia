@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,14 +38,18 @@ public class AuthController {
         }
 
         ////RefreshToken 생성 - Cookie로 전달
-        String refreshToken = jwtUtil.createRefreshToken(jwtUtil.createClaims(member.getId(), member.getArtist().getId()));
+        String refreshToken = jwtUtil.createRefreshToken(jwtUtil.createClaims(
+                TokenName.REFRESH_TOKEN.tokenName,
+                member.getEmail(), member.getArtist().getId()));
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
                 .build();
 
         ////AccessToken 생성 - Body로 전달
-        String accessToken = jwtUtil.createAccessToken(jwtUtil.createClaims(member.getId(), member.getArtist().getId()));
+        String accessToken = jwtUtil.createAccessToken(jwtUtil.createClaims(
+                TokenName.ACCESS_TOKEN.tokenName,
+                member.getEmail(), member.getArtist().getId()));
 
         //바디 설정 - AccessToken
         AuthResponse authResponse = new AuthResponse(accessToken);
@@ -59,5 +62,10 @@ public class AuthController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(authResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("");
     }
 }
