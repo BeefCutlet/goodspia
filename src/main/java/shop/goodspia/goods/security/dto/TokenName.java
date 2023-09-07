@@ -4,9 +4,9 @@ public enum TokenName {
     ACCESS_TOKEN("AccessToken"),
     REFRESH_TOKEN("RefreshToken");
 
-    private final String name;
+    public final String tokenName;
 
-    TokenName(String name) {
-        this.name = name;
+    TokenName(String tokenName) {
+        this.tokenName = tokenName;
     }
 }
