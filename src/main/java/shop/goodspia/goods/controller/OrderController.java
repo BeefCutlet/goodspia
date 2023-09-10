@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.dto.order.OrderSaveListRequest;
 import shop.goodspia.goods.service.OrderService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -32,16 +33,17 @@ public class OrderController {
      * DB에 주문 정보 저장
      * 굿즈 상세페이지의 결제하기 버튼, 장바구니의 결제하기 버튼 클릭 시 동작
      * @param orderList
-     * @param authorization
+     * @param request
      * @return 주문 목록 페이지로 이동 URL
      */
-    @Operation(summary = "주문 등록 API", description = "새로운 주문을 등록하는 API")
+    @Operation(summary = "주문 등록 API", description = "현재 접속 중인 회원으로 주문 정보가 등록됩니다.")
     @PostMapping
-    public ResponseEntity<?> addOrders(@Parameter(name = "주문 정보", description = "저장할 주문들의 정보") @RequestBody @Valid OrderSaveListRequest orderList,
-                                       @RequestHeader("Authorization") String authorization) {
-
-        orderService.addOrders(orderList, 2L);
-        return ResponseEntity.created(URI.create(baseUrl + "")).build();
+    public ResponseEntity<?> addOrders(@Parameter(name = "주문 정보", description = "저장할 주문들의 정보")
+                                       @RequestBody @Valid OrderSaveListRequest orderList,
+                                       @Parameter(hidden = true) HttpServletRequest request) {
+        Long memberId = (Long) request.getAttribute("memberId");
+        orderService.addOrders(orderList, memberId);
+        return ResponseEntity.created(URI.create(baseUrl)).build();
     }
 
     /**
