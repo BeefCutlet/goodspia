@@ -40,7 +40,7 @@ public class AuthController {
         ////RefreshToken 생성 - Cookie로 전달
         String refreshToken = jwtUtil.createRefreshToken(jwtUtil.createClaims(
                 TokenName.REFRESH_TOKEN.tokenName,
-                member.getEmail(), member.getArtist().getId()));
+                member.getEmail(), member.getId(), member.getArtist().getId()));
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -49,7 +49,7 @@ public class AuthController {
         ////AccessToken 생성 - Body로 전달
         String accessToken = jwtUtil.createAccessToken(jwtUtil.createClaims(
                 TokenName.ACCESS_TOKEN.tokenName,
-                member.getEmail(), member.getArtist().getId()));
+                member.getEmail(), member.getId(), member.getArtist().getId()));
 
         //바디 설정 - AccessToken
         AuthResponse authResponse = new AuthResponse(accessToken);
