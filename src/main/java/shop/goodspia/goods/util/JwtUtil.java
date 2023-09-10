@@ -99,10 +99,11 @@ public class JwtUtil implements InitializingBean {
         return false;
     }
 
-    public Claims createClaims(String subject, String email, Long artistId) {
+    public Claims createClaims(String subject, String email, Long memberId, Long artistId) {
         Claims claims = Jwts.claims();
         claims.setSubject(subject);
         claims.put("email", email);
+        claims.put("memberId", memberId);
         claims.put("artistId", artistId);
         return claims;
     }

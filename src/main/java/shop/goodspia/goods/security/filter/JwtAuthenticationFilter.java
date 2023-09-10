@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Date;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -51,9 +50,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else {
             //Access 토큰 만료 여부 체크
             if (!jwtUtil.getClaims(accessToken).getExpiration().before(Timestamp.from(Instant.now()))) {
-                log.info("exp={}", jwtUtil.getClaims(accessToken).getExpiration());
+                Claims claims = jwtUtil.getClaims(accessToken);
+                log.info("exp={}", claims.getExpiration());
                 //Access 토큰이 만료되지 않았을 경우, 정상 진행
                 setAuthenticationToContext(accessToken);
+                //Claim으로 저장된 회원 이메일과 아티스트 번호를 요청에 추가
+                setClaimsToRequest(request, claims);
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -80,9 +82,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //Refresh 토큰 검증이 끝났다면, Access 토큰 재발행
             //Claim 생성
             String email = claims.get("email", String.class);
+            Long memberId = claims.get("memberId", Long.class);
             Long artistId = claims.get("artistId", Long.class);
             //Access 토큰 생성
-            String remakeAccessToken = jwtUtil.createAccessToken(jwtUtil.createClaims(TokenName.ACCESS_TOKEN.name(), email, artistId));
+            String remakeAccessToken = jwtUtil.createAccessToken(
+                    jwtUtil.createClaims(TokenName.ACCESS_TOKEN.name(), email, memberId, artistId));
             Gson gson = new Gson();
             //Access 토큰 재발행
             response.getWriter().write(gson.toJson(new AuthResponse(remakeAccessToken)));
@@ -109,9 +113,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return token.split("=")[1].split(";")[0];
     }
 
+    //Authentication 객체 생성 후 SecurityContextHolder에 저장
     private void setAuthenticationToContext(String accessToken) {
         Authentication authentication = jwtUtil.getAuthenticationToken(accessToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("Access 토큰 검증 완료");
+    }
+
+    //요청에 커스텀 Claim 추가
+    private void setClaimsToRequest(HttpServletRequest request, Claims claims) {
+        request.setAttribute("email", claims.get("email", String.class));
+        request.setAttribute("memberId", claims.get("memberId", Long.class));
+        request.setAttribute("artistId", claims.get("artistId", Long.class));
     }
 }
