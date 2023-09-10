@@ -18,8 +18,9 @@ import shop.goodspia.goods.dto.artist.ArtistSaveRequest;
 import shop.goodspia.goods.dto.artist.ArtistUpdateRequest;
 import shop.goodspia.goods.service.ArtistService;
 import shop.goodspia.goods.util.ImageUpload;
+import shop.goodspia.goods.util.JwtUtil;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -44,21 +45,22 @@ public class ArtistController {
     @ApiResponses(
             @ApiResponse(responseCode = "200", description = "등록 후 생성될 자원의 URL", content = @Content(schema = @Schema(implementation = String.class)))
     )
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<?> register(@Parameter(name = "아티스트 정보", required = true)
                                       @RequestPart @Valid ArtistSaveRequest artist,
                                       @Parameter(name = "프로필 이미지")
                                       @RequestPart(required = false) MultipartFile profile,
-                                      @Parameter(hidden = true) HttpSession session) {
+                                      @Parameter(hidden = true) HttpServletRequest request) {
         //아티스트의 프로필 이미지 저장
         String profileImageName = ImageUpload.uploadImage(profile);
         artist.setProfileImage(profileImageName);
 
         //현재 로그인 중인 회원 확인
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId = (Long) request.getAttribute("memberId");
+
         //현재 로그인 중인 회원을 아티스트로 등록
         artistService.registerArtist(memberId, artist);
-        return ResponseEntity.created(URI.create(baseUrl + memberId)).build();
+        return ResponseEntity.created(URI.create(baseUrl)).build();
     }
 
     /**

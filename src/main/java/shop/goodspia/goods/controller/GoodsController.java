@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shop.goodspia.goods.dto.goods.GoodsSaveRequest;
 import shop.goodspia.goods.dto.goods.GoodsUpdateRequest;
-import shop.goodspia.goods.security.dto.SessionUser;
 import shop.goodspia.goods.service.GoodsService;
 import shop.goodspia.goods.util.ImageUpload;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Tag(name = "굿즈 등록/수정/삭제 API", description = "새로운 굿즈를 등록, 등록된 굿즈 정보를 수정, 등록했던 굿즈를 삭제하여 보이지 않도록 수정하는 API")
@@ -37,14 +36,14 @@ public class GoodsController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String addGoods(@Parameter(name = "굿즈 정보", description = "등록할 굿즈 정보") @RequestPart @Valid GoodsSaveRequest goods,
                            @Parameter(name = "썸네일 이미지", description = "등록할 굿즈 썸네일 이미지") @RequestPart MultipartFile thumbnail,
-                           @Parameter(hidden = true) HttpSession session) {
+                           @Parameter(hidden = true) HttpServletRequest request) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
         String imageUrl = ImageUpload.uploadImage(thumbnail);
         goods.setThumbnail(imageUrl);
 
         //세션에서 아티스트 아이디 반환
-        Long id = ((SessionUser) session.getAttribute("sessionUser")).getArtistId();
-        goodsService.addGoods(id, goods);
+        Long artistId = (Long) request.getAttribute("artistId");
+        goodsService.addGoods(artistId, goods);
         return "";
     }
 
