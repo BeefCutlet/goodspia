@@ -4,8 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class ImageUpload {
@@ -13,8 +11,7 @@ public class ImageUpload {
     private static final String OBJECT_PATH = "profile-image";
 
     public static String uploadImage(MultipartFile multipartFile) {
-        String filename = UUID.randomUUID().toString()
-                + URLEncoder.encode(multipartFile.getOriginalFilename(), StandardCharsets.UTF_8);
+        String filename = UUID.randomUUID().toString().substring(0, 8) + "-" + multipartFile.getOriginalFilename();
 
         //로컬에 파일 저장
         String localFilePath = System.getProperty("user.home") + "/" + OBJECT_PATH;
