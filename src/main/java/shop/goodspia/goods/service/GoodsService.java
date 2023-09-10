@@ -33,7 +33,7 @@ public class GoodsService {
      * @param goodsSaveRequest
      * @return
      */
-    public Long addGoods(long artistId, GoodsSaveRequest goodsSaveRequest) {
+    public Long addGoods(Long artistId, GoodsSaveRequest goodsSaveRequest) {
         //회원 조회 - 아티스트 등록 여부 파악용
         return artistRepository.findById(artistId).map(
                 artist -> {
