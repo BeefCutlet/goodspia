@@ -26,7 +26,7 @@ public class ArtistService {
      * @param artistId
      * @return
      */
-    public ArtistResponse getArtistInfo(long artistId) {
+    public ArtistResponse getArtistInfo(Long artistId) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
 
