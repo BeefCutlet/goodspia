@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import shop.goodspia.goods.entity.Address;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class OrderReceivedResponse {
@@ -13,7 +15,7 @@ public class OrderReceivedResponse {
     private String goodsDesign;
     private int goodsPrice;
     private String memberNickname;
-    private String paymentTime;
+    private LocalDateTime paymentTime;
     private int quantity;
     private int totalPrice;
     private Address address;
