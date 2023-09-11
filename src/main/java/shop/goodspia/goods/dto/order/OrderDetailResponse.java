@@ -16,9 +16,6 @@ public class OrderDetailResponse {
     private String goodsName;
     private String goodsSummary;
     private String goodsImage;
-    private String deliveryNumber;
-    private DeliveryStatus deliveryStatus;
-    private Address deliveryAddress;
 
     public OrderDetailResponse(OrderGoods orderGoods) {
         this.orderUid = orderGoods.getOrders().getOrderUid();
@@ -27,8 +24,5 @@ public class OrderDetailResponse {
         this.goodsName = orderGoods.getGoods().getName();
         this.goodsSummary = orderGoods.getGoods().getSummary();
         this.goodsImage = orderGoods.getGoods().getThumbnail();
-        this.deliveryNumber = orderGoods.getOrders().getDelivery().getDeliveryNumber();
-        this.deliveryStatus = orderGoods.getOrders().getDelivery().getDeliveryStatus();
-        this.deliveryAddress = orderGoods.getOrders().getDelivery().getAddress();
     }
 }
