@@ -69,13 +69,13 @@ public class OrderQueryRepository {
                 .select(Projections.fields(OrderReceivedResponse.class,
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
-                        goods.designs.as("goodsDesign"),
                         goods.price.as("goodsPrice"),
                         orders.member.nickname.as("memberNickname"),
                         payments.createdTime.as("paymentTime"),
+                        orderGoods.goodsDesign.as("goodsDesign"),
                         orderGoods.quantity.as("quantity"),
-                        orderGoods.totalPrice.as("totalPrice"),
-                        orderGoods.orders.delivery.address.as("address")
+                        orderGoods.totalPrice.as("totalPrice")
+//                        orderGoods.orders.delivery.address.as("address")
                 ))
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
@@ -106,16 +106,16 @@ public class OrderQueryRepository {
                         orderGoods.id.as("orderGoodsId"),
                         orderGoods.quantity.as("quantity"),
                         orderGoods.totalPrice.as("totalPrice"),
+                        orderGoods.goodsDesign.as("goodsDesign"),
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.price.as("goodsPrice"),
-                        goods.thumbnail.as("goodsImage"),
-                        goods.designs.as("goodsDesign")
+                        goods.thumbnail.as("goodsImage")
                 ))
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders.member, member)
-                .where(member.id.eq(memberId) , orders.orderStatus.eq(OrderStatus.COMPLETE))
+                .where(member.id.eq(memberId), orderGoods.orders.orderStatus.eq(OrderStatus.COMPLETE))
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
@@ -135,7 +135,6 @@ public class OrderQueryRepository {
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
-                .join(orderGoods.orders.delivery, delivery)
                 .where(orderGoods.id.eq(orderGoodsId))
                 .fetchOne();
     }
