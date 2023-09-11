@@ -30,7 +30,6 @@ public class GoodsSaveRequest {
     private String category;
 
     @Schema(description = "굿즈 이미지")
-    @NotBlank
     private String thumbnail;
 
     @Schema(description = "굿즈 가격")
