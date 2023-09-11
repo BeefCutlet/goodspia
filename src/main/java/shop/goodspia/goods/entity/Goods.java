@@ -62,7 +62,7 @@ public class Goods extends BaseTimeEntity {
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경
     public void delete() {
-        this.isDeleted = 0;
+        this.isDeleted = 1;
         this.deletedTime = LocalDateTime.now();
     }
 }
