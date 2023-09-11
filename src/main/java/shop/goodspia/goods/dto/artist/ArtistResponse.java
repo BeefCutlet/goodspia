@@ -14,7 +14,7 @@ public class ArtistResponse {
     private String accountNumber;
 
     public ArtistResponse(Artist artist) {
-        this.profileImage = artist.getProfileImage();
+        this.profileImage = artist.getProfileImage().split("-")[1];
         this.nickname = artist.getNickname();
         this.phoneNumber = artist.getPhoneNumber();
         this.accountBank = artist.getAccountBank();
