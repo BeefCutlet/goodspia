@@ -1,7 +1,11 @@
 package shop.goodspia.goods.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import shop.goodspia.goods.dto.cart.CartResponse;
 
@@ -21,8 +25,8 @@ public class CartQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<CartResponse> findCartList(long memberId) {
-        return queryFactory
+    public Page<CartResponse> findCartList(Long memberId, Pageable pageable) {
+        List<CartResponse> cartList = queryFactory
                 .select(Projections.bean(CartResponse.class,
                         cart.quantity.as("quantity"),
                         cart.goods.name.as("goodsName"),
@@ -34,7 +38,18 @@ public class CartQueryRepository {
                 .join(cart.goods, goods)
                 .join(cart.design, design)
                 .where(cart.member.id.eq(memberId))
+                .orderBy(cart.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
+        JPAQuery<Long> countQuery = queryFactory
+                .select(cart.count())
+                .from(cart)
+                .join(cart.goods, goods)
+                .join(cart.design, design)
+                .where(cart.member.id.eq(memberId));
+
+        return PageableExecutionUtils.getPage(cartList, pageable, countQuery::fetchOne);
     }
 }
