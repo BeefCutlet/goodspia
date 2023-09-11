@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Schema(name = "아티스트 정보", description = "기존 아티스트 정보를 갱신할 때 전달할 아티스트 정보")
@@ -14,7 +13,6 @@ import javax.validation.constraints.Pattern;
 public class ArtistUpdateRequest {
 
     @Schema(description = "아티스트 번호", example = "123")
-    @NotNull
     private Long id;
 
     @Schema(description = "아티스트용 닉네임", example = "아티스트 닉네임")
