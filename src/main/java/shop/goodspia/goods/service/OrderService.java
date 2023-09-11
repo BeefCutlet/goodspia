@@ -101,6 +101,9 @@ public class OrderService {
     //회원이 주문했던 주문 (단건)
     public OrderDetailResponse getOrderDetail(Long orderGoodsId) {
         OrderGoods orderDetail = orderQueryRepository.findOrderDetail(orderGoodsId);
+        if (orderDetail == null) {
+            throw new IllegalArgumentException("굿즈 정보가 존재하지 않습니다.");
+        }
         return new OrderDetailResponse(orderDetail);
     }
 }
