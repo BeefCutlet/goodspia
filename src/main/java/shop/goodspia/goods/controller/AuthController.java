@@ -28,7 +28,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    @Operation(summary = "비밀번호 로그인 API", description = "아이디와 비밀번호를 전달하면 인증 후 Access 토큰과 Refresh 토큰을 생성하는 API")
+    @Operation(summary = "비밀번호 로그인 API", description = "아이디와 비밀번호를 전달하면 인증 후 Access 토큰과 Refresh 토큰을 생성합니다.")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest userInfo) {
         //회원 정보 검색 - 아이디 일치 여부 체크
@@ -41,6 +41,7 @@ public class AuthController {
         String refreshToken = jwtUtil.createRefreshToken(jwtUtil.createClaims(
                 TokenName.REFRESH_TOKEN.tokenName,
                 member.getEmail(), member.getId(), member.getArtist().getId()));
+        //쿠키 생성
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -66,6 +67,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
+
         return ResponseEntity.ok("");
     }
 }
