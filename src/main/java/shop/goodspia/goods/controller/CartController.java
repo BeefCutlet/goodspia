@@ -30,8 +30,7 @@ public class CartController {
     public String addCart(@Parameter(name = "장바구니 정보", required = true) @RequestBody @Valid CartSaveRequest cart,
                           @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-        cart.setMemberId(memberId);
-        cartService.addCart(cart);
+        cartService.addCart(memberId, cart);
         return "";
     }
 
