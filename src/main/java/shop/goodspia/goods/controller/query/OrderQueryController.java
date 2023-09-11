@@ -34,6 +34,7 @@ public class OrderQueryController {
      * @param request
      * @return
      */
+    @Operation(summary = "현재 접속 중인 회원이 등록 및 미결제 상태의 주문 목록 조회 API")
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrderList(@Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
@@ -47,8 +48,7 @@ public class OrderQueryController {
      * @param request
      * @return
      */
-    @Operation(summary = "아티스트의 주문 목록 조회 API",
-            description = "현재 접속 중인 아티스트에게 접수된 주문 목록을 조회합니다. pageSize와 pageNum을 파라미터로 설정합니다.")
+    @Operation(summary = "현재 접속 중인 아티스트에게 접수된 주문 목록 조회 API", description = "page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/artist")
     public ResponseEntity<Page<OrderReceivedResponse>> getArtistOrderList(@Parameter(hidden = true) Pageable pageable,
                                                                           @Parameter(hidden = true) HttpServletRequest request) {
@@ -60,15 +60,15 @@ public class OrderQueryController {
     /**
      * 회원이 주문한 주문 리스트 조회
      * @param pageable
-     * @param session
+     * @param request
      * @return
      */
-    @Operation(summary = "회원이 주문한 주문 목록 조회 API", description = "현재 접속 중인 회원이 등록한 주문 목록을 조회합니다. pageSize와 pageNum을 파라미터로 설정합니다.")
+    @Operation(summary = "현재 접속 중인 회원이 주문한 주문 목록 조회 API", description = "page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/member")
     public ResponseEntity<Page<OrderResponse>> getOrderCompleteList(@Parameter(hidden = true) Pageable pageable,
-                                                                    @Parameter(hidden = true) HttpSession session) {
-        SessionUser user = (SessionUser) session.getAttribute("user");
-        Page<OrderResponse> completeOrders = orderService.getCompleteOrders(user.getMemberId(), pageable);
+                                                                    @Parameter(hidden = true) HttpServletRequest request) {
+        Long memberId = (Long) request.getAttribute("memberId");
+        Page<OrderResponse> completeOrders = orderService.getCompleteOrders(memberId, pageable);
         return ResponseEntity.ok(completeOrders);
     }
 
@@ -79,7 +79,7 @@ public class OrderQueryController {
      */
     @Operation(summary = "회원이 주문한 주문 상세 정보 조회 API", description = "주문 상품의 번호를 파라미터로 설정합니다.")
     @GetMapping("/detail/{orderGoodsId}")
-    public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable Long orderGoodsId) {
+    public ResponseEntity<OrderDetailResponse> getOrderDetail(@Parameter(description = "상품 주문 번호") @PathVariable Long orderGoodsId) {
         OrderDetailResponse orderDetail = orderService.getOrderDetail(orderGoodsId);
         return ResponseEntity.ok(orderDetail);
     }
