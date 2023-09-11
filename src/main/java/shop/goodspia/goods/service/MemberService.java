@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.member.MemberRequestDto;
+import shop.goodspia.goods.dto.member.MemberSaveRequest;
+import shop.goodspia.goods.dto.member.MemberUpdateRequest;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.repository.MemberRepository;
 
@@ -18,22 +19,22 @@ public class MemberService {
 
     /**
      * 회원 정보 저장
-     * @param memberRequestDto
+     * @param memberSaveRequest
      * @return
      */
-    public Long saveMember(MemberRequestDto memberRequestDto) {
-        Member member = Member.createMember(memberRequestDto);
+    public Long saveMember(MemberSaveRequest memberSaveRequest) {
+        Member member = Member.createMember(memberSaveRequest);
         return memberRepository.save(member).getId();
     }
 
     /**
      * 회원 정보 수정
-     * @param memberRequestDto
+     * @param memberUpdateRequest
      */
-    public void modifyMemberInfo(MemberRequestDto memberRequestDto) {
-        Member member = memberRepository.findById(memberRequestDto.getId())
+    public void modifyMemberInfo(MemberUpdateRequest memberUpdateRequest) {
+        Member member = memberRepository.findById(memberUpdateRequest.getId())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
-        member.updateMember(memberRequestDto);
+        member.updateMember(memberUpdateRequest);
     }
 
     /**
