@@ -1,17 +1,17 @@
 package shop.goodspia.goods.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.dto.cart.CartSaveRequest;
 import shop.goodspia.goods.dto.cart.CartResponse;
+import shop.goodspia.goods.dto.cart.CartSaveRequest;
 import shop.goodspia.goods.entity.Cart;
 import shop.goodspia.goods.entity.Design;
 import shop.goodspia.goods.entity.Goods;
 import shop.goodspia.goods.entity.Member;
 import shop.goodspia.goods.repository.*;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +29,8 @@ public class CartService {
      * @param cartSaveRequest
      * @return
      */
-    public Long addCart(CartSaveRequest cartSaveRequest) {
-        Member member = memberRepository.findById(cartSaveRequest.getMemberId())
+    public Long addCart(Long memberId, CartSaveRequest cartSaveRequest) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         Goods goods = goodsRepository.findById(cartSaveRequest.getGoodsId())
@@ -62,7 +62,7 @@ public class CartService {
     }
 
 
-    public List<CartResponse> getCartList(Long memberId) {
-        return cartQueryRepository.findCartList(memberId);
+    public Page<CartResponse> getCartList(Long memberId, Pageable pageable) {
+        return cartQueryRepository.findCartList(memberId, pageable);
     }
 }
