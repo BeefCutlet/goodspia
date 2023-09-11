@@ -52,9 +52,9 @@ public class GoodsService {
      * 굿즈 정보 수정용 메서드
      * @param goodsUpdateRequest
      */
-    public void modifyGoods(GoodsUpdateRequest goodsUpdateRequest) {
+    public void modifyGoods(Long goodsId, GoodsUpdateRequest goodsUpdateRequest) {
         //굿즈 엔티티 조회
-        Goods goods = goodsRepository.findById(goodsUpdateRequest.getId())
+        Goods goods = goodsRepository.findById(goodsId)
                 .orElseThrow(() -> new IllegalArgumentException("수정할 굿즈 정보를 찾을 수 없습니다."));
 
         //굿즈 정보 수정
@@ -64,7 +64,7 @@ public class GoodsService {
     /**
      * 굿즈 삭제 메서드 - 상태 변경
      */
-    public void delete(long goodsId) {
+    public void delete(Long goodsId) {
         //굿즈 엔티티 조회
         Goods goods = goodsRepository.findById(goodsId)
                 .orElseThrow(() -> new IllegalArgumentException("삭제할 굿즈 정보를 찾을 수 없습니다."));
