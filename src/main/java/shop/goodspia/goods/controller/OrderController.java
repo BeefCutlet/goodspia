@@ -38,7 +38,7 @@ public class OrderController {
      */
     @Operation(summary = "주문 등록 API", description = "현재 접속 중인 회원으로 주문 정보가 등록됩니다.")
     @PostMapping
-    public ResponseEntity<?> addOrders(@Parameter(name = "주문 정보", description = "저장할 주문들의 정보")
+    public ResponseEntity<?> addOrders(@Parameter(name = "현재 접속 중인 회원으로 주문 정보 등록 API")
                                        @RequestBody @Valid OrderSaveListRequest orderList,
                                        @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
@@ -51,10 +51,10 @@ public class OrderController {
      * @param orderGoodsId
      * @return
      */
-    @Operation(summary = "주문 삭제 API", description = "기존의 주문을 삭제 처리하는 API")
+    @Operation(summary = "주문 삭제 API", description = "기존의 주문을 삭제 처리합니다.")
     @DeleteMapping("/{orderGoodsId}")
     public ResponseEntity<String> deleteOrder(@Parameter(description = "삭제 처리할 주문의 번호") @PathVariable Long orderGoodsId) {
         orderService.removeOrder(orderGoodsId);
-        return ResponseEntity.ok("");
+        return ResponseEntity.noContent().build();
     }
 }
