@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,6 @@ import shop.goodspia.goods.dto.artist.ArtistSaveRequest;
 import shop.goodspia.goods.dto.artist.ArtistUpdateRequest;
 import shop.goodspia.goods.service.ArtistService;
 import shop.goodspia.goods.util.ImageUpload;
-import shop.goodspia.goods.util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -52,8 +50,10 @@ public class ArtistController {
                                       @RequestPart(required = false) MultipartFile profile,
                                       @Parameter(hidden = true) HttpServletRequest request) {
         //아티스트의 프로필 이미지 저장
-        String profileImageName = ImageUpload.uploadImage(profile);
-        artist.setProfileImage(profileImageName);
+        if (profile != null) {
+            String profileImageName = ImageUpload.uploadImage(profile);
+            artist.setProfileImage(profileImageName);
+        }
 
         //현재 로그인 중인 회원 확인
         Long memberId = (Long) request.getAttribute("memberId");
@@ -72,7 +72,7 @@ public class ArtistController {
     @ApiResponses(
             @ApiResponse(responseCode = "200", description = "아티스트 정보 수정 후 자원의 URL")
     )
-    @PatchMapping(value = "/{artistId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/{artistId}")
     public ResponseEntity<?> modify(@Parameter(name = "아티스트 번호", description = "정보를 수정할 아티스트의 번호") @PathVariable Long artistId,
                          @Parameter(name = "아티스트 정보", description = "수정할 아티스트의 정보") @RequestPart @Valid ArtistUpdateRequest artist,
                          @Parameter(name = "프로필 이미지", description = "수정할 아티스트의 프로필 이미지") @RequestPart(required = false) MultipartFile profile) {
