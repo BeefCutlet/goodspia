@@ -13,10 +13,6 @@ import java.util.List;
 @Getter @Setter
 public class GoodsUpdateRequest {
 
-    @Schema(description = "굿즈 번호")
-    @NotNull
-    private Long id;
-
     @Schema(description = "굿즈 이름")
     @NotBlank
     private String name;
@@ -34,7 +30,6 @@ public class GoodsUpdateRequest {
     private String category;
 
     @Schema(description = "굿즈 이미지")
-    @NotBlank
     private String thumbnail;
 
     @Schema(description = "굿즈 가격")
