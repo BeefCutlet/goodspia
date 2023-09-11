@@ -28,7 +28,7 @@ public class GoodsQueryController {
      * @param pageable
      * @return
      */
-    @Operation(summary = "굿즈 목록 조회 API", description = "굿즈 목록을 조회하는 API. pageSize와 pageNum을 쿼리스트링으로 설정해야 합니다.")
+    @Operation(summary = "굿즈 목록 조회 API", description = "굿즈 카테고리와 page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/list")
     public ResponseEntity<Page<GoodsResponse>> getGoodsList(@Parameter(name = "굿즈 카테고리", description = "굿즈 검색 시 카테고리를 선택했다면 설정")
                                                             @RequestParam(required = false) String category,
@@ -43,7 +43,7 @@ public class GoodsQueryController {
      * @param goodsId
      * @return
      */
-    @Operation(summary = "굿즈 단건 조회 API", description = "굿즈 상세 정보를 조회하기 위한 단건 조회 API")
+    @Operation(summary = "굿즈 상세 정보 조회 API", description = "조회할 굿즈의 번호를 파라미터로 설정합니다.")
     @GetMapping("/detail/{goodsId}")
     public ResponseEntity<GoodsDetailResponse> getOneGoods(@Parameter(name = "굿즈 번호") @PathVariable Long goodsId) {
         log.info("굿즈 상세 정보 조회, goodsId={}", goodsId);
@@ -57,8 +57,8 @@ public class GoodsQueryController {
      * @param pageable
      * @return
      */
-    @Operation(summary = "굿즈 목록 조회 API",
-            description = "아티스트가 제작한 굿즈 목록을 조회하는 API. 조회할 아티스트의 번호를 파라미터로 주어야 합니다. pageSize와 pageNum을 쿼리스트링으로 설정해야 합니다.")
+    @Operation(summary = "아티스트가 제작한 굿즈 목록 조회 API",
+            description = "조회할 아티스트의 번호를 파라미터로 설정합니다. page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/artist/{artistId}")
     public ResponseEntity<Page<GoodsResponse>> getArtistGoodsList(@Parameter(name = "아티스트 번호") @PathVariable Long artistId,
                                                                   @Parameter(hidden = true) Pageable pageable) {
