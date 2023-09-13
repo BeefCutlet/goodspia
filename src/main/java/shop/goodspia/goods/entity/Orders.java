@@ -36,8 +36,7 @@ public class Orders extends BaseTimeEntity {
     @JoinColumn(name = "payments_id")
     private Payments payments;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "delivery_id")
+    @OneToOne(mappedBy = "orders")
     private Delivery delivery;
 
     //주문 생성
@@ -68,11 +67,5 @@ public class Orders extends BaseTimeEntity {
     public void addPayments(Payments payments) {
         this.payments = payments;
         payments.addOrder(this);
-    }
-
-    //배달 생성 후 연결
-    public void addDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        delivery.addDelivery(this);
     }
 }
