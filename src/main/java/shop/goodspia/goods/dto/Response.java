@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(staticName = "of")
 public class Response<T> {
 
-    private final int code;
     private final String message;
     private final T data;
 }
