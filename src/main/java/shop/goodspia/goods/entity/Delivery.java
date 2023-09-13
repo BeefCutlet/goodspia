@@ -20,21 +20,24 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne
+    @JoinColumn(name = "orders_id")
     private Orders orders;
 
-    public static Delivery createDelivery(DeliverySaveRequest deliverySaveRequest) {
+    public static Delivery createDelivery(DeliverySaveRequest deliverySaveRequest, Orders order) {
         return Delivery.builder()
                 .deliveryNumber(deliverySaveRequest.getDeliveryNumber())
                 .address(new Address(
                         deliverySaveRequest.getZipcode(),
                         deliverySaveRequest.getAddressDistrict(),
                         deliverySaveRequest.getAddressDetail()))
-                .deliveryStatus(DeliveryStatus.DELIVERY_READY)
+                .deliveryStatus(DeliveryStatus.PRODUCT_READY)
+                .orders(order)
                 .build();
     }
 
-    public void addDelivery(Orders orders) {
-        this.orders = orders;
+    //배송 상태 변경용 메서드
+    public void changeDeliveryStatus(DeliveryStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 }
