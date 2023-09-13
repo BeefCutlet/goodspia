@@ -45,7 +45,7 @@ public class MemberController {
      * @return
      */
     @Operation(summary = "회원 정보 수정 API", description = "회원의 비밀번호, 닉네임을 수정할 수 있습니다.")
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<?> modifyMember(@Parameter(name = "회원 정보", description = "수정될 회원의 정보")
                                @RequestBody MemberUpdateRequest memberInfo,
                                @Parameter(hidden = true) HttpServletRequest request) {

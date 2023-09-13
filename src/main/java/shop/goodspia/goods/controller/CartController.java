@@ -41,7 +41,7 @@ public class CartController {
      * @return
      */
     @Operation(summary = "장바구니 수량 수정 API", description = "장바구니에 담긴 굿즈의 수량을 수정하는 API")
-    @PatchMapping("/fluctuate/{cartId}")
+    @PutMapping("/fluctuate/{cartId}")
     public String fluctuateQuantity(@Parameter(description = "수정할 장바구니 굿즈의 번호") @PathVariable Long cartId,
                                     @Parameter(description = "수정될 굿즈 수량") @RequestParam Integer quantity) {
         cartService.changeQuantity(cartId, quantity);

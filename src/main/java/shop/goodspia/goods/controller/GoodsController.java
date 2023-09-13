@@ -73,7 +73,7 @@ public class GoodsController {
      * @return
      */
     @Operation(summary = "굿즈 수정 API", description = "기존에 등록한 굿즈의 정보를 수정하는 API")
-    @PatchMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> modifyDetails(@Parameter(description = "수정할 굿즈의 번호") @PathVariable Long goodsId,
                                 @Parameter(name = "굿즈 정보", description = "수정할 굿즈 정보") @RequestPart GoodsUpdateRequest goods,
                                 @Parameter(name = "굿즈 썸네일 이미지", description = "굿즈의 수정된 썸네일 이미지") @RequestPart MultipartFile thumbnail) {
@@ -92,7 +92,7 @@ public class GoodsController {
      * @return
      */
     @Operation(summary = "굿즈 삭제 API", description = "등록한 굿즈를 삭제 처리하는 API")
-    @PatchMapping("/remove/{goodsId}")
+    @PutMapping("/remove/{goodsId}")
     public ResponseEntity<?> delete(@Parameter(description = "삭제 처리할 굿즈의 번호") @PathVariable Long goodsId) {
         goodsService.delete(goodsId);
         return ResponseEntity.noContent().build();

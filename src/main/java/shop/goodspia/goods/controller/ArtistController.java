@@ -72,17 +72,16 @@ public class ArtistController {
     @ApiResponses(
             @ApiResponse(responseCode = "200", description = "아티스트 정보 수정 후 자원의 URL")
     )
-    @PatchMapping(value = "/{artistId}")
+    @PutMapping(value = "/{artistId}")
     public ResponseEntity<?> modify(@Parameter(name = "아티스트 번호", description = "정보를 수정할 아티스트의 번호") @PathVariable Long artistId,
                          @Parameter(name = "아티스트 정보", description = "수정할 아티스트의 정보") @RequestPart @Valid ArtistUpdateRequest artist,
                          @Parameter(name = "프로필 이미지", description = "수정할 아티스트의 프로필 이미지") @RequestPart(required = false) MultipartFile profile) {
         //아티스트의 프로필 이미지 저장(갱신)
         String profileImageName = ImageUpload.uploadImage(profile);
         artist.setProfileImage(profileImageName);
-        artist.setId(artistId);
 
         //아티스트의 정보 수정
-        artistService.modifyArtist(artist);
+        artistService.modifyArtist(artistId, artist);
         return ResponseEntity.created(URI.create(baseUrl)).build();
     }
 }
