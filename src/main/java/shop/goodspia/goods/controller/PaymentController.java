@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.dto.UrlResponse;
+import shop.goodspia.goods.dto.delivery.DeliverySaveRequest;
 import shop.goodspia.goods.dto.payment.PaymentPrepareRequest;
 import shop.goodspia.goods.dto.payment.PaymentPrepareResponse;
 import shop.goodspia.goods.dto.payment.PaymentRequest;
@@ -40,8 +41,7 @@ public class PaymentController {
     @Operation(summary = "결제 사전검증 API", description = "결제 진행 전 결제되어야 할 금액을 미리 저장합니다.")
     @PostMapping("/reservation")
     public ResponseEntity<PaymentPrepareResponse> reservePayment(@Parameter(description = "추후 검증을 위해 사전에 등록할 결제 정보")
-                                                                 @RequestBody @Valid PaymentPrepareRequest preparePaymentInfo)
-            throws Exception {
+                                                                 @RequestBody @Valid PaymentPrepareRequest preparePaymentInfo) throws Exception {
         PaymentPrepareResponse paymentPrepareResponse = paymentAgentService.reservePayment(preparePaymentInfo);
 
         return ResponseEntity.ok(paymentPrepareResponse);
@@ -55,10 +55,14 @@ public class PaymentController {
      */
     @Operation(summary = "결제 검증 API", description = "결제되어야 할 금액과 실제 결제된 금액이 일치하는지 유효성 검사를 합니다.")
     @PostMapping("/validation/{paymentUid}")
-    public ResponseEntity<UrlResponse> validatePayment(@Parameter(description = "결제 API 에서 결제 처리 후 생성된 결제 UID")
+    public ResponseEntity<UrlResponse> validatePayment(@Parameter(description = "배송지 정보")
+                                                       @RequestBody DeliverySaveRequest deliverySaveRequest,
+                                                       @Parameter(description = "결제 API 에서 결제 처리 후 생성된 결제 UID")
                                                        @PathVariable String paymentUid) throws Exception {
+        //결제 정보 검증
         PaymentRequest paymentRequest = paymentAgentService.validatePayment(paymentUid);
-        paymentService.addPayment(paymentRequest);
+        //검증 완료 시 결제 정보 및 배송지 정보를 DB에 저장
+        paymentService.addPaymentAndDelivery(paymentRequest, deliverySaveRequest);
 
         return ResponseEntity.created(URI.create(baseUrl)).build();
     }

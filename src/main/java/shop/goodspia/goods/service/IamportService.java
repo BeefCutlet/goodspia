@@ -17,6 +17,7 @@ import shop.goodspia.goods.exception.PaymentValidationFailureException;
 import shop.goodspia.goods.repository.OrderQueryRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @Slf4j
 @Service
@@ -39,7 +40,7 @@ public class IamportService implements PaymentAgentService {
 
         //아임포트 API로 주문번호과 결제금액 사전등록
         Prepare prepare = iamportClient.postPrepare(
-                new PrepareData(prepareDto.getMerchantUid(), prepareDto.getAmount())).getResponse();
+                new PrepareData(prepareDto.getMerchantUid(), BigDecimal.valueOf(prepareDto.getAmount()))).getResponse();
 
         return parsingToPaymentPrepareResponseDto(prepare);
     }
