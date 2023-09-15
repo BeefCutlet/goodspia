@@ -14,7 +14,7 @@ public class PaymentExceptionHandler {
 
     @ExceptionHandler(PaymentValidationFailureException.class)
     public Response<?> validationFailure(PaymentValidationFailureException e) {
-        return Response.of(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);
+        return Response.of(e.getMessage(), null);
     }
 
 }
