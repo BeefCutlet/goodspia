@@ -16,11 +16,11 @@ public class OrderExceptionHandler {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<Response<?>> emptyResultEx() {
-        return ResponseEntity.ok(Response.of(HttpStatus.OK.value(), "요청한 데이터가 존재하지 않습니다.", null));
+        return ResponseEntity.ok(Response.of("요청한 데이터가 존재하지 않습니다.", null));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Response<?>> dataNotFound(IllegalArgumentException e) {
-        return ResponseEntity.ok(Response.of(HttpStatus.OK.value(), e.getMessage(), null));
+        return ResponseEntity.ok(Response.of(e.getMessage(), null));
     }
 }
