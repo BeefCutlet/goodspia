@@ -2,10 +2,8 @@ package shop.goodspia.goods.dto.delivery;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.goodspia.goods.entity.DeliveryStatus;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -27,6 +25,6 @@ public class DeliverySaveRequest {
     @Pattern(regexp = "[가-힣0-9a-zA-Z]+")
     private String addressDetail;
 
-    @NotNull
-    private DeliveryStatus deliveryStatus;
+    @NotBlank
+    private String deliveryStatus;
 }
