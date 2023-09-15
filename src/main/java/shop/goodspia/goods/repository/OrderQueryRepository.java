@@ -26,6 +26,7 @@ import static shop.goodspia.goods.entity.QPayments.payments;
 
 @Repository
 public class OrderQueryRepository {
+
     private final JPAQueryFactory queryFactory;
 
     public OrderQueryRepository(EntityManager em) {
@@ -34,12 +35,13 @@ public class OrderQueryRepository {
 
 
     //회원이 결제하지 않은 주문 상품들의 전체 가격
-    public Long findTotalPrice(String orderUid) {
+    public Integer findTotalPrice(String orderUid) {
         return queryFactory
-                .select(orderGoods.totalPrice.count())
+                .select(orderGoods.totalPrice.sum())
                 .from(orderGoods)
-                .join(orders)
-                .where(orders.orderUid.eq(orderUid))
+                .join(orderGoods.orders, orders)
+                .groupBy(orders.orderUid)
+                .having(orders.orderUid.eq(orderUid))
                 .fetchOne();
     }
 
