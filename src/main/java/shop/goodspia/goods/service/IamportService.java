@@ -48,7 +48,7 @@ public class IamportService implements PaymentAgentService {
     @Override
     public PaymentRequest validatePayment(String paymentUid) throws IamportResponseException, IOException {
         //DB에 저장된 결제 금액과 실제 결제 금액 비교
-        Long totalPrice = orderQueryRepository.findTotalPrice(paymentUid);
+        Integer totalPrice = orderQueryRepository.findTotalPrice(paymentUid);
         Payment payment = iamportClient.paymentByImpUid(paymentUid).getResponse();
         if (totalPrice != payment.getAmount().longValue()) {
             throw new PaymentValidationFailureException("주문 상품들의 결제 금액과 실제 결제 금액이 일치하지 않습니다.");
