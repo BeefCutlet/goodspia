@@ -4,13 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Getter @Setter
 public class MemberUpdateRequest {
 
     private Long id;
+
     @NotBlank
+    @Pattern(regexp = "[0-9a-zA-Z!@#$%^&*()]{6,20}")
     private String password;
+
     @NotBlank
+    @Pattern(regexp = "[0-9a-zA-Zㅏ-ㅣㄱ-ㅎ가-힣._]{2,12}")
     private String nickname;
 }
