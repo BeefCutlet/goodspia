@@ -34,7 +34,7 @@ public class Goods extends BaseTimeEntity {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    @OneToMany(mappedBy = "goods")
+    @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
     private final List<Design> designs = new ArrayList<>();
 
     public static Goods createGoods(GoodsSaveRequest goodsSaveRequest, Artist artist) {
@@ -58,6 +58,11 @@ public class Goods extends BaseTimeEntity {
         this.category = goodsUpdateRequest.getCategory();
         this.thumbnail = goodsUpdateRequest.getThumbnail();
         this.price = goodsUpdateRequest.getPrice();
+    }
+
+    //굿즈 디자인 추가 메서드
+    public void addDesign(List<Design> designs) {
+        this.designs.addAll(designs);
     }
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경
