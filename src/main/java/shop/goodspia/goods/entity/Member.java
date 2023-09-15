@@ -24,7 +24,6 @@ public class Member extends BaseTimeEntity {
     private String password;
     private LocalDateTime lastPasswordChanged;
     private String nickname;
-    private String lastLoginIp;
     private int isWithdraw;
     private LocalDateTime withdrawTime;
 
@@ -37,6 +36,7 @@ public class Member extends BaseTimeEntity {
                 .email(memberSaveRequest.getEmail())
                 .password(memberSaveRequest.getPassword())
                 .nickname(memberSaveRequest.getNickname())
+                .isWithdraw(0)
                 .build();
     }
 
