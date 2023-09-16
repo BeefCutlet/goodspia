@@ -5,7 +5,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.entity.*;
+import shop.goodspia.goods.artist.entity.Artist;
+import shop.goodspia.goods.cart.entity.Cart;
+import shop.goodspia.goods.common.dto.AccountBank;
+import shop.goodspia.goods.goods.entity.Design;
+import shop.goodspia.goods.goods.entity.Goods;
+import shop.goodspia.goods.member.entity.Member;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
