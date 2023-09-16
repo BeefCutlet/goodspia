@@ -25,9 +25,11 @@ import java.time.Instant;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final long accessTokenExpiration;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, long accessTokenExpiration) {
         this.jwtUtil = jwtUtil;
+        this.accessTokenExpiration = accessTokenExpiration;
     }
 
     @Override
@@ -85,8 +87,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long memberId = claims.get("memberId", Long.class);
             Long artistId = claims.get("artistId", Long.class);
             //Access 토큰 생성
-            String remakeAccessToken = jwtUtil.createAccessToken(
-                    jwtUtil.createClaims(TokenName.ACCESS_TOKEN.name(), email, memberId, artistId));
+            String remakeAccessToken = jwtUtil.createToken(jwtUtil.createClaims(
+                    TokenName.ACCESS_TOKEN.name(),
+                    email, memberId,
+                    artistId),
+                    accessTokenExpiration);
             Gson gson = new Gson();
             //Access 토큰 재발행
             response.getWriter().write(gson.toJson(new AuthResponse(remakeAccessToken)));

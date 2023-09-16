@@ -18,8 +18,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -49,18 +47,18 @@ public class JwtUtil implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public String createAccessToken(Claims claims) {
+    public String createToken(Claims claims, long expirationTime) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.from(Instant.now()))
-                .setExpiration(Timestamp.from(Instant.now().plus(accessTokenExpiration, ChronoUnit.SECONDS)))
+                .setExpiration(Timestamp.from(Instant.now().plus(expirationTime, ChronoUnit.SECONDS)))
                 .compact();
     }
 
-    public String createRefreshToken(Claims claims) {
+    public String createRefreshToken(Claims claims, long expirationTime) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
