@@ -1,4 +1,4 @@
-package shop.goodspia.goods.security.exception;
+package shop.goodspia.goods.security.handler;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

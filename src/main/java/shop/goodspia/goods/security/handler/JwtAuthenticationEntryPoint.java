@@ -1,4 +1,4 @@
-package shop.goodspia.goods.security.exception;
+package shop.goodspia.goods.security.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
