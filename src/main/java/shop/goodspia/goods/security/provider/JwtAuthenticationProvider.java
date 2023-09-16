@@ -2,6 +2,7 @@ package shop.goodspia.goods.security.provider;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,14 +23,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         User user = (User) userService.loadUserByUsername((String) authentication.getPrincipal());
 
         if (!passwordEncoder.matches((String) authentication.getCredentials(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                authentication.getPrincipal(), authentication.getPrincipal()
-        );
-
-        return authenticationToken;
+        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getPrincipal());
     }
 
     @Override
