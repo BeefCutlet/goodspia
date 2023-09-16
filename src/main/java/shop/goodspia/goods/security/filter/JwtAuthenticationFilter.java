@@ -2,6 +2,7 @@ package shop.goodspia.goods.security.filter;
 
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -10,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import shop.goodspia.goods.security.dto.AuthResponse;
-import shop.goodspia.goods.security.dto.TokenName;
-import shop.goodspia.goods.common.util.JwtUtil;
+import shop.goodspia.goods.security.dto.TokenInfo;
+import shop.goodspia.goods.security.service.JwtUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,15 +23,10 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final long accessTokenExpiration;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, long accessTokenExpiration) {
-        this.jwtUtil = jwtUtil;
-        this.accessTokenExpiration = accessTokenExpiration;
-    }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,
@@ -88,10 +84,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long artistId = claims.get("artistId", Long.class);
             //Access 토큰 생성
             String remakeAccessToken = jwtUtil.createToken(jwtUtil.createClaims(
-                    TokenName.ACCESS_TOKEN.name(),
+                    TokenInfo.ACCESS_TOKEN,
                     email, memberId,
                     artistId),
-                    accessTokenExpiration);
+                    TokenInfo.ACCESS_EXP);
             Gson gson = new Gson();
             //Access 토큰 재발행
             response.getWriter().write(gson.toJson(new AuthResponse(remakeAccessToken)));

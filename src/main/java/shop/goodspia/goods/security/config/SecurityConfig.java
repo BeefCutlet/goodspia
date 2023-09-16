@@ -1,11 +1,10 @@
 package shop.goodspia.goods.security.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,31 +15,20 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import shop.goodspia.goods.member.repository.MemberRepository;
-import shop.goodspia.goods.security.exception.JwtAccessDeniedHandler;
-import shop.goodspia.goods.security.exception.JwtAuthenticationEntryPoint;
 import shop.goodspia.goods.security.filter.JwtAuthenticationFilter;
-import shop.goodspia.goods.common.util.JwtUtil;
 import shop.goodspia.goods.security.filter.JwtLoginFilter;
+import shop.goodspia.goods.security.handler.JwtAccessDeniedHandler;
+import shop.goodspia.goods.security.handler.JwtAuthenticationEntryPoint;
 import shop.goodspia.goods.security.handler.JwtLoginFailureHandler;
 import shop.goodspia.goods.security.handler.JwtLoginSuccessHandler;
+import shop.goodspia.goods.security.service.JwtUtil;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
-    private final long accessTokenExpiration;
-    private final long refreshTokenExpiration;
-
-    public SecurityConfig(JwtUtil jwtUtil,
-                          MemberRepository memberRepository,
-                          @Value("${access.expiration}") long accessTokenExpiration,
-                          @Value("${refresh.expiration}") long refreshTokenExpiration) {
-        this.jwtUtil = jwtUtil;
-        this.memberRepository = memberRepository;
-        this.accessTokenExpiration = accessTokenExpiration;
-        this.refreshTokenExpiration = refreshTokenExpiration;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -84,7 +72,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil, accessTokenExpiration);
+        return new JwtAuthenticationFilter(jwtUtil);
     }
 
     @Bean
@@ -103,11 +91,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtLoginSuccessHandler(
-                jwtUtil,
-                memberRepository,
-                accessTokenExpiration,
-                refreshTokenExpiration
-        );
+        return new JwtLoginSuccessHandler(jwtUtil, memberRepository);
     }
 }

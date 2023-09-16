@@ -1,4 +1,4 @@
-package shop.goodspia.goods.common.util;
+package shop.goodspia.goods.security.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import shop.goodspia.goods.security.dto.TokenInfo;
 
 import java.security.Key;
 import java.sql.Timestamp;
@@ -22,24 +23,14 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@PropertySource(value = {"classpath:jwt.properties"})
+@PropertySource(value = {"classpath:secret.properties"})
 public class JwtUtil implements InitializingBean {
 
     private final String secretKey;
-    private final long accessTokenExpiration;
-    private final long refreshTokenExpiration;
-    private final String issuer;
-
     private Key key;
 
-    public JwtUtil(@Value("${secret-key}") String secretKey,
-                   @Value("${access.expiration}") long accessTokenExpiration,
-                   @Value("${refresh.expiration}") long refreshTokenExpiration,
-                   @Value("${issuer}") String issuer) {
+    public JwtUtil(@Value("${secret-key}") String secretKey) {
         this.secretKey = secretKey;
-        this.accessTokenExpiration = accessTokenExpiration;
-        this.refreshTokenExpiration = refreshTokenExpiration;
-        this.issuer = issuer;
     }
 
     @Override
@@ -52,20 +43,9 @@ public class JwtUtil implements InitializingBean {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
-                .setIssuer(issuer)
+                .setIssuer(TokenInfo.ISSUER)
                 .setIssuedAt(Timestamp.from(Instant.now()))
                 .setExpiration(Timestamp.from(Instant.now().plus(expirationTime, ChronoUnit.SECONDS)))
-                .compact();
-    }
-
-    public String createRefreshToken(Claims claims, long expirationTime) {
-        return Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(claims)
-                .setIssuer(issuer)
-                .setIssuedAt(Timestamp.from(Instant.now()))
-                .setExpiration(Timestamp.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.SECONDS)))
                 .compact();
     }
 
