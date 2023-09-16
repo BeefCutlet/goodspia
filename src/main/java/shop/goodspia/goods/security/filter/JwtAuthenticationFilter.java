@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import shop.goodspia.goods.dto.auth.AuthResponse;
+import shop.goodspia.goods.security.dto.AuthResponse;
 import shop.goodspia.goods.security.dto.TokenName;
-import shop.goodspia.goods.util.JwtUtil;
+import shop.goodspia.goods.common.util.JwtUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
