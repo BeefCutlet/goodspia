@@ -17,12 +17,12 @@ import shop.goodspia.goods.payment.dto.PaymentStatus;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static shop.goodspia.goods.entity.QDelivery.delivery;
-import static shop.goodspia.goods.entity.QGoods.goods;
-import static shop.goodspia.goods.entity.QMember.member;
-import static shop.goodspia.goods.entity.QOrderGoods.orderGoods;
-import static shop.goodspia.goods.entity.QOrders.orders;
-import static shop.goodspia.goods.entity.QPayments.payments;
+import static shop.goodspia.goods.delivery.entity.QDelivery.delivery;
+import static shop.goodspia.goods.goods.entity.QGoods.goods;
+import static shop.goodspia.goods.member.entity.QMember.member;
+import static shop.goodspia.goods.order.entity.QOrderGoods.orderGoods;
+import static shop.goodspia.goods.order.entity.QOrders.orders;
+import static shop.goodspia.goods.payment.entity.QPayments.payments;
 
 @Repository
 public class OrderQueryRepository {

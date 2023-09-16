@@ -12,9 +12,10 @@ import shop.goodspia.goods.cart.dto.CartResponse;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static shop.goodspia.goods.entity.QCart.cart;
-import static shop.goodspia.goods.entity.QDesign.design;
-import static shop.goodspia.goods.entity.QGoods.goods;
+import static shop.goodspia.goods.cart.entity.QCart.cart;
+import static shop.goodspia.goods.goods.entity.QDesign.design;
+import static shop.goodspia.goods.goods.entity.QGoods.goods;
+
 
 @Repository
 public class CartQueryRepository {

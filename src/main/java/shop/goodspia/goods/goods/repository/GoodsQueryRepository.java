@@ -14,8 +14,8 @@ import shop.goodspia.goods.goods.entity.Goods;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static shop.goodspia.goods.entity.QArtist.artist;
-import static shop.goodspia.goods.entity.QGoods.goods;
+import static shop.goodspia.goods.artist.entity.QArtist.artist;
+import static shop.goodspia.goods.goods.entity.QGoods.goods;
 
 @Repository
 public class GoodsQueryRepository {
