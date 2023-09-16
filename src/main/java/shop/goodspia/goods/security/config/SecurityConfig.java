@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import shop.goodspia.goods.security.exception.JwtAccessDeniedHandler;
 import shop.goodspia.goods.security.exception.JwtAuthenticationEntryPoint;
 import shop.goodspia.goods.security.filter.JwtAuthenticationFilter;
-import shop.goodspia.goods.util.JwtUtil;
+import shop.goodspia.goods.common.util.JwtUtil;
 
 @Configuration
 @RequiredArgsConstructor
