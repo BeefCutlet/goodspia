@@ -15,7 +15,7 @@ public class PaymentPrepareRequest {
 
     @Schema(description = "주문 번호")
     @NotBlank
-    @Pattern(regexp = "(ORDER_)([0-9])+")
+    @Pattern(regexp = "(ORDER_)([0-9a-zA-Z])+")
     private String merchantUid; //주문 번호
 
     @Schema(description = "결제 예정된 가격")
