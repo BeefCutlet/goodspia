@@ -9,7 +9,7 @@ import shop.goodspia.goods.member.dto.MemberUpdateRequest;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.*;
 @Builder
 public class Member extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
     @Column(unique = true)

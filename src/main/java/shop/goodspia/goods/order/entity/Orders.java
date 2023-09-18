@@ -11,6 +11,7 @@ import shop.goodspia.goods.payment.entity.Payments;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -21,7 +22,7 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 public class Orders extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orders_id")
     private Long id;
 
@@ -48,7 +49,7 @@ public class Orders extends BaseTimeEntity {
     //주문 생성
     public static Orders createOrder(Member member, List<OrderGoods> orderGoodsList) {
         Orders orders = Orders.builder()
-                .orderUid("ORDER_" + System.currentTimeMillis())
+                .orderUid("ORDER_" + UUID.randomUUID().toString())
                 .orderStatus(OrderStatus.READY)
                 .member(member)
                 .build();

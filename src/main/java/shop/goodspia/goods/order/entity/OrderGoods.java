@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.*;
 @AllArgsConstructor
 public class OrderGoods extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_goods_id")
     private Long id;
 

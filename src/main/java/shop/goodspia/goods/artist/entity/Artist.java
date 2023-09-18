@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Slf4j
 public class Artist extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "artist_id")
     private Long id;
     private String nickname;

@@ -17,16 +17,21 @@ import static javax.persistence.FetchType.*;
 @AllArgsConstructor
 public class Cart extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
     private Long id;
     private int quantity;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
+
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "goods_id")
     private Goods goods;
+
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "design_id")
     private Design design;
 
     public static Cart createCart(int quantity, Member member, Goods goods, Design design) {

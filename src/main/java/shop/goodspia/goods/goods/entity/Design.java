@@ -14,7 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Design {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "design_id")
     private Long id;
     private String designName;

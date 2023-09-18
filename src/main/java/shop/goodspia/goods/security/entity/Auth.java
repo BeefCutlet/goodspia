@@ -15,6 +15,7 @@ import static javax.persistence.FetchType.*;
 public class Auth {
 
     @Id @GeneratedValue
+    @Column(name = "auth_id")
     private Long id;
     private String refreshToken;
 

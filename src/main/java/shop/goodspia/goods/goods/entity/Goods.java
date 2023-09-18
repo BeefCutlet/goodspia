@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.*;
 @Builder
 public class Goods extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "goods_id")
     private Long id;
     private String name;
