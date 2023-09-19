@@ -31,8 +31,8 @@ public class MemberService {
      * 회원 정보 수정
      * @param memberUpdateRequest
      */
-    public void modifyMemberInfo(MemberUpdateRequest memberUpdateRequest) {
-        Member member = memberRepository.findById(memberUpdateRequest.getId())
+    public void modifyMemberInfo(Long memberId, MemberUpdateRequest memberUpdateRequest) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
         member.updateMember(memberUpdateRequest);
     }

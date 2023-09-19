@@ -50,8 +50,7 @@ public class MemberController {
                                @RequestBody MemberUpdateRequest memberInfo,
                                @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-        memberInfo.setId(memberId);
-        memberService.modifyMemberInfo(memberInfo);
+        memberService.modifyMemberInfo(memberId, memberInfo);
         return ResponseEntity.noContent().build();
     }
 }
