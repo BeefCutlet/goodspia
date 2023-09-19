@@ -38,7 +38,7 @@ public class GoodsQueryRepository {
                         goods.id.as("goodsId"),
                         goods.name.as("goodsName"),
                         goods.price.as("price"),
-                        goods.thumbnail.as("image"),
+                        goods.thumbnail.as("thumbnail"),
                         goods.artist.nickname.as("artistName")))
                 .from(goods)
                 .join(goods.artist, artist)
