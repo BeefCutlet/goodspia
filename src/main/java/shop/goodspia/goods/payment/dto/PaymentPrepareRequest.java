@@ -3,10 +3,7 @@ package shop.goodspia.goods.payment.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Schema(name = "결제 사전등록 정보", description = "추후 검증을 위해 저장할 결제 사전등록 정보")
@@ -19,7 +16,7 @@ public class PaymentPrepareRequest {
     private String merchantUid; //주문 번호
 
     @Schema(description = "결제 예정된 가격")
-    @NotNull
     @Min(1000)
+    @Max(100000000)
     private long amount; //주문 가격
 }

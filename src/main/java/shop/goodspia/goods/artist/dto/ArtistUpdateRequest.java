@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Schema(name = "아티스트 정보", description = "기존 아티스트 정보를 갱신할 때 전달할 아티스트 정보")
@@ -20,7 +21,7 @@ public class ArtistUpdateRequest {
     private String profileImage;
 
     @Schema(description = "정산 시 입금받을 계좌의 은행", example = "KB")
-    @NotBlank
+    @NotNull
     private String accountBank;
 
     @Schema(description = "정산 시 입금받을 계좌의 번호", example = "123123-00-123123")

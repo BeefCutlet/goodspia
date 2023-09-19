@@ -9,8 +9,6 @@ import javax.validation.constraints.Pattern;
 @Getter @Setter
 public class MemberUpdateRequest {
 
-    private Long id;
-
     @NotBlank
     @Pattern(regexp = "[0-9a-zA-Z!@#$%^&*()]{6,20}")
     private String password;

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -13,17 +14,15 @@ import javax.validation.constraints.NotNull;
 public class CartSaveRequest {
 
     @Schema(description = "굿즈 수량")
-    @NotNull
     @Min(1)
+    @Max(1000)
     private int quantity;
 
     @Schema(description = "굿즈 번호")
-    @NotNull
     @Min(1)
     private Long goodsId;
 
     @Schema(description = "굿즈 디자인 번호")
-    @NotNull
     @Min(1)
     private Long designId;
 }

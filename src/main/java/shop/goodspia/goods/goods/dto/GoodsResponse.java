@@ -4,25 +4,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Schema
 @Getter @Setter
 public class GoodsResponse {
 
-    @NotNull
+    @Min(1)
     private Long goodsId;
 
-    @NotNull
     private String thumbnail;
 
     @NotNull
-    @Pattern(regexp = "[a-zA-Z가-힣]{1,50}")
+    @Pattern(regexp = "[0-9a-zA-Z가-힣]")
+    @Size(min = 1, max = 50)
     private String goodsName;
 
-    @NotNull
-    @Min(1)
+    @Min(1000)
+    @Max(10000000)
     private int price;
 }
