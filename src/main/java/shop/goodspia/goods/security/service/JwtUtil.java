@@ -28,7 +28,7 @@ public class JwtUtil implements InitializingBean {
     private final String secretKey;
     private Key key;
 
-    public JwtUtil(@Value("${secret-key}") String secretKey) {
+    public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
         this.secretKey = secretKey;
     }
 
