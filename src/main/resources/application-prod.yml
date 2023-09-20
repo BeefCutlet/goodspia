@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${rds.hostname}:${rds.port}/${rds.db.name}
+    username: ${rds.username}
+    password: ${rds.password}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        default_batch_fetch_size: 100
+  messages:
+    basename: errors
+
+logging:
+  level:
+    org.hibernate.sql: info
+
+server:
+  port: 5000
+
+#IAMPORT REST API KEY
+iamport:
+  rest-api:
+    key: ${iamport.rest-api.key}
+    secret-key: ${iamport.rest-api.secret-key}
+  imp-uid: ${iamport.imp-uid}
+
+#BASE URL
+base-url: https://www.goodspia.shop
+
+#JWT SECRET-KEY
+secret-key: ${jwt.secret-key}
