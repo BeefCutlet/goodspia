@@ -23,7 +23,6 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@PropertySource(value = {"classpath:secret.properties"})
 public class JwtUtil implements InitializingBean {
 
     private final String secretKey;

@@ -21,7 +21,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
-@PropertySource(value = {"classpath:/secret.properties"})
 public class OrderController {
 
     private final OrderService orderService;
