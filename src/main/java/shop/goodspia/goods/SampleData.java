@@ -41,7 +41,7 @@ public class SampleData {
         private final PasswordEncoder passwordEncoder;
 
         public void sampleInit() {
-//            for (int k = 0; k < 100; k++) {
+//            for (int k = 1; k <= 20; k++) {
 //                Artist artist = Artist.builder()
 //                        .nickname("ArtistNickname" + k)
 //                        .profileImage("aaaaaaaa-ArtistProfileImage.png")
@@ -59,7 +59,7 @@ public class SampleData {
 //                        .build();
 //                em.persist(member);
 //
-//                for (int i = 0; i < 100; i++) {
+//                for (int i = 1; i <= 100; i++) {
 //                    Goods goods = Goods.builder()
 //                            .name("GoodsName" + i)
 //                            .thumbnail("aaaaaaaa-GoodsImage.png" + i)
@@ -71,7 +71,7 @@ public class SampleData {
 //                            .build();
 //                    em.persist(goods);
 //
-//                    for (int j = 1; j <= 3; j++) {
+//                    for (int j = 1; j <= 2; j++) {
 //                        Design design = Design.builder()
 //                                .designName("DesignName" + j)
 //                                .goods(goods)
@@ -87,7 +87,7 @@ public class SampleData {
 //                        em.persist(cart);
 //                    }
 //
-//                    for (int l = 1; l <= 30; l++) {
+//                    for (int l = 1; l <= 10; l++) {
 //                        List<OrderGoods> orderGoodsList = new ArrayList<>();
 //                        OrderGoods orderGoods1 = OrderGoods.createOrderGoods(
 //                                goods, i, i * 10000, "DesignName1");
@@ -97,13 +97,8 @@ public class SampleData {
 //                                goods, i, i * 10000, "DesignName2");
 //                        em.persist(orderGoods2);
 //
-//                        OrderGoods orderGoods3 = OrderGoods.createOrderGoods(
-//                                goods, i, i * 10000, "DesignName3");
-//                        em.persist(orderGoods3);
-//
 //                        orderGoodsList.add(orderGoods1);
 //                        orderGoodsList.add(orderGoods2);
-//                        orderGoodsList.add(orderGoods3);
 //
 //                        Orders order = Orders.createOrder(member, orderGoodsList);
 //                        em.persist(order);
