@@ -1,0 +1,69 @@
+name: ci/cd
+on:
+  push:
+    branches:
+      - master
+
+env:
+  S3_BUCKET_NAME: goodspia
+  RESOURCE_PATH: ./src/main/resources/application.yml
+  CODE_DEPLOY_APPLICATION_NAME: GoodsPia
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: GoodsPiaDeployGroup
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+        
+        # [1]
+      - name: Set yml file 
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.RESOURCE_PATH }} 
+        env:
+          override.value: ${{ secrets.DI_FROM_SECRET }} 
+          # override.value: 'from deploy.yaml'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+        # [2] 빌드
+      - name: Build with Gradle
+        run: ./gradlew clean build
+        shell: bash
+
+        # [3] ZIP 파일 생성
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+        # [4] Access Key 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: ${{ secrets.AWS_REGION }} 
+
+        # [5] S3에 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+
+        # [6] 코드 배포
+      - name: Code Deploy
+        run: | 
+          aws deploy create-deployment \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+  
