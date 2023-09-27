@@ -23,17 +23,11 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class JwtUtil implements InitializingBean {
+public class JwtUtil {
 
-    private final String secretKey;
     private Key key;
 
     public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
