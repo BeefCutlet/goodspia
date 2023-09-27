@@ -33,5 +33,4 @@ iamport:
 base-url: https://www.goodspia.shop
 
 #JWT SECRET-KEY
-jwt:
-  secret-key: ${jwt.secret-key}
+jwt.secret-key: ${jwt.secret-key}

@@ -21,12 +21,12 @@ if [ -z "$CURRENT_PID" ]; then
     echo "NOT RUNNING"
 else
     echo "> kill -15 $CURRENT_PID"
-    kill -15 $CURRENT_PID
+    kill -15 "$CURRENT_PID"
     sleep 5
 fi
 
 echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH 1>>$APPLICATION_LOG_PATH 2>$DEPLOY_ERR_LOG_PATH &
+nohup java -jar "$JAR_PATH" 1>>$APPLICATION_LOG_PATH 2>$DEPLOY_ERR_LOG_PATH &
 
 sleep 2
 echo "> 배포 종료 : $(date +%c)" >> $DEPLOY_LOG_PATH
