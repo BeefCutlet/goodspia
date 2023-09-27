@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/ubuntu/github-action
+REPOSITORY=/home/ubuntu/goodspia
 cd $REPOSITORY
 
 APP_NAME=goodspia

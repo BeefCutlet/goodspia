@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/github-action
+    destination: /home/ubuntu/goodspia
     overwrite: yes
 
 permissions:
