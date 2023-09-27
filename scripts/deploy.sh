@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/ubuntu/goodspia
+REPOSITORY=/home/ubuntu/goodspia-source
 cd $REPOSITORY
 
 APP_NAME=goodspia
