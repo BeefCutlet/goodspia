@@ -6,7 +6,7 @@ on:
 
 env:
   S3_BUCKET_NAME: goodspia
-  RESOURCE_PATH: ./src/main/resources/application.yml
+  RESOURCE_PATH: ./src/main/resources/application-prod.yml
   CODE_DEPLOY_APPLICATION_NAME: GoodsPia
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: GoodsPiaDeployGroup
 
@@ -15,6 +15,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.RESOURCE_PATH }}
+        env:
+          spring.datasource.url: ${{ secrets.RDS_HOST }}
+          spring.datasource.username: ${{ secrets.RDS_USERNAME }}
+          spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
+          iamport.rest-api.key: ${ secrets.IAMPORT_KEY }
+          iamport.rest-api.secret-key: ${ secrets.IAMPORT_SECRET_KEY }
+          iamport.rest-api.imp-uid: ${ secrets.IAMPORT_IMP_UID }
+          jwt.secret-key: ${ secrets.JWT_SECRET_KEY }
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -30,7 +43,7 @@ jobs:
           files: ${{ env.RESOURCE_PATH }} 
         env:
           override.value: ${{ secrets.DI_FROM_SECRET }} 
-          # override.value: 'from deploy.yaml'
+          # override.value: 'from deploy.yml'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
