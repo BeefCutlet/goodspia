@@ -13,7 +13,7 @@ APPLICATION_LOG_PATH="/home/ubuntu/$APP_NAME/application.log"
 # =====================================
 # 현재 구동 중인 application pid 확인
 # =====================================
-CURRENT_PID=$(pgrep -fl $APP_NAME | grep java | awk '{print $1}')
+CURRENT_PID=$(pgrep -f $APP_NAME | grep java | awk '{print $1}')
 echo "> 현재 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
 
 if [ -z "$CURRENT_PID" ]; then
