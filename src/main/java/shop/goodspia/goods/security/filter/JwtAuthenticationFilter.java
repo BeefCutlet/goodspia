@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
+        log.info("JWT 인증 시작");
         //Access 토큰 추출 및 Null 체크, Bearer 인증타입 체크
         String accessToken = resolveAccessToken(request);
 
@@ -92,6 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //Access 토큰 재발행
             response.getWriter().write(gson.toJson(new AuthResponse(remakeAccessToken)));
         }
+        log.info("JWT 인증 종료");
     }
 
     //Access 토큰 추출 메서드

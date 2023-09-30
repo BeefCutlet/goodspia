@@ -46,14 +46,26 @@ public class OrderQueryRepository {
     }
 
     //회원이 결제하지 않은 상품들 목록
-    public List<OrderGoods> findReadyOrders(Long memberId) {
-        return queryFactory
+    public Page<OrderGoods> findReadyOrders(Long memberId, Pageable pageable) {
+        List<OrderGoods> orderGoodsList = queryFactory
                 .select(orderGoods)
                 .from(orderGoods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.goods, goods)
                 .where(orders.member.id.eq(memberId), orders.orderStatus.eq(OrderStatus.READY))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(orderGoods.id.desc())
                 .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(orderGoods.count())
+                .from(orderGoods)
+                .join(orderGoods.orders, orders)
+                .join(orderGoods.goods, goods)
+                .where(orders.member.id.eq(memberId), orders.orderStatus.eq(OrderStatus.READY));
+
+        return PageableExecutionUtils.getPage(orderGoodsList, pageable, countQuery::fetchOne);
     }
 
     //회원이 결제하지 않은 주문 여부 확인
@@ -85,6 +97,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.orders.payments, payments)
                 .join(orderGoods.orders.delivery, delivery)
                 .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE))
+                .orderBy(orderGoods.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -118,6 +131,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders.member, member)
                 .where(member.id.eq(memberId), orderGoods.orders.orderStatus.eq(OrderStatus.COMPLETE))
+                .orderBy(orderGoods.id.desc())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory

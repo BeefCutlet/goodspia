@@ -3,8 +3,10 @@ package shop.goodspia.goods.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,10 +27,22 @@ import shop.goodspia.goods.security.service.JwtUtil;
 
 @Configuration
 @RequiredArgsConstructor
+@PropertySource(value = "/application-dev.yml")
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().antMatchers(
+                "/swagger-ui",
+                "/swagger-ui/**",
+                "/api-docs",
+                "/api-docs/**",
+                "/goods/list",
+                "/goods/detail/*");
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,7 +54,6 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/goods/list", "/goods/detail/*").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -49,8 +62,9 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler())
 
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtLoginFilter(http.getSharedObject(AuthenticationConfiguration.class)), JwtAuthenticationFilter.class);
+                .addFilterBefore(jwtLoginFilter(http.getSharedObject(AuthenticationConfiguration.class)),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), JwtLoginFilter.class);
         return http.build();
     }
 
@@ -70,10 +84,6 @@ public class SecurityConfig {
         return new JwtAccessDeniedHandler();
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil);
-    }
 
     @Bean
     public JwtLoginFilter jwtLoginFilter(AuthenticationConfiguration authenticationConfiguration) throws Exception {

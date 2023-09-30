@@ -70,9 +70,9 @@ public class OrderService {
     }
 
     //현재 주문 목록 조회
-    public List<OrderResponse> getRequestedOrders(Long memberId) {
+    public List<OrderResponse> getRequestedOrders(Long memberId, Pageable pageable) {
         //아직 결제되지 않은 상품 리스트 조회
-        List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId);
+        List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId, pageable).getContent();
         List<OrderResponse> orders = new ArrayList<>();
         for (OrderGoods readyOrder : readyOrders) {
             OrderResponse order = new OrderResponse(readyOrder);
