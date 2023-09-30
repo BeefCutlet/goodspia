@@ -6,13 +6,13 @@ files:
     overwrite: yes
 
 permissions:
-  - object: /
-    pattern: "**"
+  - object: /home/ubuntu/goodspia-source
     owner: ubuntu
     group: ubuntu
+    mode: 755
 
 hooks:
-  ApplicationStart:
+  AfterInstall:
     - location: scripts/deploy.sh
       timeout: 120
       runas: ubuntu
