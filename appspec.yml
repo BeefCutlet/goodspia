@@ -10,13 +10,9 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-    mode: 0644
 
 hooks:
-#  ApplicationStart:
-#    - location: scripts/deploy.sh
-#      timeout: 120
-#      runas: ubuntu
-  AfterInstall:
+  ApplicationStart:
     - location: scripts/deploy.sh
       timeout: 120
+      runas: ubuntu
