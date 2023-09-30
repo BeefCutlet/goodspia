@@ -14,14 +14,14 @@ APPLICATION_LOG_PATH="/home/ubuntu/$APP_NAME/application.log"
 # =====================================
 # 현재 구동 중인 application pid 확인
 # =====================================
-CURRENT_PID=$(pgrep -fl demo | grep java | awk {'print $1'})
+CURRENT_PID=$(pgrep -fl demo | grep java | awk '{print $1}')
 echo "> 현재 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
 
 if [ -z "$CURRENT_PID" ]; then
     echo "NOT RUNNING"
 else
-    echo "> kill -15 $CURRENT_PID"
-    kill -15 "$CURRENT_PID"
+    echo "> kill -9 $CURRENT_PID"
+    kill -9 "$CURRENT_PID"
     sleep 5
 fi
 
