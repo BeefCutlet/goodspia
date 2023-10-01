@@ -27,7 +27,6 @@ import shop.goodspia.goods.security.service.JwtUtil;
 
 @Configuration
 @RequiredArgsConstructor
-@PropertySource(value = "/application-dev.yml")
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;

@@ -21,7 +21,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-@PropertySource(value = "/application-prod.yml")
 public class MemberController {
 
     private final MemberService memberService;

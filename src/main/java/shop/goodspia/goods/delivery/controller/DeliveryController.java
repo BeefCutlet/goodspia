@@ -14,7 +14,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/delivery")
 @RequiredArgsConstructor
-@PropertySource(value = "/application-prod.yml")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;

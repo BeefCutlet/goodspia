@@ -28,7 +28,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/artists")
 @RequiredArgsConstructor
-@PropertySource(value = "/application-prod.yml")
 public class ArtistController {
 
     private final ArtistService artistService;

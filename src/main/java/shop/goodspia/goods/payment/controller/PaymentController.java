@@ -25,7 +25,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
-@PropertySource(value = "/application-prod.yml")
 public class PaymentController {
 
     private final PaymentAgentService paymentAgentService;

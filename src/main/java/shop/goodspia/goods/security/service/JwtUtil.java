@@ -23,7 +23,6 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@PropertySource(value = "/application-prod.yml")
 public class JwtUtil {
 
     private Key key;
