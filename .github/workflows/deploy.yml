@@ -63,7 +63,7 @@ jobs:
 
         # [5] S3에 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 .$FOLDER_NAME/$APP_NAME.zip s3://$S3_BUCKET_NAME.$FOLDER_NAME/$APP_NAME.zip
+        run: aws s3 cp --region ap-northeast-2 ./$FOLDER_NAME/$APP_NAME.zip s3://$S3_BUCKET_NAME/$FOLDER_NAME/$APP_NAME.zip
 
         # [6] 코드 배포
       - name: Code Deploy
