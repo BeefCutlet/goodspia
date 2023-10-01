@@ -5,7 +5,7 @@ on:
       - master
 
 env:
-  S3_BUCKET_NAME: goodspia/deploy
+  S3_BUCKET_NAME: goodspia.deploy
   APP_NAME: goodspia
   RESOURCE_PATH: ./src/main/resources/application-prod.yml
   CODE_DEPLOY_APPLICATION_NAME: GoodsPia
