@@ -6,7 +6,6 @@ on:
 
 env:
   S3_BUCKET_NAME: goodspia
-  FOLDER_NAME: deploy
   APP_NAME: goodspia
   RESOURCE_PATH: ./src/main/resources/application-prod.yml
   CODE_DEPLOY_APPLICATION_NAME: GoodsPia
@@ -63,7 +62,7 @@ jobs:
 
         # [5] S3에 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$FOLDER_NAME/$APP_NAME.zip s3://$S3_BUCKET_NAME/$FOLDER_NAME/$APP_NAME.zip
+        run: aws s3 cp --region ap-northeast-2 ./$APP_NAME.zip s3://$S3_BUCKET_NAME/$APP_NAME.zip
 
         # [6] 코드 배포
       - name: Code Deploy
@@ -71,4 +70,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }}
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
-          --s3-location bucket=$S3_BUCKET_NAME.$FOLDER_NAME,bundleType=zip,key=$APP_NAME.zip
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$APP_NAME.zip
