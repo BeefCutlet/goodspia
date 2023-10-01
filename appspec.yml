@@ -1,12 +1,12 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /goodspia
     destination: /home/ubuntu/goodspia-source
     overwrite: yes
 
 permissions:
-  - object: /
+  - object: /home/ubuntu/goodspia-source
     pattern: "**"
     owner: ubuntu
     group: ubuntu
