@@ -20,27 +20,27 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@RequiredArgsConstructor
-@Profile("local")
+//@Component
+//@RequiredArgsConstructor
+//@Profile("local")
 public class SampleData {
 
-    private final Sample sample;
-
-    @PostConstruct
-    public void init() {
-        sample.sampleInit();
-    }
-
-    @Component
-    @Transactional
-    @RequiredArgsConstructor
-    static class Sample {
-
-        private final EntityManager em;
-        private final PasswordEncoder passwordEncoder;
-
-        public void sampleInit() {
+//    private final Sample sample;
+//
+//    @PostConstruct
+//    public void init() {
+//        sample.sampleInit();
+//    }
+//
+//    @Component
+//    @Transactional
+//    @RequiredArgsConstructor
+//    static class Sample {
+//
+//        private final EntityManager em;
+//        private final PasswordEncoder passwordEncoder;
+//
+//        public void sampleInit() {
 //            for (int k = 1; k <= 20; k++) {
 //                Artist artist = Artist.builder()
 //                        .nickname("ArtistNickname" + k)
@@ -105,7 +105,7 @@ public class SampleData {
 //                    }
 //                }
 //            }
-
-        }
-    }
+//
+//        }
+//    }
 }
