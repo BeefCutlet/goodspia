@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /deploy
     destination: /home/ubuntu/goodspia-source
 file_exists_behavior: OVERWRITE
 
