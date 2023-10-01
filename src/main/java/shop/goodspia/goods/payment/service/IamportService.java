@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Service
+@PropertySource(value = "/application-prod.yml")
 public class IamportService implements PaymentAgentService {
 
     private final IamportClient iamportClient;

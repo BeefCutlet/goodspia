@@ -21,6 +21,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@PropertySource(value = "/application-prod.yml")
 public class OrderController {
 
     private final OrderService orderService;

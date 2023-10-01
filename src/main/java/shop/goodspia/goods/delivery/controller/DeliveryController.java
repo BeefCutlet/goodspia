@@ -3,6 +3,7 @@ package shop.goodspia.goods.delivery.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.delivery.service.DeliveryService;
@@ -13,6 +14,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/delivery")
 @RequiredArgsConstructor
+@PropertySource(value = "/application-prod.yml")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
