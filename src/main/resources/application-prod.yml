@@ -9,8 +9,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
         default_batch_fetch_size: 100
   messages:
     basename: errors
@@ -35,3 +33,16 @@ base-url: https://www.goodspia.shop
 #JWT SECRET-KEY
 jwt:
   secret-key: ${jwt.secret-key}
+
+springdoc:
+  packages-to-scan: shop.goodspia.goods
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /api-docs
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs/json
+  cache:
+    disabled: true
