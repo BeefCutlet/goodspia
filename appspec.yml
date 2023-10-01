@@ -1,9 +1,10 @@
 version: 0.0
 os: linux
 files:
-  - source: /goodspia
+  - source: /
     destination: /home/ubuntu/goodspia-source
     overwrite: yes
+file_exists_behavior: OVERWRITE
 
 permissions:
   - object: /home/ubuntu/goodspia-source
