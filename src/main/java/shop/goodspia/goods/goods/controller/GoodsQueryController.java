@@ -10,8 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.goods.dto.GoodsDetailResponse;
+import shop.goodspia.goods.goods.dto.GoodsListResponse;
 import shop.goodspia.goods.goods.dto.GoodsResponse;
 import shop.goodspia.goods.goods.service.GoodsService;
+
+import java.util.List;
 
 @Tag(name = "굿즈 조회 API", description = "굿즈 목록/단건 조회 API")
 @Slf4j
@@ -30,11 +33,11 @@ public class GoodsQueryController {
      */
     @Operation(summary = "굿즈 목록 조회 API", description = "굿즈 카테고리와 page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/list")
-    public ResponseEntity<Page<GoodsResponse>> getGoodsList(@Parameter(name = "굿즈 카테고리", description = "굿즈 검색 시 카테고리를 선택했다면 설정")
+    public ResponseEntity<GoodsListResponse> getGoodsList(@Parameter(name = "굿즈 카테고리", description = "굿즈 검색 시 카테고리를 선택했다면 설정")
                                                             @RequestParam(required = false) String category,
-                                                            @Parameter(hidden = true) Pageable pageable) {
+                                                          @Parameter(hidden = true) Pageable pageable) {
         log.info("전체 굿즈 리스트 조회, pageSize={}, pageNum={}", pageable.getPageSize(), pageable.getPageNumber());
-        Page<GoodsResponse> goodsList = goodsService.getGoodsList(pageable, category);
+        GoodsListResponse goodsList = goodsService.getGoodsList(pageable, category);
         return ResponseEntity.ok(goodsList);
     }
 

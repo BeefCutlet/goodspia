@@ -5,16 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.goods.dto.GoodsDetailResponse;
-import shop.goodspia.goods.goods.dto.GoodsSaveRequest;
-import shop.goodspia.goods.goods.dto.GoodsResponse;
-import shop.goodspia.goods.goods.dto.GoodsUpdateRequest;
+import shop.goodspia.goods.goods.dto.*;
 import shop.goodspia.goods.goods.entity.Design;
 import shop.goodspia.goods.goods.entity.Goods;
 import shop.goodspia.goods.artist.repository.ArtistRepository;
 import shop.goodspia.goods.goods.repository.DesignRepository;
 import shop.goodspia.goods.goods.repository.GoodsQueryRepository;
 import shop.goodspia.goods.goods.repository.GoodsRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -79,8 +78,10 @@ public class GoodsService {
      * @param category
      * @return
      */
-    public Page<GoodsResponse> getGoodsList(Pageable pageable, String category) {
-        return goodsQueryRepository.findGoodsList(pageable, category);
+    public GoodsListResponse getGoodsList(Pageable pageable, String category) {
+        Page<GoodsResponse> goodsListPage = goodsQueryRepository.findGoodsList(pageable, category);
+        List<GoodsResponse> goodsList = goodsListPage.getContent();
+        return new GoodsListResponse(goodsList, goodsListPage.getTotalPages());
     }
 
     /**

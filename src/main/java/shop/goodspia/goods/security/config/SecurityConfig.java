@@ -38,9 +38,7 @@ public class SecurityConfig {
                 "/swagger-ui",
                 "/swagger-ui/**",
                 "/api-docs",
-                "/api-docs/**",
-                "/goods/list",
-                "/goods/detail/*");
+                "/api-docs/**");
     }
 
     @Bean
@@ -53,6 +51,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
+                .antMatchers("/goods/list", "/goods/detail/*").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
