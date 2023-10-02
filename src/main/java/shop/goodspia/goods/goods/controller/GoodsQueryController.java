@@ -63,10 +63,10 @@ public class GoodsQueryController {
     @Operation(summary = "아티스트가 제작한 굿즈 목록 조회 API",
             description = "조회할 아티스트의 번호를 파라미터로 설정합니다. page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/artist/{artistId}")
-    public ResponseEntity<Page<GoodsResponse>> getArtistGoodsList(@Parameter(name = "아티스트 번호") @PathVariable Long artistId,
+    public ResponseEntity<GoodsListResponse> getArtistGoodsList(@Parameter(name = "아티스트 번호") @PathVariable Long artistId,
                                                                   @Parameter(hidden = true) Pageable pageable) {
         log.info("아티스트가 제작한 굿즈 리스트 조회, artistId={}", artistId);
-        Page<GoodsResponse> artistGoodsList = goodsService.getArtistGoodsList(pageable, artistId);
+        GoodsListResponse artistGoodsList = goodsService.getArtistGoodsList(pageable, artistId);
         return ResponseEntity.ok(artistGoodsList);
     }
 }

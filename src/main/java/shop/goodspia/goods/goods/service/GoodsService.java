@@ -90,8 +90,10 @@ public class GoodsService {
      * @param artistId
      * @return
      */
-    public Page<GoodsResponse> getArtistGoodsList(Pageable pageable, long artistId) {
-        return goodsQueryRepository.findArtistGoodsList(pageable, artistId);
+    public GoodsListResponse getArtistGoodsList(Pageable pageable, long artistId) {
+        Page<GoodsResponse> goodsListPage = goodsQueryRepository.findArtistGoodsList(pageable, artistId);
+        List<GoodsResponse> goodsList = goodsListPage.getContent();
+        return new GoodsListResponse(goodsList, goodsListPage.getTotalPages());
     }
 
     /**
