@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-        log.info("JwtAuthenticationFilter | 요청 URL = {}", request.getRequestURI());
+        log.info("JwtAuthenticationFilter | 요청 URL = {}", request.getRequestURL());
         log.info("JwtAuthenticationFilter | 요청 IP = {}", request.getHeader("X-Forwarded-For"));
         log.info("JWT 인증 시작");
         //Access 토큰 추출 및 Null 체크, Bearer 인증타입 체크
