@@ -25,7 +25,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             String errorResponse = gson.toJson(Response.of("인증에 실패하였습니다.", null));
             response.getWriter().write(errorResponse);
         }
-        authException.printStackTrace();
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
