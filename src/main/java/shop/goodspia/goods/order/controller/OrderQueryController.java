@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.goodspia.goods.order.dto.OrderDetailResponse;
+import shop.goodspia.goods.order.dto.OrderPageResponse;
 import shop.goodspia.goods.order.dto.OrderReceivedResponse;
 import shop.goodspia.goods.order.dto.OrderResponse;
 import shop.goodspia.goods.order.service.OrderService;
@@ -36,11 +37,11 @@ public class OrderQueryController {
      */
     @Operation(summary = "현재 접속 중인 회원이 등록 및 미결제 상태의 주문 목록 조회 API")
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrderList(
+    public ResponseEntity<OrderPageResponse<OrderResponse>> getOrderList(
             @Parameter(hidden = true) HttpServletRequest request,
             @Parameter(hidden = true) Pageable pageable) {
         Long memberId = (Long) request.getAttribute("memberId");
-        List<OrderResponse> orders = orderService.getRequestedOrders(memberId, pageable);
+        OrderPageResponse<OrderResponse> orders = orderService.getRequestedOrders(memberId, pageable);
         return ResponseEntity.ok(orders);
     }
 
@@ -52,10 +53,10 @@ public class OrderQueryController {
      */
     @Operation(summary = "현재 접속 중인 아티스트에게 접수된 주문 목록 조회 API", description = "page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/artist")
-    public ResponseEntity<Page<OrderReceivedResponse>> getArtistOrderList(@Parameter(hidden = true) Pageable pageable,
+    public ResponseEntity<OrderPageResponse<OrderReceivedResponse>> getArtistOrderList(@Parameter(hidden = true) Pageable pageable,
                                                                           @Parameter(hidden = true) HttpServletRequest request) {
         Long artistId = (Long) request.getAttribute("artistId");
-        Page<OrderReceivedResponse> receivedOrders = orderService.getReceivedOrders(artistId, pageable);
+        OrderPageResponse<OrderReceivedResponse> receivedOrders = orderService.getReceivedOrders(artistId, pageable);
         return ResponseEntity.ok(receivedOrders);
     }
 
@@ -67,10 +68,10 @@ public class OrderQueryController {
      */
     @Operation(summary = "현재 접속 중인 회원이 주문한 주문 목록 조회 API", description = "page와 size를 파라미터로 설정할 수 있습니다.")
     @GetMapping("/member")
-    public ResponseEntity<Page<OrderResponse>> getOrderCompleteList(@Parameter(hidden = true) Pageable pageable,
-                                                                    @Parameter(hidden = true) HttpServletRequest request) {
+    public ResponseEntity<OrderPageResponse<OrderResponse>> getOrderCompleteList(@Parameter(hidden = true) Pageable pageable,
+                                                                                 @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-        Page<OrderResponse> completeOrders = orderService.getCompleteOrders(memberId, pageable);
+        OrderPageResponse<OrderResponse> completeOrders = orderService.getCompleteOrders(memberId, pageable);
         return ResponseEntity.ok(completeOrders);
     }
 

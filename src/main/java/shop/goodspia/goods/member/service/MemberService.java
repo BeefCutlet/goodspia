@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.goodspia.goods.member.dto.MemberResponse;
 import shop.goodspia.goods.member.dto.MemberSaveRequest;
 import shop.goodspia.goods.member.dto.MemberUpdateRequest;
 import shop.goodspia.goods.member.entity.Member;
@@ -39,11 +40,12 @@ public class MemberService {
 
     /**
      * 단일 회원 정보 조회용 메서드
-     * @param email
+     * @param memberId
      * @return
      */
-    public Member getMemberInfo(String email) {
-        return memberRepository.findByEmail(email)
+    public MemberResponse getMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
+        return new MemberResponse(member.getEmail(), member.getNickname());
     }
 }

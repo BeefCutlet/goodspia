@@ -60,8 +60,8 @@ public class ArtistController {
         Long memberId = (Long) request.getAttribute("memberId");
 
         //현재 로그인 중인 회원을 아티스트로 등록
-        artistService.registerArtist(memberId, artist);
-        return ResponseEntity.created(URI.create(baseUrl)).build();
+        Long artistId = artistService.registerArtist(memberId, artist);
+        return ResponseEntity.created(URI.create(baseUrl + "/artists/" + artistId)).build();
     }
 
     /**
@@ -83,6 +83,6 @@ public class ArtistController {
 
         //아티스트의 정보 수정
         artistService.modifyArtist(artistId, artist);
-        return ResponseEntity.created(URI.create(baseUrl)).build();
+        return ResponseEntity.created(URI.create(baseUrl + "/artists/" + artistId)).build();
     }
 }

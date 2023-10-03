@@ -41,8 +41,8 @@ public class OrderController {
                                        @RequestBody @Valid OrderSaveListRequest orderList,
                                        @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-        orderService.addOrders(orderList, memberId);
-        return ResponseEntity.created(URI.create(baseUrl)).build();
+        Long orderId = orderService.addOrders(orderList, memberId);
+        return ResponseEntity.created(URI.create(baseUrl + "/orders")).build();
     }
 
     /**

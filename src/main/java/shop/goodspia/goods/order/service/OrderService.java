@@ -36,7 +36,7 @@ public class OrderService {
      * 주문 목록에 리스트 추가
      * @param orderSaveListRequest
      */
-    public void addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
+    public Long addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
@@ -62,7 +62,8 @@ public class OrderService {
         }
 
         Orders orders = Orders.createOrder(member, orderGoodsList);
-        orderRepository.save(orders);
+        Orders savedOrder = orderRepository.save(orders);
+        return savedOrder.getId();
     }
 
     public void removeOrder(Long orderGoodsId) {
@@ -70,34 +71,34 @@ public class OrderService {
     }
 
     //현재 주문 목록 조회
-    public List<OrderResponse> getRequestedOrders(Long memberId, Pageable pageable) {
+    public OrderPageResponse<OrderResponse> getRequestedOrders(Long memberId, Pageable pageable) {
         //아직 결제되지 않은 상품 리스트 조회
-        List<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId, pageable).getContent();
+        Page<OrderGoods> readyOrders = orderQueryRepository.findReadyOrders(memberId, pageable);
         List<OrderResponse> orders = new ArrayList<>();
         for (OrderGoods readyOrder : readyOrders) {
             OrderResponse order = new OrderResponse(readyOrder);
             orders.add(order);
         }
 
-        return orders;
+        return new OrderPageResponse<>(orders, readyOrders.getTotalPages());
     }
 
     //아티스트에게 들어온 주문 목록 조회
-    public Page<OrderReceivedResponse> getReceivedOrders(Long artistId, Pageable pageable) {
+    public OrderPageResponse<OrderReceivedResponse> getReceivedOrders(Long artistId, Pageable pageable) {
         Page<OrderReceivedResponse> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
         if (orderGoods == null || !orderGoods.hasContent()) {
             throw new IllegalArgumentException("주문 정보를 찾을 수 없습니다.");
         }
-        return orderGoods;
+        return new OrderPageResponse<>(orderGoods.getContent(), orderGoods.getTotalPages());
     }
 
     //회원이 주문했던 주문 목록
-    public Page<OrderResponse> getCompleteOrders(Long memberId, Pageable pageable) {
+    public OrderPageResponse<OrderResponse> getCompleteOrders(Long memberId, Pageable pageable) {
         Page<OrderResponse> completeOrders = orderQueryRepository.findCompleteOrders(memberId, pageable);
         if (completeOrders == null || !completeOrders.hasContent()) {
             throw new IllegalArgumentException("접수한 주문이 없습니다.");
         }
-        return completeOrders;
+        return new OrderPageResponse<>(completeOrders.getContent(), completeOrders.getTotalPages());
     }
 
     //회원이 주문했던 주문 (단건)

@@ -37,7 +37,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<?> register(@Parameter(name = "회원 정보", description = "회원가입 할 회원의 정보") @RequestBody MemberSaveRequest memberInfo) {
         memberService.saveMember(memberInfo);
-        return ResponseEntity.created(URI.create(baseUrl)).build();
+        return ResponseEntity.created(URI.create(baseUrl + "/members/info")).build();
     }
 
     /**
@@ -52,6 +52,6 @@ public class MemberController {
                                @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
         memberService.modifyMemberInfo(memberId, memberInfo);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.created(URI.create(baseUrl + "/members/info")).build();
     }
 }
