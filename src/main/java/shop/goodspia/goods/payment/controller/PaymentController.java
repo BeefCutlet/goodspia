@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.common.dto.UrlResponse;
-import shop.goodspia.goods.delivery.dto.DeliverySaveRequest;
 import shop.goodspia.goods.payment.dto.PaymentPrepareRequest;
 import shop.goodspia.goods.payment.dto.PaymentPrepareResponse;
 import shop.goodspia.goods.payment.dto.PaymentRequest;
@@ -56,14 +54,12 @@ public class PaymentController {
      */
     @Operation(summary = "결제 검증 API", description = "결제되어야 할 금액과 실제 결제된 금액이 일치하는지 유효성 검사를 합니다.")
     @PostMapping("/validation/{paymentUid}")
-    public ResponseEntity<UrlResponse> validatePayment(@Parameter(description = "배송지 정보")
-                                                       @RequestBody DeliverySaveRequest deliverySaveRequest,
-                                                       @Parameter(description = "결제 API 에서 결제 처리 후 생성된 결제 UID")
+    public ResponseEntity<UrlResponse> validatePayment(@Parameter(description = "결제 API 에서 결제 처리 후 생성된 결제 UID")
                                                        @PathVariable String paymentUid) throws Exception {
         //결제 정보 검증
         PaymentRequest paymentRequest = paymentAgentService.validatePayment(paymentUid);
         //검증 완료 시 결제 정보 및 배송지 정보를 DB에 저장
-        paymentService.addPaymentAndDelivery(paymentRequest, deliverySaveRequest);
+        paymentService.addPaymentAndDelivery(paymentRequest);
 
         return ResponseEntity.created(URI.create(baseUrl)).build();
     }

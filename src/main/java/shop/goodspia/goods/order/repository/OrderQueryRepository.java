@@ -9,15 +9,14 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import shop.goodspia.goods.order.dto.OrderReceivedResponse;
 import shop.goodspia.goods.order.dto.OrderResponse;
-import shop.goodspia.goods.order.entity.OrderGoods;
 import shop.goodspia.goods.order.dto.OrderStatus;
+import shop.goodspia.goods.order.entity.OrderGoods;
 import shop.goodspia.goods.order.entity.Orders;
 import shop.goodspia.goods.payment.dto.PaymentStatus;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static shop.goodspia.goods.delivery.entity.QDelivery.delivery;
 import static shop.goodspia.goods.goods.entity.QGoods.goods;
 import static shop.goodspia.goods.member.entity.QMember.member;
 import static shop.goodspia.goods.order.entity.QOrderGoods.orderGoods;
@@ -89,13 +88,11 @@ public class OrderQueryRepository {
                         orderGoods.goodsDesign.as("goodsDesign"),
                         orderGoods.quantity.as("quantity"),
                         orderGoods.totalPrice.as("totalPrice")
-//                        orderGoods.orders.delivery.address.as("address")
                 ))
                 .from(orderGoods)
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
-                .join(orderGoods.orders.delivery, delivery)
                 .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE))
                 .orderBy(orderGoods.id.desc())
                 .offset(pageable.getOffset())
@@ -108,7 +105,6 @@ public class OrderQueryRepository {
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
-                .join(orderGoods.orders.delivery, delivery)
                 .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE));
 
         return PageableExecutionUtils.getPage(orderGoodsList, pageable, countQuery::fetchOne);
