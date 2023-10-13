@@ -13,9 +13,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.common.dto.Response;
 import shop.goodspia.goods.security.dto.AuthResponse;
+import shop.goodspia.goods.security.dto.TokenInfo;
 import shop.goodspia.goods.security.service.JwtUtil;
 import shop.goodspia.goods.security.service.RefreshTokenService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Tag(name = "Refresh 토큰 재발급 API", description = "Access 토큰이 만료되었을 때, Refresh 토큰과 이용해 재발급을 요청할 때 사용하는 API")
@@ -30,17 +32,16 @@ public class JwtRefreshTokenRemakeHandler {
 
     /**
      * Access 토큰이 만료되었을 때, Refresh 토큰과 이용해 재발급을 요청할 때 사용하는 API
-     * @param token
+     * @param request
      * @return
      */
     @Operation(summary = "Access 토큰 재발급을 위한 API", description = "유효한 Refresh 토큰 필요")
     @PostMapping("/token")
-    public ResponseEntity<AuthResponse> createNewAccessToken(@Parameter(hidden = true)
-                                                             @RequestHeader(HttpHeaders.SET_COOKIE) String token) {
-        log.info("RefreshToken in Cookie={}", token);
+    public ResponseEntity<AuthResponse> createNewAccessToken(@Parameter(hidden = true) HttpServletRequest request) {
         ////Access 토큰이 만료되었을 경우, Access 토큰 재발급을 위해 Refresh 토큰 검사
         //Refresh 토큰 추출
-        String refreshToken = resolveRefreshToken(token);
+        String refreshToken = resolveRefreshToken(request);
+        log.info("RefreshToken in Cookie={}",refreshToken);
         Claims claims = jwtUtil.getClaims(refreshToken);
 
         //토큰 유효성 검사
@@ -56,7 +57,15 @@ public class JwtRefreshTokenRemakeHandler {
     }
 
     //Refresh 토큰 추출 메서드
-    private String resolveRefreshToken(String token) {
+    private String resolveRefreshToken(HttpServletRequest request) {
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(TokenInfo.REFRESH_TOKEN)) {
+                token = cookie.getName();
+            }
+        }
+
         if (!StringUtils.hasText(token)) {
             log.info("Refresh 토큰이 존재하지 않습니다.");
             throw new IllegalArgumentException("Refresh 토큰이 존재하지 않습니다.");
