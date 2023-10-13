@@ -26,7 +26,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
-        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getPrincipal());
+        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials());
     }
 
     @Override

@@ -75,21 +75,31 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     //RefreshToken 생성 메서드
     private String createRefreshToken(Member member) {
+        Long artistId = null;
+        if (member.getArtist() != null) {
+            artistId = member.getArtist().getId();
+        }
+
         return jwtUtil.createToken(jwtUtil.createClaims(
                 TokenInfo.REFRESH_TOKEN,
                 member.getEmail(),
                 member.getId(),
-                member.getArtist().getId()),
+                artistId),
                 TokenInfo.REFRESH_EXP);
     }
 
     //AccessToken 생성 메서드
     private String createAccessToken(Member member) {
+        Long artistId = null;
+        if (member.getArtist() != null) {
+            artistId = member.getArtist().getId();
+        }
+
         return jwtUtil.createToken(jwtUtil.createClaims(
                 TokenInfo.ACCESS_TOKEN,
                 member.getEmail(),
                 member.getId(),
-                member.getArtist().getId()),
+                artistId),
                 TokenInfo.ACCESS_EXP);
     }
 }
