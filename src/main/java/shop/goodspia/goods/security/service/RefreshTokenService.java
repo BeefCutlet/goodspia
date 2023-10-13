@@ -37,7 +37,7 @@ public class RefreshTokenService {
 
         ////토큰 서명 확인 + DB에 저장된 Refresh 토큰과 일치하는지 검사 + 만료 여부 검사
         //Refresh 토큰 만료 여부 체크
-        if (jwtUtil.validateToken(refreshToken) ||
+        if (!jwtUtil.validateToken(refreshToken) ||
                 !auth.getRefreshToken().equals(refreshToken) ||
                 refreshTokenClaims.getExpiration().before(Timestamp.from(Instant.now()))) {
             isRefreshValid = false;
