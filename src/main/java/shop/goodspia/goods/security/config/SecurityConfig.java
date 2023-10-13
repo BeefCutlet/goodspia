@@ -3,7 +3,6 @@ package shop.goodspia.goods.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -23,6 +22,7 @@ import shop.goodspia.goods.security.handler.JwtAccessDeniedHandler;
 import shop.goodspia.goods.security.handler.JwtAuthenticationEntryPoint;
 import shop.goodspia.goods.security.handler.JwtLoginFailureHandler;
 import shop.goodspia.goods.security.handler.JwtLoginSuccessHandler;
+import shop.goodspia.goods.security.repository.AuthRepository;
 import shop.goodspia.goods.security.service.JwtUtil;
 
 @Configuration
@@ -31,6 +31,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final AuthRepository authRepository;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -41,7 +42,10 @@ public class SecurityConfig {
                 "/api-docs",
                 "/api-docs/**",
                 "/goods/list",
-                "/goods/detail/*");
+                "/goods/detail/*",
+                "/login",
+                "/members",
+                "/auth/token");
     }
 
     @Bean
@@ -101,6 +105,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtLoginSuccessHandler(jwtUtil, memberRepository);
+        return new JwtLoginSuccessHandler(jwtUtil, memberRepository, authRepository);
     }
 }
