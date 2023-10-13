@@ -45,7 +45,7 @@ class CartServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        cartService = new CartService(cartRepository, memberRepository, goodsRepository, designRepository, cartQueryRepository);
+//        cartService = new CartService(cartRepository, memberRepository, goodsRepository, designRepository, cartQueryRepository);
     }
 
     @Test

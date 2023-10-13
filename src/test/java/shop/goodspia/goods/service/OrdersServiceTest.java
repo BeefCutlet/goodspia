@@ -12,7 +12,6 @@ import shop.goodspia.goods.order.dto.OrderSaveRequest;
 import shop.goodspia.goods.order.dto.OrderStatus;
 import shop.goodspia.goods.order.entity.OrderGoods;
 import shop.goodspia.goods.order.entity.Orders;
-import shop.goodspia.goods.delivery.repository.DeliveryRepository;
 import shop.goodspia.goods.goods.repository.GoodsRepository;
 import shop.goodspia.goods.member.repository.MemberRepository;
 import shop.goodspia.goods.order.repository.OrderRepository;
@@ -31,7 +30,6 @@ public class OrdersServiceTest {
     private OrderRepository orderRepository;
     private MemberRepository memberRepository;
     private GoodsRepository goodsRepository;
-    private DeliveryRepository deliveryRepository;
 
 //    @Test
 //    void addPaymentTest() {
