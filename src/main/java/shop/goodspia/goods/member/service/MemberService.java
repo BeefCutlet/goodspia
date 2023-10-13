@@ -2,6 +2,7 @@ package shop.goodspia.goods.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.member.dto.MemberResponse;
@@ -17,6 +18,7 @@ import shop.goodspia.goods.member.repository.MemberRepository;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원 정보 저장
@@ -24,7 +26,12 @@ public class MemberService {
      * @return
      */
     public Long saveMember(MemberSaveRequest memberSaveRequest) {
-        Member member = Member.createMember(memberSaveRequest);
+        Member member = Member.builder()
+                .email(memberSaveRequest.getEmail())
+                .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
+                .nickname(memberSaveRequest.getNickname())
+                .isWithdraw(0)
+                .build();
         return memberRepository.save(member).getId();
     }
 
