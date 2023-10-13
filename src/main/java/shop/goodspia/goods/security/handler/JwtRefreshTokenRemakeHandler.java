@@ -62,7 +62,7 @@ public class JwtRefreshTokenRemakeHandler {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(TokenInfo.REFRESH_TOKEN)) {
-                token = cookie.getName();
+                token = cookie.getValue();
                 break;
             }
         }
