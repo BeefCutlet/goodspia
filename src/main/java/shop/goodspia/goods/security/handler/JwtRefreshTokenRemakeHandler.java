@@ -63,6 +63,7 @@ public class JwtRefreshTokenRemakeHandler {
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(TokenInfo.REFRESH_TOKEN)) {
                 token = cookie.getName();
+                break;
             }
         }
 
@@ -70,7 +71,7 @@ public class JwtRefreshTokenRemakeHandler {
             log.info("Refresh 토큰이 존재하지 않습니다.");
             throw new IllegalArgumentException("Refresh 토큰이 존재하지 않습니다.");
         }
-        return token.split("=")[1].split(";")[0];
+        return token;
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
