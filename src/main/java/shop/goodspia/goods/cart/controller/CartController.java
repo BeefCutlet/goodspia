@@ -33,8 +33,9 @@ public class CartController {
      */
     @Operation(summary = "장바구니 등록 API", description = "현재 접속 중인 회원이 등록한 장바구니 목록을 조회하는 API")
     @PostMapping
-    public ResponseEntity<?> addCart(@Parameter(name = "장바구니 정보", required = true) @RequestBody @Valid CartSaveRequest cart,
-                                  @Parameter(hidden = true) HttpServletRequest request) {
+    public ResponseEntity<?> addCart(@Parameter(name = "장바구니 정보", required = true)
+                                     @RequestBody @Valid CartSaveRequest cart,
+                                     @Parameter(hidden = true) HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
         cartService.addCart(memberId, cart);
         return ResponseEntity.created(URI.create(baseUrl + "/cart/list")).build();
@@ -48,8 +49,10 @@ public class CartController {
      */
     @Operation(summary = "장바구니 수량 수정 API", description = "장바구니에 담긴 굿즈의 수량을 수정하는 API")
     @PutMapping("/fluctuate/{cartId}")
-    public ResponseEntity<?> fluctuateQuantity(@Parameter(description = "수정할 장바구니 굿즈의 번호") @PathVariable Long cartId,
-                                    @Parameter(description = "수정될 굿즈 수량") @RequestParam Integer quantity) {
+    public ResponseEntity<?> fluctuateQuantity(@Parameter(description = "수정할 장바구니 굿즈의 번호")
+                                               @PathVariable Long cartId,
+                                               @Parameter(description = "수정될 굿즈 수량")
+                                               @RequestParam Integer quantity) {
         cartService.changeQuantity(cartId, quantity);
         return ResponseEntity.created(URI.create(baseUrl + "/cart/list")).build();
     }

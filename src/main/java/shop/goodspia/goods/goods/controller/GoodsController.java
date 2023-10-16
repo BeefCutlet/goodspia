@@ -41,9 +41,11 @@ public class GoodsController {
      */
     @Operation(summary = "굿즈 등록 API", description = "새로운 굿즈를 등록하는 API")
     @PostMapping
-    public ResponseEntity<?> addGoods(@Parameter(name = "굿즈 정보", description = "등록할 굿즈 정보") @RequestPart @Valid GoodsSaveRequest goods,
-                                   @Parameter(name = "썸네일 이미지", description = "등록할 굿즈 썸네일 이미지") @RequestPart MultipartFile thumbnail,
-                                   @Parameter(hidden = true) HttpServletRequest request) {
+    public ResponseEntity<?> addGoods(@Parameter(name = "굿즈 정보", description = "등록할 굿즈 정보")
+                                      @RequestPart @Valid GoodsSaveRequest goods,
+                                      @Parameter(name = "썸네일 이미지", description = "등록할 굿즈 썸네일 이미지")
+                                      @RequestPart MultipartFile thumbnail,
+                                      @Parameter(hidden = true) HttpServletRequest request) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
         String imageUrl = ImageUpload.uploadImage(thumbnail);
         goods.setThumbnail(imageUrl);
