@@ -4,6 +4,9 @@ spring:
     url: jdbc:mysql://${rds.hostname}:${rds.port}/${rds.db.name}
     username: ${rds.username}
     password: ${rds.password}
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
   jpa:
     hibernate:
       ddl-auto: none

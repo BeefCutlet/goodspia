@@ -37,6 +37,8 @@ jobs:
           iamport.rest-api.secret-key: ${{ secrets.IAMPORT_SECRET_KEY }}
           iamport.rest-api.imp-uid: ${{ secrets.IAMPORT_IMP_UID }}
           jwt.secret-key: ${{ secrets.JWT_SECRET_KEY }}
+          spring.redis.host: ${{ secrets.REDIS_HOST }}
+          spring.redis.port: ${{ secrets.REDIS_PORT }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
