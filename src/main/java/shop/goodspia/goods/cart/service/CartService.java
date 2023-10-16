@@ -34,11 +34,11 @@ public class CartService {
     private final CartQueryRepository cartQueryRepository;
 
     /**
-     * 카트에 굿즈 추가
-     * @param cartSaveRequest
+     * 장바구니 저장
+     * @param memberId, cartSaveRequest
      * @return
      */
-    public void addCart(Long memberId, CartSaveRequest cartSaveRequest) {
+    public Long addCart(Long memberId, CartSaveRequest cartSaveRequest) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
@@ -48,6 +48,25 @@ public class CartService {
         Design design = designRepository.findById(cartSaveRequest.getDesignId())
                 .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
 
+        Cart cart = Cart.createCart(cartSaveRequest.getQuantity(), member, goods, design);
+        return cartRepository.save(cart).getId();
+    }
+
+    /**
+     * 장바구니 저장 - Redis에 저장
+     * @param memberId, cartSaveRequest
+     * @return
+     */
+    public void addRedisCart(Long memberId, CartSaveRequest cartSaveRequest) {
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        goodsRepository.findById(cartSaveRequest.getGoodsId())
+                .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다."));
+
+        designRepository.findById(cartSaveRequest.getDesignId())
+                .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
+
         RedisCart redisCart = RedisCart.builder()
                 .quantity(cartSaveRequest.getQuantity())
                 .memberId(memberId)
@@ -55,8 +74,6 @@ public class CartService {
                 .designId(cartSaveRequest.getDesignId())
                 .build();
         cartRedisRepository.save(redisCart);
-//        Cart cart = Cart.createCart(cartSaveRequest.getQuantity(), member, goods, design);
-//        return cartRepository.save(cart).getId();
     }
 
     /**

@@ -42,6 +42,22 @@ public class CartController {
     }
 
     /**
+     * 카트에 선택한 굿즈를 등록하는 API
+     * @param cart goodsId, designId
+     * @param request
+     * @return
+     */
+    @Operation(summary = "장바구니 Redis 등록 API", description = "현재 접속 중인 회원이 등록한 장바구니 목록을 조회하는 API")
+    @PostMapping
+    public ResponseEntity<?> addRedisCart(@Parameter(name = "장바구니 정보", required = true)
+                                     @RequestBody @Valid CartSaveRequest cart,
+                                     @Parameter(hidden = true) HttpServletRequest request) {
+        Long memberId = (Long) request.getAttribute("memberId");
+        cartService.addRedisCart(memberId, cart);
+        return ResponseEntity.created(URI.create(baseUrl + "/cart/list")).build();
+    }
+
+    /**
      * 장바구니에 담긴 굿즈의 수량 정보 수정 API
      * @param cartId
      * @param quantity
