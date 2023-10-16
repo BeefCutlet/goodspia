@@ -26,6 +26,11 @@ public class MemberService {
      * @return
      */
     public Long saveMember(MemberSaveRequest memberSaveRequest) {
+        String findMember = memberSaveRequest.getEmail();
+        if (memberRepository.findByEmailNotFetch(findMember).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+        }
+
         Member member = Member.builder()
                 .email(memberSaveRequest.getEmail())
                 .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
