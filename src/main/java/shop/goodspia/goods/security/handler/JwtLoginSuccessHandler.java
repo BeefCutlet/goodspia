@@ -59,7 +59,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 //                    Auth auth = new Auth(refreshToken, member);
 //                    return authRepository.save(auth);
 //                });
-        authRedisRepository.save(member.getId(), new RedisAuth(refreshToken, member.getId()));
+        authRedisRepository.save(member.getId(), refreshToken);
 
         ////AccessToken 생성 - Body로 전달
         String accessToken = createAccessToken(member);
