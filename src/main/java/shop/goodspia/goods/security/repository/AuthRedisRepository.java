@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import shop.goodspia.goods.common.util.RedisKeyGenerator;
-import shop.goodspia.goods.security.entity.RedisAuth;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,20 +13,20 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthRedisRepository {
 
-    private final RedisTemplate<String, RedisAuth> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final RedisKeyGenerator keyGenerator;
 
     /**
      * Refresh 토큰 저장
      * 기존 토큰을 삭제하고, 새로운 토큰을 저장
      * @param memberId
-     * @param auth
+     * @param refreshToken
      */
-    public void save(Long memberId, RedisAuth auth) {
+    public void save(Long memberId, String refreshToken) {
         try {
             String key = keyGenerator.generateAuthKey(memberId);
             redisTemplate.delete(key);
-            redisTemplate.opsForValue().set(key, auth);
+            redisTemplate.opsForValue().set(key, refreshToken);
             redisTemplate.expire(key, 30, TimeUnit.MINUTES);
             log.info("Refresh 토큰 저장 성공, 회원 ID = {}", memberId);
         } catch (Exception e) {
@@ -35,7 +34,7 @@ public class AuthRedisRepository {
         }
     }
 
-    public RedisAuth findByKey(Long memberId) {
+    public String findByKey(Long memberId) {
         String key = keyGenerator.generateAuthKey(memberId);
         return redisTemplate.opsForValue().get(key);
     }
