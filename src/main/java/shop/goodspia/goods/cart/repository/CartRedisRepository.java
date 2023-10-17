@@ -20,16 +20,17 @@ public class CartRedisRepository {
     private final RedisKeyGenerator keyGenerator;
 
     /**
-     * 장바구니 데이터 단건 저장
+     * 장바구니 데이터 저장
      * @param redisCart
      */
     public void save(RedisCart redisCart) {
-        long start = System.currentTimeMillis();
-        String key = keyGenerator.generateCartKey(redisCart.getMemberId());
-        redisTemplate.opsForList().rightPush(key, redisCart);
-        redisTemplate.expire(key, 120, TimeUnit.SECONDS);
-        long end = System.currentTimeMillis();
-        log.info("Redis Cart Save Time={}", (end - start));
+        try {
+            String key = keyGenerator.generateCartKey(redisCart.getMemberId());
+            redisTemplate.opsForList().rightPush(key, redisCart);
+            redisTemplate.expire(key, 120, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.info("장바구니 저장 실패, 회원 ID = {}", redisCart.getMemberId());
+        }
     }
 
     /**
