@@ -39,17 +39,20 @@
 
 ## 시스템 아키텍처
 
-![GoodsPia Architecture.png](..%2F..%2F..%2F%EB%B8%94%EB%A1%9C%EA%B7%B8%EC%9A%A9%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2FGoodsPia%20Architecture.png)
+![GoodsPia Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/e1f4f44b-048e-4c1e-96f3-a5eb0eb69b40)
+
 
 ## ERD
 
-![GoodsPia ERD.png](..%2F..%2F..%2F%EB%B8%94%EB%A1%9C%EA%B7%B8%EC%9A%A9%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2FGoodsPia%20ERD.png)
+![GoodsPia_ERD](https://github.com/BeefCutlet/goodspia/assets/77325024/dfdc2142-ee0d-4877-859d-1f81341892c3)
+
 
 ## 세부구현
 
 ### 회원가입/로그인 프로세스
 
-![로그인프로세스.png](..%2F..%2F..%2F%EB%B8%94%EB%A1%9C%EA%B7%B8%EC%9A%A9%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2F%EB%A1%9C%EA%B7%B8%EC%9D%B8%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4.png)
+![GoodsPia_Login_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/34efe557-8d92-434e-a8d6-4e4605e46cf0)
+
 
 - 회원가입은 입력받은 이메일을 바탕으로 중복 회원이 없다면 비밀번호를 암호화한 뒤 DB에 저장하도록 하였습니다.
 - 로그인은 입력받은 이메일을 바탕으로 DB에서 회원 정보를 조회하여 이메일과 비밀번호가 일치하면 성공하도록 하였습니다.
@@ -66,7 +69,7 @@
 
 ### 인증 프로세스
 
-![인증프로세스.png](..%2F..%2F..%2F%EB%B8%94%EB%A1%9C%EA%B7%B8%EC%9A%A9%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2F%EC%9D%B8%EC%A6%9D%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4.png)
+![GoodsPia_Authentication_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/fb1bcf7c-6200-4735-88ec-7ff9247f8556)
 
 - 로그인하지 않은 사용자는 다른 회원의 정보에 접근할 수 없습니다.
 - 또한, 일반 사용자는 아티스트가 사용할 수 있는 기능(굿즈 등록, 수정 등)을 이용할 수 없습니다.
@@ -83,7 +86,7 @@
 
 ### 배포 자동화 프로세스
 
-![배포자동화 프로세스.png](..%2F..%2F..%2F%EB%B8%94%EB%A1%9C%EA%B7%B8%EC%9A%A9%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2F%EB%B0%B0%ED%8F%AC%EC%9E%90%EB%8F%99%ED%99%94%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4.png)
+![GoodsPia_Deploy_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/7c30e351-bb6d-4ace-965d-512ab8135d72)
 
 - 프로젝트를 배포한 뒤, 디버깅을 하고 성능 테스트를 진행한 뒤 재배포를 하려면, 다음과 같은 과정을 거쳐야 했습니다.
   - 깃허브에 수정된 코드를 Push 한다.
