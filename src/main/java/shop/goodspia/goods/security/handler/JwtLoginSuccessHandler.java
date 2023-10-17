@@ -14,6 +14,8 @@ import shop.goodspia.goods.member.repository.MemberRepository;
 import shop.goodspia.goods.security.dto.AuthResponse;
 import shop.goodspia.goods.security.dto.TokenInfo;
 import shop.goodspia.goods.security.entity.Auth;
+import shop.goodspia.goods.security.entity.RedisAuth;
+import shop.goodspia.goods.security.repository.AuthRedisRepository;
 import shop.goodspia.goods.security.repository.AuthRepository;
 import shop.goodspia.goods.security.service.JwtUtil;
 
@@ -29,7 +31,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
-    private final AuthRepository authRepository;
+    private final AuthRedisRepository authRedisRepository;
 
     private Gson gson = new Gson();
 
@@ -47,16 +49,17 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
                 .secure(true)
                 .build();
 
-        //Refresh 토큰을 DB에 저장
-        //회원에게 기존 Refresh 토큰 정보가 있는지 확인
-        //기존 Refresh 토큰 정보가 있으면 새로운 Refresh 토큰으로 UPDATE
-        //기존 Refresh 토큰 정보가 없으면 새로운 Refresh 토큰을 저장
-        authRepository.findAuthByMemberId(member.getId())
-                .map(auth -> auth.updateRefreshToken(refreshToken))
-                .orElseGet(() -> {
-                    Auth auth = new Auth(refreshToken, member);
-                    return authRepository.save(auth);
-                });
+//        //Refresh 토큰을 DB에 저장
+//        //회원에게 기존 Refresh 토큰 정보가 있는지 확인
+//        //기존 Refresh 토큰 정보가 있으면 새로운 Refresh 토큰으로 UPDATE
+//        //기존 Refresh 토큰 정보가 없으면 새로운 Refresh 토큰을 저장
+//        authRepository.findAuthByMemberId(member.getId())
+//                .map(auth -> auth.updateRefreshToken(refreshToken))
+//                .orElseGet(() -> {
+//                    Auth auth = new Auth(refreshToken, member);
+//                    return authRepository.save(auth);
+//                });
+        authRedisRepository.save(member.getId(), new RedisAuth(refreshToken, member.getId()));
 
         ////AccessToken 생성 - Body로 전달
         String accessToken = createAccessToken(member);

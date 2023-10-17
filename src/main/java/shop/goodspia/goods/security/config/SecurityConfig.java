@@ -22,7 +22,7 @@ import shop.goodspia.goods.security.handler.JwtAccessDeniedHandler;
 import shop.goodspia.goods.security.handler.JwtAuthenticationEntryPoint;
 import shop.goodspia.goods.security.handler.JwtLoginFailureHandler;
 import shop.goodspia.goods.security.handler.JwtLoginSuccessHandler;
-import shop.goodspia.goods.security.repository.AuthRepository;
+import shop.goodspia.goods.security.repository.AuthRedisRepository;
 import shop.goodspia.goods.security.service.JwtUtil;
 
 @Configuration
@@ -31,7 +31,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
-    private final AuthRepository authRepository;
+    private final AuthRedisRepository authRedisRepository;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -105,6 +105,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtLoginSuccessHandler(jwtUtil, memberRepository, authRepository);
+        return new JwtLoginSuccessHandler(jwtUtil, memberRepository, authRedisRepository);
     }
 }
