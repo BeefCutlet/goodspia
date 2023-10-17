@@ -29,6 +29,7 @@ public class AuthRedisRepository {
             redisTemplate.delete(key);
             redisTemplate.opsForValue().set(key, auth);
             redisTemplate.expire(key, 30, TimeUnit.MINUTES);
+            log.info("Refresh 토큰 저장 성공, 회원 ID = {}", memberId);
         } catch (Exception e) {
             log.info("Refresh 토큰 저장 실패, 회원 ID = {}", memberId);
         }
