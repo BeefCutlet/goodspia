@@ -1,6 +1,7 @@
 # GoodsPia
 굿즈 구매 웹 서비스
 
+
 ## 목차
 1. 프로젝트 목적
 2. 핵심기능
@@ -12,6 +13,7 @@
    - 인증 프로세스
    - 배포 자동화 프로세스
 
+
 ## 핵심기능
 
 - 플랫폼의 사용자는 아티스트로 등록할 수 있습니다.
@@ -19,6 +21,7 @@
 - 일반 사용자는 굿즈를 장바구니에 담고 구매할 수 있습니다.
 - 로그인 이후에는 JWT를 발급받아서 인증이 필요한 요청 시에 헤더에 함께 담아 전달하여 인증을 실시합니다.
 - GithubActions를 이용하여 Github에 Push 이벤트가 발생하면 배포 작업을 자동으로 수행합니다.
+
 
 ## 기술스택
 
@@ -37,9 +40,11 @@
     - AWS Code Deploy
     - Github Actions
 
+
 ## 시스템 아키텍처
 
 ![GoodsPia Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/e1f4f44b-048e-4c1e-96f3-a5eb0eb69b40)
+
 
 
 ## ERD
@@ -49,10 +54,10 @@
 
 ## 세부구현
 
+
 ### 회원가입/로그인 프로세스
 
-![GoodsPia_Login_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/34efe557-8d92-434e-a8d6-4e4605e46cf0)
-
+![GoodsPia_Login_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/6661a03a-40a9-465a-b795-a664c940d856)
 
 - 회원가입은 입력받은 이메일을 바탕으로 중복 회원이 없다면 비밀번호를 암호화한 뒤 DB에 저장하도록 하였습니다.
 - 로그인은 입력받은 이메일을 바탕으로 DB에서 회원 정보를 조회하여 이메일과 비밀번호가 일치하면 성공하도록 하였습니다.
@@ -67,9 +72,10 @@
   - 리프레시 토큰은 HTTP Header의 Set-Cookie에 담아서 전달하였습니다. 그러나 쿠키는 브라우저 또는 HTTP 통신 감청을 통해 탈취될 가능성이 있습니다.
   - 혹시라도 SSL 암호화를 피해서 토큰을 탈취하는 일이 없도록 secure 옵션을 설정하였습니다. 또한, XSS 공격으로 쿠키를 탈취당하지 않도록 HttpOnly 옵션을 설정하였습니다.
 
+
 ### 인증 프로세스
 
-![GoodsPia_Authentication_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/fb1bcf7c-6200-4735-88ec-7ff9247f8556)
+![GoodsPia_Authentication_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/4e524808-5f82-47f7-9049-6da3e5dde417)
 
 - 로그인하지 않은 사용자는 다른 회원의 정보에 접근할 수 없습니다.
 - 또한, 일반 사용자는 아티스트가 사용할 수 있는 기능(굿즈 등록, 수정 등)을 이용할 수 없습니다.
@@ -83,6 +89,7 @@
   - DB에 저장된 리프레시 토큰과 전달된 리프레시 토큰을 비교하여 일치 여부를 확인합니다.
   - 토큰에 설정된 만료일을 현재 시각과 비교하여 만료 여부를 판단합니다.
 - 리프레시 토큰 인증에 성공하면 액세스 토큰을 재발급하고, 실패하면 다시 로그인하도록 처리합니다.
+
 
 ### 배포 자동화 프로세스
 
