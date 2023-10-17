@@ -1,6 +1,7 @@
 package shop.goodspia.goods.cart.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import shop.goodspia.goods.common.util.RedisKeyGenerator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class CartRedisRepository {
@@ -22,9 +24,12 @@ public class CartRedisRepository {
      * @param redisCart
      */
     public void save(RedisCart redisCart) {
+        long start = System.currentTimeMillis();
         String key = keyGenerator.generateCartKey(redisCart.getMemberId());
         redisTemplate.opsForList().rightPush(key, redisCart);
         redisTemplate.expire(key, 120, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        log.info("Redis Cart Save Time={}", (end - start));
     }
 
     /**

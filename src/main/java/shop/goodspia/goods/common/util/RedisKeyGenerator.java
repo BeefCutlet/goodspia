@@ -10,9 +10,7 @@ import static shop.goodspia.goods.common.util.RedisKey.CART_KEY;
 public class RedisKeyGenerator {
 
     public String generateCartKey(Long memberId) {
-        log.info("key generate start={}", System.currentTimeMillis());
         String key = CART_KEY + ":" + memberId;
-        log.info("key generate end={}", System.currentTimeMillis());
         return key;
     }
 }
