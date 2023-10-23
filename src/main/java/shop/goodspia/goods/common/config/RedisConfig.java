@@ -34,16 +34,12 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, ?> redisTemplate() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.activateDefaultTyping(
-//                BasicPolymorphicTypeValidator.builder()
-//                        .allowIfSubType(Object.class)
-//                        .build());
-
         RedisTemplate<String, ?> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
     }
 }

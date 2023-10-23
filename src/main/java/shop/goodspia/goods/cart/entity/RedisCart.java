@@ -12,7 +12,16 @@ import lombok.NoArgsConstructor;
 public class RedisCart {
 
     private int quantity;
-    private Long memberId;
     private Long goodsId;
+    private String goodsName;
+    private String goodsSummary;
+    private String goodsCategory;
+    private String goodsThumbnail;
+    private int goodsPrice;
     private Long designId;
+    private String designName;
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

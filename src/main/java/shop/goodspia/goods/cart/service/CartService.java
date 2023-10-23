@@ -1,6 +1,7 @@
 package shop.goodspia.goods.cart.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import shop.goodspia.goods.member.repository.MemberRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,6 +41,7 @@ public class CartService {
      * @return
      */
     public Long addCart(Long memberId, CartSaveRequest cartSaveRequest) {
+        log.info("MySQL Cart Save Start");
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
@@ -49,7 +52,9 @@ public class CartService {
                 .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
 
         Cart cart = Cart.createCart(cartSaveRequest.getQuantity(), member, goods, design);
-        return cartRepository.save(cart).getId();
+        Long savedCartId = cartRepository.save(cart).getId();
+        log.info("MySQL Cart Save End");
+        return savedCartId;
     }
 
     /**
@@ -58,22 +63,39 @@ public class CartService {
      * @return
      */
     public void addRedisCart(Long memberId, CartSaveRequest cartSaveRequest) {
+        log.info("Redis Cart Save Start");
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-        goodsRepository.findById(cartSaveRequest.getGoodsId())
+        Goods goods = goodsRepository.findById(cartSaveRequest.getGoodsId())
                 .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다."));
 
-        designRepository.findById(cartSaveRequest.getDesignId())
-                .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
+        //디자인 데이터 정합성 검사
+        List<Design> designs = goods.getDesigns();
+        boolean isDesignValid = false;
+        for (Design design : designs) {
+            if (design.getId() == cartSaveRequest.getDesignId()) {
+                isDesignValid = true;
+                RedisCart redisCart = RedisCart.builder()
+                        .quantity(cartSaveRequest.getQuantity())
+                        .goodsId(goods.getId())
+                        .goodsName(goods.getName())
+                        .goodsSummary(goods.getSummary())
+                        .goodsCategory(goods.getCategory())
+                        .goodsThumbnail(goods.getThumbnail())
+                        .goodsPrice(goods.getPrice())
+                        .designId(design.getId())
+                        .designName(design.getDesignName())
+                        .build();
+                cartRedisRepository.save(memberId, redisCart);
+                break;
+            }
+        }
 
-        RedisCart redisCart = RedisCart.builder()
-                .quantity(cartSaveRequest.getQuantity())
-                .memberId(memberId)
-                .goodsId(cartSaveRequest.getGoodsId())
-                .designId(cartSaveRequest.getDesignId())
-                .build();
-        cartRedisRepository.save(redisCart);
+        if (!isDesignValid) {
+            throw new IllegalArgumentException("디자인 정보를 찾을 수 없습니다.");
+        }
+        log.info("Redis Cart Save End");
     }
 
     /**
@@ -111,6 +133,6 @@ public class CartService {
      * @return
      */
     public List<RedisCart> getRedisCartList(Long memberId) {
-        return cartRedisRepository.findListByMemberId(memberId);
+        return cartRedisRepository.findAllByMemberId(memberId);
     }
 }

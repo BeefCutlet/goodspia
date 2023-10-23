@@ -31,20 +31,16 @@ public class CartQueryController {
     @GetMapping("/list/non-cache")
     public ResponseEntity<Page<CartResponse>> getMemberCartList(@Parameter(hidden = true) Pageable pageable,
                                                                 @Parameter(hidden = true) HttpServletRequest request) {
-        log.info("MySQL Start");
         Long memberId = (Long) request.getAttribute("memberId");
         Page<CartResponse> cartList = cartService.getCartList(memberId, pageable);
-        log.info("MySQL End");
         return ResponseEntity.ok(cartList);
     }
 
     @Operation(summary = "장바구니 목록 조회 API", description = "현재 접속 중인 회원이 등록한 장바구니의 전체 목록을 조회합니다.")
     @GetMapping("/list")
     public ResponseEntity<List<RedisCart>> getMemberRedisCartList(@Parameter(hidden = true) HttpServletRequest request) {
-        log.info("Redis Start");
         Long memberId = (Long) request.getAttribute("memberId");
         List<RedisCart> cartList = cartService.getRedisCartList(memberId);
-        log.info("Redis End");
         return ResponseEntity.ok(cartList);
     }
 }
