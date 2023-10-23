@@ -53,9 +53,7 @@ public class JwtUtil {
     //토큰 유효성 검사 메서드
     public boolean validateToken(String token) {
         try {
-            log.info("try to validate token={}", token);
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            log.info("token validate success, token={}", token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
