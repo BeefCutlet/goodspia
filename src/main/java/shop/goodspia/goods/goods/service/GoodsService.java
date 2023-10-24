@@ -1,6 +1,7 @@
 package shop.goodspia.goods.goods.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,7 @@ public class GoodsService {
      * @param category
      * @return
      */
+    @Cacheable(value = "goodsList", key = "#pageable.pageNumber")
     public GoodsListResponse getGoodsList(Pageable pageable, String category) {
         Page<GoodsResponse> goodsListPage = goodsQueryRepository.findGoodsList(pageable, category);
         List<GoodsResponse> goodsList = goodsListPage.getContent();
