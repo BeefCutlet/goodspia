@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().antMatchers(
-                "/",
+                "/health-check",
                 "/swagger-ui",
                 "/swagger-ui/**",
                 "/api-docs",
