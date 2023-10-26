@@ -43,8 +43,7 @@
 
 ## 시스템 아키텍처
 
-![GoodsPia Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/e1f4f44b-048e-4c1e-96f3-a5eb0eb69b40)
-
+![GoodsPia_Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/1eb18951-2532-4814-a638-2dd000bfb389)
 
 
 ## ERD
