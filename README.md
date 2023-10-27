@@ -31,7 +31,7 @@
 - 굿즈 등록/조회/삭제, 장바구니 등록/조회 등 간단한 CRUD로 이루어져 있습니다.
 - RESTful한 API를 만들기 위하여 URL을 설정할 때, 행위는 GET / POST / PUT / DELETE와 같은 HTTP 메서드를 이용하여 표현하고, 행위의 대상이 되는 리소스는 명사형으로 표현하였습니다.
 - 성능 테스트 툴을 사용하여 API의 성능테스트를 진행하고, 캐싱/로드밸런싱으로 성능을 개선하였습니다.
-- JWT를 이용하여 Stateless하게 인증하여 DB의 부하를 줄였습니다.
+- 로그인을 하면 JWT를 생성하여 전달하고, 인증이 필요한 요청 시에 JWT에 기록된 정보를 바탕으로 인증을 처리합니다.
 - GithubActions를 이용하여 Github에 Push 이벤트가 발생하면 배포 작업을 자동으로 수행합니다.
 
 
@@ -58,9 +58,11 @@
 
 
 
+
 ## 아키텍처
 
 ![GoodsPia_Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/1eb18951-2532-4814-a638-2dd000bfb389)
+
 
 
 
@@ -70,7 +72,9 @@
 
 
 
+
 ## 세부구현
+
 
 
 ### 회원가입/로그인 프로세스
@@ -89,6 +93,7 @@
   - 이런 보안 상의 문제에 대처하기 위하여 액세스 토큰의 만료기한을 5분으로 짧게 설정하고, 리프레시 토큰의 만료기한을 30분으로 비교적 길게 설정하여 토큰이 탈취되더라도 금방 사용이 불가능해지도록 설정하였습니다.
   - 리프레시 토큰은 HTTP Header의 Set-Cookie에 담아서 전달하였습니다. 그러나 쿠키는 브라우저 또는 HTTP 통신 감청을 통해 탈취될 가능성이 있습니다.
   - 혹시라도 SSL 암호화를 피해서 토큰을 탈취하는 일이 없도록 secure 옵션을 설정하였습니다. 또한, XSS 공격으로 쿠키를 탈취당하지 않도록 HttpOnly 옵션을 설정하였습니다.
+
 
 
 
@@ -111,6 +116,7 @@
 
 
 
+
 ### 배포 자동화 프로세스
 
 ![GoodsPia_Deploy_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/7c30e351-bb6d-4ace-965d-512ab8135d72)
@@ -130,6 +136,7 @@
  
 
 
+
 ### API 성능테스트
 
 - 성능테스트는 1분 동안 여러 명의 사용자가 API에 동시에 요청을 하는 상황을 가정하고, 요청에 대한 응답을 받을 때까지 걸리는 시간을 기준으로 측정하였습니다.
@@ -140,7 +147,9 @@
 
 
 
+
 **(1) 장바구니 등록 API**
+
 
 **1) 200 VUS(Virtual Users) + 1분 + AmazonRDS for MySQL**
 
@@ -151,6 +160,8 @@ RDS만 사용했을 때에는
 - 상위 10%의 요청이 1.08초를 초과
 하는 결과가 나왔습니다.
 ![cart-200vus-1m-mysql-v2-loop](https://github.com/BeefCutlet/goodspia/assets/77325024/8a9935d4-e46a-43cc-9da1-ccf5fff5c11f)
+
+
 
 
 **2) 200 VUS + 1분 + Amazon ElastiCache (Redis)**
@@ -167,6 +178,7 @@ Redis를 이용하여 데이터를 저장하면 In-Memory DB 특유의 빠른 �
 평균적으로 약 10% 정도 속도가 빨라졌고, 응답 시간의 편차도 줄어들었지만 생각보다 큰 개선이 이루어지지 않았습니다.
 테스트하는 과정에서 EC2 서버의 CPU 사용률을 확인한 결과, 꾸준히 100%를 유지하고 있었는데 Redis 사용으로 인해 DB 처리속도는 빨라졌지만 서버에서 부하가 걸려서 크게 개선되지 않았다는 가설을 내릴 수 있었습니다.
 ![cart-200vus-1m-redis-v2-loop](https://github.com/BeefCutlet/goodspia/assets/77325024/cb2bab7f-81bd-4c27-aa21-6d85cfe744e3)
+
 
 
 **3) 200 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
@@ -186,7 +198,10 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 
 
 
+
+
 **(2) 굿즈 조회 API**
+
 
 **1) 600 VUS + 1분 + AmazonRDS for MySQL**
 
@@ -200,6 +215,7 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 - 상위 10%의 요청이 1.26초를 초과
 하는 결과가 나왔습니다.
 ![goodslist-600vus-1m-noncache](https://github.com/BeefCutlet/goodspia/assets/77325024/2af4ef5d-0b26-4713-b61e-5f21fd08b0fc)
+
 
 
 **2) 600 VUS + 1분 + Amazon ElastiCache (Redis)**
@@ -218,6 +234,7 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 
 캐싱을 하지 않았을 때보다 약 91%라는 상당한 속도 개선이 있었습니다.
 ![goodslist-600vus-1m-cache](https://github.com/BeefCutlet/goodspia/assets/77325024/f76f6a33-ae38-40e0-8c60-26e4464b63dc)
+
 
 
 **3) 600 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
