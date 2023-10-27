@@ -140,9 +140,9 @@
 
 
 
-(1) 장바구니 등록 API
+**(1) 장바구니 등록 API**
 
-1) 200 VUS(Virtual Users) + 1분 + AmazonRDS for MySQL
+**1) 200 VUS(Virtual Users) + 1분 + AmazonRDS for MySQL**
 
 RDS만 사용했을 때에는
 - 1분 동안 1304개의 요청을 처리
@@ -153,7 +153,7 @@ RDS만 사용했을 때에는
 ![cart-200vus-1m-mysql-v2-loop](https://github.com/BeefCutlet/goodspia/assets/77325024/8a9935d4-e46a-43cc-9da1-ccf5fff5c11f)
 
 
-2) 200 VUS + 1분 + Amazon ElastiCache (Redis)
+**2) 200 VUS + 1분 + Amazon ElastiCache (Redis)**
 
 Redis를 이용하여 데이터를 저장하면 In-Memory DB 특유의 빠른 속도로 처리되어 응답 시간이 단축될 것이라 기대하였습니다.
 
@@ -169,7 +169,7 @@ Redis를 이용하여 데이터를 저장하면 In-Memory DB 특유의 빠른 �
 ![cart-200vus-1m-redis-v2-loop](https://github.com/BeefCutlet/goodspia/assets/77325024/cb2bab7f-81bd-4c27-aa21-6d85cfe744e3)
 
 
-3) 200 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
+**3) 200 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
 
 EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Load Balancing 서비스를 이용하여 부하 분산을 시도하였습니다.
 서버가 2대로 늘어난만큼 서버에 가해지는 부하가 반으로 줄어들 것이라고 기대하였습니다.
@@ -186,9 +186,9 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 
 
 
-(2) 굿즈 조회 API
+**(2) 굿즈 조회 API**
 
-1) 600 VUS + 1분 + AmazonRDS for MySQL
+**1) 600 VUS + 1분 + AmazonRDS for MySQL**
 
 최신 굿즈를 조회하는 요청은 페이징 처리가 되어있었고, 테스트에서 요청한 데이터는 총 15개만 가져오도록 요청하였습니다.
 그래서 INSERT 요청에 비해 상대적으로 빠른 응답 시간을 받을 수 있었고, Virtual Users를 600까지 늘려서 테스트 해볼 수 있었습니다.
@@ -202,7 +202,7 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 ![goodslist-600vus-1m-noncache](https://github.com/BeefCutlet/goodspia/assets/77325024/2af4ef5d-0b26-4713-b61e-5f21fd08b0fc)
 
 
-2) 600 VUS + 1분 + Amazon ElastiCache (Redis)
+**2) 600 VUS + 1분 + Amazon ElastiCache (Redis)**
 
 굿즈 조회 성능 개선을 위하여 Redis를 사용하여 캐싱 처리를 하였습니다.
 캐싱 전략은 조회 요청이 들어오면 우선적으로 Redis에서 데이터를 찾아본 뒤, 데이터가 없으면 RDS에서 가져와서 처리하고 이후에 Redis에 캐싱하는 Cache-Aside 전략을 사용하였습니다.
@@ -220,7 +220,7 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 ![goodslist-600vus-1m-cache](https://github.com/BeefCutlet/goodspia/assets/77325024/f76f6a33-ae38-40e0-8c60-26e4464b63dc)
 
 
-3) 600 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
+**3) 600 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
 
 AWS의 Elastic Load Balancing을 이용한 부하 분산을 한 뒤, 같은 조건으로 테스트를 해보았습니다.
 서버의 개수가 2배로 늘어났기 때문에 서버의 부하가 감소하여 추가적인 속도 개선이 있을 것으로 기대하였습니다.
@@ -236,7 +236,7 @@ AWS의 Elastic Load Balancing을 이용한 부하 분산을 한 뒤, 같은 조�
 ![goodslist-600vus-1m-ELB](https://github.com/BeefCutlet/goodspia/assets/77325024/cd535d3e-ce38-4aaa-a0c9-e5a0fc9cb941)
 
 
-4) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 1개
+**4) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 1개**
 
 보다 크게 체감을 할 수 있도록 요청수를 늘려서 테스트해보았습니다.
 
@@ -251,7 +251,7 @@ VUS 수를 2000으로 늘리고 테스트한 결과,
 ![goodslist-2000vus-1m-cache](https://github.com/BeefCutlet/goodspia/assets/77325024/01987abd-78b5-47e7-a9d3-6e6fcf79ffed)
 
 
-5) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
+**5) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
 이후 서버를 2대로 늘려서 테스트한 결과,
 - 1분 동안 65848개의 요청을 처리
 - 평균 응답 시간 약 268ms
