@@ -1,11 +1,15 @@
 # GoodsPia
 굿즈 판매 플랫폼 API
 
+
+
 ## 프로젝트 목적
 
 - 성능은 사용자의 만족도를 높이고 이탈을 방지하는 중요한 요소입니다.
 - 백엔드 개발자로서 스스로 만든 API의 성능을 테스트하고, 성능을 개선하기 위한 방법을 연구하는 것이 중요하다고 판단하였습니다.
 - 간단한 CRUD를 구성한 뒤, 성능 개선에 초점을 두는 방향으로 해당 프로젝트를 진행하였습니다.
+
+
 
 ## 개요
 
@@ -15,6 +19,7 @@
 - 성능 테스트 툴을 사용하여 API의 성능테스트를 진행하고, 캐싱/로드밸런싱으로 성능을 개선하였습니다.
 - JWT를 이용하여 Stateless하게 인증하여 DB의 부하를 줄였습니다.
 - GithubActions를 이용하여 Github에 Push 이벤트가 발생하면 배포 작업을 자동으로 수행합니다.
+
 
 
 ## 목차
@@ -27,6 +32,7 @@
    - 회원가입/로그인 프로세스
    - 인증 프로세스
    - 배포 자동화 프로세스
+
 
 
 ## 기술스택
@@ -50,14 +56,17 @@
     - Github Actions
 
 
+
 ## 시스템 아키텍처
 
 ![GoodsPia_Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/1eb18951-2532-4814-a638-2dd000bfb389)
 
 
+
 ## ERD
 
 ![GoodsPia_ERD](https://github.com/BeefCutlet/goodspia/assets/77325024/dfdc2142-ee0d-4877-859d-1f81341892c3)
+
 
 
 ## 세부구현
@@ -81,6 +90,7 @@
   - 혹시라도 SSL 암호화를 피해서 토큰을 탈취하는 일이 없도록 secure 옵션을 설정하였습니다. 또한, XSS 공격으로 쿠키를 탈취당하지 않도록 HttpOnly 옵션을 설정하였습니다.
 
 
+
 ### 인증 프로세스
 
 ![GoodsPia_Authentication_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/4e524808-5f82-47f7-9049-6da3e5dde417)
@@ -99,6 +109,7 @@
 - 리프레시 토큰 인증에 성공하면 액세스 토큰을 재발급하고, 실패하면 다시 로그인하도록 처리합니다.
 
 
+
 ### 배포 자동화 프로세스
 
 ![GoodsPia_Deploy_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/7c30e351-bb6d-4ace-965d-512ab8135d72)
@@ -115,3 +126,37 @@
   - Github에 Push 이벤트가 동작하면 application.yml에 Github Secrets로부터 파라미터를 넣은 다음, zip 파일로 압축하여 Amazon S3에 업로드합니다.
   - Amazon CodeDeploy에 요청을 하여 S3에서 업로드한 zip 파일을 EC2 인스턴스에 다운로드합니다.
   - EC2 인스턴스에 zip 파일을 압축 해제하고, 프로그램을 빌드 후 배포합니다.
+ 
+
+
+### 성능테스트
+
+- 성능테스트는 API에 요청을 보냈을 때 응답을 받을 때까지 걸리는 시간을 기준으로 측정하였습니다.
+- 성능테스트를 위한 툴은 간단한 자바스크립트 코드로 테스트를 작성하여 결과를 숫자로 받아볼 수 있는 k6를 선택하였습니다.
+- 테스트는 트래픽이 몰릴 가능성이 있는 API 중 2가지를 대상으로 진행하였습니다.
+   - 선택한 상품을 장바구니에 등록하는 API(INSERT) => 인기 굿즈로 알려져서 여러 사용자가 동시에 특정 상품을 장바구니에 담는 상황에 트래픽이 몰릴 수 있습니다.
+   - 메인페이지에서 최신 굿즈를 조회하는 API(SELECT) => 메인페이지는 사이트에 접속하는 모든 사용자가 가장 처음 보게 되는 페이지이기 때문에 가장 많이 요청될 수 있습니다.
+- 각각의 API에 1분 동안 여러 명의 사용자가 동시에 요청한다고 가정하였을 때, 요청들을 처리하는 속도를 비교하였습니다. 물론 실제 사용자가 1분 동안 일정 주기로 요청을 보내지는 않겠지만, 속도를 측정하기 위한 테스트이기 때문에 편의상 1분 동안 1초 간격으로 동시에 요청을 날리는 것을 가정하여 테스트하였습니다.
+
+
+1. 장바구니 등록 API
+(1) 200 VUS(Virtual Users) + 1분 + AmazonRDS for MySQL
+
+
+(2) 200 VUS + 1분 + Amazon ElastiCache (Redis)
+
+
+(3) 200 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
+
+
+2. 굿즈 조회 API
+(1) 1000 VUS + 1분 + AmazonRDS for MySQL
+
+
+(2) 1000 VUS + 1분 + Amazon ElastiCache (Redis)
+
+
+(3) 1000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
+
+
+(4) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개
