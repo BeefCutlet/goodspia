@@ -1,12 +1,10 @@
 package shop.goodspia.goods.goods.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
 
-@Schema
 @Getter @Setter
 public class GoodsResponse {
 

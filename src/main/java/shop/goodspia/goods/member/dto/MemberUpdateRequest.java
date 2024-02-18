@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 public class MemberUpdateRequest {
 
     @NotBlank
-    @Pattern(regexp = "[0-9a-zA-Z!@#$%^&*()]{6,20}")
+    @Pattern(regexp = "[0-9a-zA-Z!@#$%]{6,20}")
     private String password;
 
     @NotBlank

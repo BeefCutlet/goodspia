@@ -15,7 +15,7 @@ public class MemberSaveRequest {
     private String email;
 
     @NotBlank
-    @Pattern(regexp = "[0-9a-zA-Z!@#$%^&*()]{6,20}")
+    @Pattern(regexp = "[0-9a-zA-Z!@#$%]{6,20}")
     private String password;
 
     @NotBlank

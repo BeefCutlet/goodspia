@@ -1,26 +1,21 @@
 package shop.goodspia.goods.goods.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.goods.dto.GoodsSaveRequest;
 import shop.goodspia.goods.goods.dto.GoodsUpdateRequest;
 import shop.goodspia.goods.goods.service.GoodsService;
-import shop.goodspia.goods.common.util.ImageUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
-@Tag(name = "굿즈 등록/수정/삭제 API", description = "새로운 굿즈를 등록, 등록된 굿즈 정보를 수정, 등록했던 굿즈를 삭제하여 보이지 않도록 수정하는 API")
 @Slf4j
 @RestController
 @RequestMapping("/goods")
@@ -39,13 +34,10 @@ public class GoodsController {
      * @param thumbnail 굿즈 메인 이미지
      * @return 이동할 URL 반환 - 아티스트 페이지
      */
-    @Operation(summary = "굿즈 등록 API", description = "새로운 굿즈를 등록하는 API")
     @PostMapping
-    public ResponseEntity<?> addGoods(@Parameter(name = "굿즈 정보", description = "등록할 굿즈 정보")
-                                      @RequestPart @Valid GoodsSaveRequest goods,
-                                      @Parameter(name = "썸네일 이미지", description = "등록할 굿즈 썸네일 이미지")
+    public ResponseEntity<?> addGoods(@RequestPart @Valid GoodsSaveRequest goods,
                                       @RequestPart MultipartFile thumbnail,
-                                      @Parameter(hidden = true) HttpServletRequest request) {
+                                      HttpServletRequest request) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
         String imageUrl = ImageUpload.uploadImage(thumbnail);
         goods.setThumbnail(imageUrl);
@@ -61,9 +53,8 @@ public class GoodsController {
      * @param contentImage
      * @return 저장된 이미지 URL
      */
-    @Operation(summary = "굿즈 이미지 저장 API", description = "굿즈 내용에 들어가는 이미지를 저장하는 API")
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> savePicture(@Parameter(name = "굿즈 내용 이미지", description = "굿즈 내용에 들어가는 이미지") @RequestPart MultipartFile contentImage) {
+    public ResponseEntity<String> savePicture(@RequestPart MultipartFile contentImage) {
         //이미지 업로드 후 이미지 URL 반환
         String imageUrl = ImageUpload.uploadImage(contentImage);
         return ResponseEntity.ok(imageUrl);
@@ -75,11 +66,10 @@ public class GoodsController {
      * @param thumbnail
      * @return
      */
-    @Operation(summary = "굿즈 수정 API", description = "기존에 등록한 굿즈의 정보를 수정하는 API")
     @PutMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> modifyDetails(@Parameter(description = "수정할 굿즈의 번호") @PathVariable Long goodsId,
-                                @Parameter(name = "굿즈 정보", description = "수정할 굿즈 정보") @RequestPart GoodsUpdateRequest goods,
-                                @Parameter(name = "굿즈 썸네일 이미지", description = "굿즈의 수정된 썸네일 이미지") @RequestPart MultipartFile thumbnail) {
+    public ResponseEntity<?> modifyDetails(@PathVariable Long goodsId,
+                                           @RequestPart GoodsUpdateRequest goods,
+                                           @RequestPart MultipartFile thumbnail) {
         //굿즈 썸네일 저장
         String uploadedThumbnail = ImageUpload.uploadImage(thumbnail);
         goods.setThumbnail(uploadedThumbnail);
@@ -94,9 +84,8 @@ public class GoodsController {
      * @param goodsId 삭제할 굿즈의 ID
      * @return
      */
-    @Operation(summary = "굿즈 삭제 API", description = "등록한 굿즈를 삭제 처리하는 API")
     @PutMapping("/remove/{goodsId}")
-    public ResponseEntity<?> delete(@Parameter(description = "삭제 처리할 굿즈의 번호") @PathVariable Long goodsId) {
+    public ResponseEntity<?> delete(@PathVariable Long goodsId) {
         goodsService.delete(goodsId);
         return ResponseEntity.noContent().build();
     }
