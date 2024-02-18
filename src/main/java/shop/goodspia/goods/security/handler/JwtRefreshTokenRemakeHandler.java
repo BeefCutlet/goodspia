@@ -1,16 +1,15 @@
 package shop.goodspia.goods.security.handler;
 
 import io.jsonwebtoken.Claims;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import shop.goodspia.goods.common.dto.Response;
 import shop.goodspia.goods.security.dto.AuthResponse;
 import shop.goodspia.goods.security.dto.TokenInfo;
@@ -20,7 +19,6 @@ import shop.goodspia.goods.security.service.RefreshTokenService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-@Tag(name = "Refresh 토큰 재발급 API", description = "Access 토큰이 만료되었을 때, Refresh 토큰과 이용해 재발급을 요청할 때 사용하는 API")
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -31,13 +29,12 @@ public class JwtRefreshTokenRemakeHandler {
     private final RefreshTokenService refreshTokenService;
 
     /**
-     * Access 토큰이 만료되었을 때, Refresh 토큰과 이용해 재발급을 요청할 때 사용하는 API
+     * Access 토큰이 만료되었을 때, Refresh 토큰을 이용해 재발급을 요청할 때 사용하는 API
      * @param request
      * @return
      */
-    @Operation(summary = "Access 토큰 재발급을 위한 API", description = "유효한 Refresh 토큰 필요")
     @PostMapping("/token")
-    public ResponseEntity<AuthResponse> createNewAccessToken(@Parameter(hidden = true) HttpServletRequest request) {
+    public ResponseEntity<AuthResponse> createNewAccessToken(HttpServletRequest request) {
         ////Access 토큰이 만료되었을 경우, Access 토큰 재발급을 위해 Refresh 토큰 검사
         //Refresh 토큰 추출
         String refreshToken = resolveRefreshToken(request);
