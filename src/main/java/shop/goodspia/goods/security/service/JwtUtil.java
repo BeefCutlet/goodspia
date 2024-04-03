@@ -4,9 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,23 +23,34 @@ import java.util.Set;
 @Component
 public class JwtUtil {
 
-    private Key key;
+    private final Key key;
 
     public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
     }
 
-    public String createToken(Claims claims, long expirationTime) {
+    public String createAccessToken(Long memberId) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(claims)
                 .setIssuer(TokenInfo.ISSUER)
                 .setIssuedAt(Timestamp.from(Instant.now()))
-                .setExpiration(Timestamp.from(Instant.now().plus(expirationTime, ChronoUnit.SECONDS)))
+                .claim(TokenInfo.CLAIM_ID, memberId)
+                .setExpiration(Timestamp.from(Instant.now().plus(TokenInfo.ACCESS_EXP, ChronoUnit.SECONDS)))
                 .compact();
     }
 
+    public String createRefreshToken() {
+        return Jwts.builder()
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer(TokenInfo.ISSUER)
+                .setIssuedAt(Timestamp.from(Instant.now()))
+                .setExpiration(Timestamp.from(Instant.now().plus(TokenInfo.REFRESH_EXP, ChronoUnit.SECONDS)))
+                .compact();
+    }
+
+    //Claim 추출 메서드
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -66,22 +75,5 @@ public class JwtUtil {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public Claims createClaims(String subject, String email, Long memberId, Long artistId) {
-        Claims claims = Jwts.claims();
-        claims.setSubject(subject);
-        claims.put("email", email);
-        claims.put("memberId", memberId);
-        claims.put("artistId", artistId);
-        return claims;
-    }
-
-    public Authentication getAuthenticationToken(String accessToken) {
-        Claims claims = getClaims(accessToken);
-        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-
-        return new UsernamePasswordAuthenticationToken(
-                new User((String) claims.get("email"), accessToken, authorities), accessToken, authorities);
     }
 }

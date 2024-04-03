@@ -33,7 +33,7 @@ public class LoginService {
      * 로그인 후 액세스 토큰 반환
      */
     public AuthResponse login(AuthRequest request) {
-        Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
+        Member member = memberRepository.findByEmailNotFetch(request.getEmail()).orElseThrow(() -> {
             throw new IllegalArgumentException("회원 정보를 찾을 수 없습니다.");
         });
 

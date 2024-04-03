@@ -1,52 +1,36 @@
 package shop.goodspia.goods.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import shop.goodspia.goods.member.repository.MemberRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shop.goodspia.goods.security.filter.JwtAuthenticationFilter;
-import shop.goodspia.goods.security.filter.JwtLoginFilter;
-import shop.goodspia.goods.security.handler.JwtAccessDeniedHandler;
 import shop.goodspia.goods.security.handler.JwtAuthenticationEntryPoint;
-import shop.goodspia.goods.security.handler.JwtLoginFailureHandler;
-import shop.goodspia.goods.security.handler.JwtLoginSuccessHandler;
-import shop.goodspia.goods.security.repository.AuthRedisRepository;
-import shop.goodspia.goods.security.service.JwtUtil;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtUtil jwtUtil;
-    private final MemberRepository memberRepository;
-    private final AuthRedisRepository authRedisRepository;
+    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers(
-                "/health-check",
-                "/swagger-ui",
-                "/swagger-ui/**",
-                "/api-docs",
-                "/api-docs/**",
-                "/goods/list",
-                "/goods/detail/*",
-                "/login",
-                "/members",
-                "/auth/token");
-    }
+    @Value("${base-cors-url}")
+    private String baseCorsUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -58,18 +42,39 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
+                .antMatchers(
+                        "/health-check",
+                        "/auth/login",
+                        "/members",
+                        "/goods/list",
+                        "/goods/detail/*")
+                .permitAll()
                 .anyRequest().authenticated()
 
                 .and()
+                .authenticationProvider(authenticationProvider)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler())
 
                 .and()
-                .addFilterBefore(jwtLoginFilter(http.getSharedObject(AuthenticationConfiguration.class)),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), JwtLoginFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        return new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration));
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(final AuthenticationConfiguration configuration)
+            throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
     }
 
     //비밀번호 인코더
@@ -79,32 +84,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new JwtAccessDeniedHandler();
-    }
-
-
-    @Bean
-    public JwtLoginFilter jwtLoginFilter(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        JwtLoginFilter jwtLoginFilter = new JwtLoginFilter();
-        jwtLoginFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
-        jwtLoginFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
-        jwtLoginFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        return jwtLoginFilter;
-    }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new JwtLoginFailureHandler();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtLoginSuccessHandler(jwtUtil, memberRepository, authRedisRepository);
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

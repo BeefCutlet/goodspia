@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import shop.goodspia.goods.security.dto.AccessToken;
 import shop.goodspia.goods.security.dto.AuthRequest;
 import shop.goodspia.goods.security.dto.AuthResponse;
 import shop.goodspia.goods.security.dto.TokenInfo;
@@ -33,7 +34,7 @@ public class LoginController {
      * 로그인 - 아이디(이메일), 패스워드 입력
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid final AuthRequest request) {
+    public ResponseEntity<AccessToken> login(@RequestBody @Valid final AuthRequest request) {
         //로그인 인증 - 성공 시 액세스 토큰 + 리프레시 토큰 생성
         AuthResponse authResponse = loginService.login(request);
         //리프레시 토큰 쿠키 생성 - HttpOnly, Secure 설정
@@ -42,14 +43,14 @@ public class LoginController {
         log.info("RefreshToken: {}", authResponse.getRefreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .body(authResponse);
+                .body(authResponse.getAccessToken());
     }
 
     /**
      * 리프레시 토큰 재발급
      */
     @PostMapping("/refresh-token")
-    public ResponseEntity<AuthResponse> getRefreshToken(HttpServletRequest request) {
+    public ResponseEntity<AccessToken> getRefreshToken(HttpServletRequest request) {
         //리프레스 토큰 추출
         String refreshToken = resolveRefreshToken(request);
         String accessToken = resolveAccessToken(request);
@@ -61,7 +62,7 @@ public class LoginController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .body(authResponse);
+                .body(authResponse.getAccessToken());
     }
 
     //Refresh 토큰 추출 메서드
