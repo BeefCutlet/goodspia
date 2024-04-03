@@ -1,4 +1,4 @@
-package shop.goodspia.goods.security.entity;
+package shop.goodspia.goods.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

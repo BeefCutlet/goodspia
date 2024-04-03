@@ -1,9 +1,6 @@
-package shop.goodspia.goods.security.entity;
+package shop.goodspia.goods.security.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import shop.goodspia.goods.member.entity.Member;
 
 import javax.persistence.*;
@@ -13,7 +10,8 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Auth {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +23,11 @@ public class Auth {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Auth(String refreshToken, Member member) {
-        this.refreshToken = refreshToken;
-        this.member = member;
+    public static Auth of(String refreshToken, Member member) {
+        return Auth.builder()
+                .refreshToken(refreshToken)
+                .member(member)
+                .build();
     }
 
     public Auth updateRefreshToken(String refreshToken) {
