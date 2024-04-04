@@ -58,6 +58,6 @@ public class MemberService {
     public MemberResponse getMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
-        return new MemberResponse(member.getEmail(), member.getNickname());
+        return MemberResponse.from(member);
     }
 }

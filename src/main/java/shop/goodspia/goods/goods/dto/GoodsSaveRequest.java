@@ -15,13 +15,7 @@ public class GoodsSaveRequest {
     private String name;
 
     @NotNull
-    private String summary;
-
-    @NotNull
     private String content;
-
-    @NotNull
-    private String category;
 
     private String thumbnail;
 

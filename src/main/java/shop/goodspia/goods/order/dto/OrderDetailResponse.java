@@ -16,15 +16,13 @@ public class OrderDetailResponse {
 
     private String goodsName;
 
-    private String goodsSummary;
-    private String goodsImage;
+    private String goodsThumbnail;
 
     public OrderDetailResponse(OrderGoods orderGoods) {
         this.orderUid = orderGoods.getOrders().getOrderUid();
         this.createdTime = orderGoods.getOrders().getCreatedTime();
         this.goodsId = orderGoods.getGoods().getId();
         this.goodsName = orderGoods.getGoods().getName();
-        this.goodsSummary = orderGoods.getGoods().getSummary();
-        this.goodsImage = orderGoods.getGoods().getThumbnail();
+        this.goodsThumbnail = orderGoods.getGoods().getThumbnail();
     }
 }

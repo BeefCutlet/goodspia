@@ -80,7 +80,6 @@ public class CartService {
                         .quantity(cartSaveRequest.getQuantity())
                         .goodsId(goods.getId())
                         .goodsName(goods.getName())
-                        .goodsSummary(goods.getSummary())
                         .goodsCategory(goods.getCategory())
                         .goodsThumbnail(goods.getThumbnail())
                         .goodsPrice(goods.getPrice())

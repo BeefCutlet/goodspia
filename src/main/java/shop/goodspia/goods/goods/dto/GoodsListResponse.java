@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 public class GoodsListResponse {
 
-    @Valid
     private List<GoodsResponse> goodsList;
     private int totalPage;
 }

@@ -26,6 +26,10 @@ public class Member extends BaseTimeEntity {
     private String password;
     private LocalDateTime lastPasswordChanged;
     private String nickname;
+    private String name;
+    private String birthday;
+    @Embedded
+    private Address address;
     private int isWithdraw;
     private LocalDateTime withdrawTime;
 
@@ -33,11 +37,17 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    public static Member createMember(MemberSaveRequest memberSaveRequest) {
+    public static Member from(MemberSaveRequest memberSaveRequest) {
         return Member.builder()
                 .email(memberSaveRequest.getEmail())
                 .password(memberSaveRequest.getPassword())
                 .nickname(memberSaveRequest.getNickname())
+                .name(memberSaveRequest.getName())
+                .birthday(memberSaveRequest.getBirthday())
+                .address(Address.of(
+                        memberSaveRequest.getZipcode(),
+                        memberSaveRequest.getAddress1(),
+                        memberSaveRequest.getAddress2()))
                 .isWithdraw(0)
                 .build();
     }
