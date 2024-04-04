@@ -25,7 +25,6 @@ public class Goods extends BaseTimeEntity {
     private Long id;
     private String name;
     private String content;
-    private String category;
     private String thumbnail;
     private int price;
     private int isDeleted;
