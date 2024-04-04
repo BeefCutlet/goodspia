@@ -29,9 +29,6 @@ public class GoodsService {
 
     /**
      * 굿즈 등록용 메서드
-     * @param artistId
-     * @param goodsSaveRequest
-     * @return
      */
     public Long addGoods(Long artistId, GoodsSaveRequest goodsSaveRequest) {
         //회원 조회 - 아티스트 등록 여부 파악용
@@ -50,7 +47,6 @@ public class GoodsService {
 
     /**
      * 굿즈 정보 수정용 메서드
-     * @param goodsUpdateRequest
      */
     public void modifyGoods(Long goodsId, GoodsUpdateRequest goodsUpdateRequest) {
         //굿즈 엔티티 조회
@@ -75,22 +71,16 @@ public class GoodsService {
 
     /**
      * 전체 굿즈리스트 조회 (최신순)
-     * @param pageable
-     * @param category
-     * @return
      */
     @Cacheable(value = "goodsList", key = "#pageable.pageNumber")
-    public GoodsListResponse getGoodsList(Pageable pageable, String category) {
-        Page<GoodsResponse> goodsListPage = goodsQueryRepository.findGoodsList(pageable, category);
+    public GoodsListResponse getGoodsList(Pageable pageable) {
+        Page<GoodsResponse> goodsListPage = goodsQueryRepository.findGoodsList(pageable);
         List<GoodsResponse> goodsList = goodsListPage.getContent();
         return new GoodsListResponse(goodsList, goodsListPage.getTotalPages());
     }
 
     /**
      * 아티스트가 제작한 굿즈 리스트 조회 (최신순)
-     * @param pageable
-     * @param artistId
-     * @return
      */
     public GoodsListResponse getArtistGoodsList(Pageable pageable, long artistId) {
         Page<GoodsResponse> goodsListPage = goodsQueryRepository.findArtistGoodsList(pageable, artistId);
@@ -100,8 +90,6 @@ public class GoodsService {
 
     /**
      * 굿즈 상세 정보 조회
-     * @param goodsId
-     * @return
      */
     public GoodsDetailResponse getGoods(long goodsId) {
         Goods goodsDetail = goodsQueryRepository.findGoodsDetail(goodsId);

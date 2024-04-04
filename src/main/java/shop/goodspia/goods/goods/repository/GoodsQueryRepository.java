@@ -1,7 +1,6 @@
 package shop.goodspia.goods.goods.repository;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,7 @@ public class GoodsQueryRepository {
      * @param category
      * @return
      */
-    public Page<GoodsResponse> findGoodsList(Pageable pageable, String category) {
+    public Page<GoodsResponse> findGoodsList(Pageable pageable) {
         List<GoodsResponse> goodsList = queryFactory
                 .select(Projections.bean(GoodsResponse.class,
                         goods.id.as("goodsId"),
@@ -42,7 +41,6 @@ public class GoodsQueryRepository {
                         goods.artist.nickname.as("artistName")))
                 .from(goods)
                 .join(goods.artist, artist)
-                .where(verifyCategory(category))
                 .orderBy(goods.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -56,16 +54,12 @@ public class GoodsQueryRepository {
         return PageableExecutionUtils.getPage(goodsList, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression verifyCategory(String category) {
-        return (category != null && !category.equals("ALL")) ? goods.category.eq(category) : null;
-    }
-
     /**
      * 굿즈 단건 조회
      * @param goodsId
      * @return
      */
-    public Goods findGoodsDetail(long goodsId) {
+    public Goods findGoodsDetail(Long goodsId) {
         return queryFactory
                 .select(goods)
                 .from(goods)
@@ -75,7 +69,7 @@ public class GoodsQueryRepository {
     }
 
     //아티스트가 등록한 굿즈 리스트 페이징 조회
-    public Page<GoodsResponse> findArtistGoodsList(Pageable pageable, long artistId) {
+    public Page<GoodsResponse> findArtistGoodsList(Pageable pageable, Long artistId) {
         List<GoodsResponse> goodsList = queryFactory
                 .select(Projections.bean(GoodsResponse.class,
                         goods.id.as("goodsId"),
