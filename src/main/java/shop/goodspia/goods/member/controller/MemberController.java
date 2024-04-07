@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.member.dto.MemberSaveRequest;
 import shop.goodspia.goods.member.dto.MemberUpdateRequest;
 import shop.goodspia.goods.member.service.MemberService;
+import shop.goodspia.goods.security.dto.MemberPrincipal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -42,8 +44,8 @@ public class MemberController {
      */
     @PutMapping
     public ResponseEntity<?> modifyMemberInfo(@RequestBody @Valid MemberUpdateRequest memberInfo,
-                                              HttpServletRequest request) {
-        Long memberId = (Long) request.getAttribute("memberId");
+                                              @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        Long memberId = memberPrincipal.getId();
         memberService.modifyMemberInfo(memberId, memberInfo);
         return ResponseEntity.created(URI.create(baseUrl + "/members/info")).build();
     }

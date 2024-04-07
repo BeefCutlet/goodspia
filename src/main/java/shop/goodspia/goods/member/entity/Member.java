@@ -1,15 +1,13 @@
 package shop.goodspia.goods.member.entity;
 
 import lombok.*;
-import shop.goodspia.goods.artist.entity.Artist;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import shop.goodspia.goods.common.entity.BaseTimeEntity;
 import shop.goodspia.goods.member.dto.MemberSaveRequest;
 import shop.goodspia.goods.member.dto.MemberUpdateRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -27,34 +25,35 @@ public class Member extends BaseTimeEntity {
     private LocalDateTime lastPasswordChanged;
     private String nickname;
     private String name;
+    private Gender gender;
+    private String phoneNumber;
     private String birthday;
     @Embedded
     private Address address;
-    private int isWithdraw;
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
     private LocalDateTime withdrawTime;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
-
-    public static Member from(MemberSaveRequest memberSaveRequest) {
+    public static Member from(MemberSaveRequest memberSaveRequest, PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(memberSaveRequest.getEmail())
-                .password(memberSaveRequest.getPassword())
+                .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
                 .nickname(memberSaveRequest.getNickname())
                 .name(memberSaveRequest.getName())
+                .gender(memberSaveRequest.getGender())
                 .birthday(memberSaveRequest.getBirthday())
+                .phoneNumber(memberSaveRequest.getPhoneNumber())
                 .address(Address.of(
                         memberSaveRequest.getZipcode(),
                         memberSaveRequest.getAddress1(),
                         memberSaveRequest.getAddress2()))
-                .isWithdraw(0)
+                .status(MemberStatus.ACTIVE)
                 .build();
     }
 
-    public void registerArtist(Artist artist) {
-        this.artist = artist;
-    }
+//    public void registerArtist(Artist artist) {
+//        this.artist = artist;
+//    }
 
     public void updateMember(MemberUpdateRequest memberUpdateRequest) {
         this.password = memberUpdateRequest.getPassword();

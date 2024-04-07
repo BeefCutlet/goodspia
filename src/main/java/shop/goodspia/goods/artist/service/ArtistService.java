@@ -23,11 +23,9 @@ public class ArtistService {
 
     /**
      * 아티스트 정보 조회 메서드
-     * @param artistId
-     * @return
      */
-    public ArtistResponse getArtistInfo(long artistId) {
-        Artist artist = artistRepository.findById(artistId)
+    public ArtistResponse getArtistInfo(Long memberId) {
+        Artist artist = artistRepository.findArtistByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
 
         return new ArtistResponse(artist);
@@ -36,15 +34,13 @@ public class ArtistService {
     /**
      * 아티스트 등록 메서드
      */
-    public Long registerArtist(long memberId, ArtistSaveRequest artistSaveRequest) {
+    public Long registerArtist(Long memberId, ArtistSaveRequest artistSaveRequest) {
         //회원 정보에 아티스트 번호 저장
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         //아티스트 등록
-        Artist savedArtist = artistRepository.save(Artist.createArtist(artistSaveRequest));
-        //회원 정보에 아티스트 연관관계 추가
-        member.registerArtist(savedArtist);
+        Artist savedArtist = artistRepository.save(Artist.from(member, artistSaveRequest));
 
         return savedArtist.getId();
     }
@@ -52,8 +48,8 @@ public class ArtistService {
     /**
      * 아티스트 정보 수정 메서드
      */
-    public void modifyArtist(long artistId, ArtistUpdateRequest artistUpdateRequest) {
-        Artist artist = artistRepository.findById(artistId)
+    public void modifyArtist(Long memberId, ArtistUpdateRequest artistUpdateRequest) {
+        Artist artist = artistRepository.findArtistByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
         artist.updateArtist(artistUpdateRequest);
     }

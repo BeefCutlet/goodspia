@@ -25,8 +25,9 @@ public class Goods extends BaseTimeEntity {
     private Long id;
     private String name;
     private String content;
-    private String thumbnail;
     private int price;
+    private int stock;
+    private String thumbnail;
     private int isDeleted;
     private LocalDateTime deletedTime;
 
@@ -37,12 +38,13 @@ public class Goods extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
     private final List<Design> designs = new ArrayList<>();
 
-    public static Goods createGoods(GoodsSaveRequest goodsSaveRequest, Artist artist) {
+    public static Goods from(GoodsSaveRequest goodsSaveRequest, Artist artist) {
         return Goods.builder()
                 .name(goodsSaveRequest.getName())
                 .content(goodsSaveRequest.getContent())
-                .thumbnail(goodsSaveRequest.getThumbnail())
                 .price(goodsSaveRequest.getPrice())
+                .stock(goodsSaveRequest.getStock())
+                .thumbnail(goodsSaveRequest.getThumbnail())
                 .isDeleted(0)
                 .artist(artist)
                 .build();

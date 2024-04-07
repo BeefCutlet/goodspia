@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shop.goodspia.goods.artist.dto.ArtistSaveRequest;
 import shop.goodspia.goods.artist.dto.ArtistUpdateRequest;
 import shop.goodspia.goods.artist.service.ArtistService;
 import shop.goodspia.goods.common.util.ImageUpload;
+import shop.goodspia.goods.security.dto.MemberPrincipal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,9 +30,6 @@ public class ArtistController {
 
     /**
      * 아티스트 등록 API
-     *
-     * @param artist
-     * @return
      */
     @PostMapping
     public ResponseEntity<?> register(@RequestPart @Valid ArtistSaveRequest artist,
@@ -52,12 +51,9 @@ public class ArtistController {
 
     /**
      * 아티스트 정보 수정 API
-     *
-     * @param artist
-     * @return 이동할 페이지 URL
      */
-    @PutMapping(value = "/{artistId}")
-    public ResponseEntity<?> modify(@PathVariable Long artistId,
+    @PutMapping
+    public ResponseEntity<?> modify(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                     @RequestPart @Valid ArtistUpdateRequest artist,
                                     @RequestPart(required = false) MultipartFile profile) {
         //아티스트의 프로필 이미지 저장(갱신)
@@ -65,7 +61,7 @@ public class ArtistController {
         artist.setProfileImage(profileImageName);
 
         //아티스트의 정보 수정
-        artistService.modifyArtist(artistId, artist);
-        return ResponseEntity.created(URI.create(baseUrl + "/artists/" + artistId)).build();
+        artistService.modifyArtist(memberPrincipal.getId(), artist);
+        return ResponseEntity.noContent().build();
     }
 }

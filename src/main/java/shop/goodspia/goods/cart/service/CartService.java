@@ -51,7 +51,7 @@ public class CartService {
         Design design = designRepository.findById(cartSaveRequest.getDesignId())
                 .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
 
-        Cart cart = Cart.createCart(cartSaveRequest.getQuantity(), member, goods, design);
+        Cart cart = Cart.from(cartSaveRequest.getQuantity(), member, goods, design);
         Long savedCartId = cartRepository.save(cart).getId();
         log.info("MySQL Cart Save End");
         return savedCartId;

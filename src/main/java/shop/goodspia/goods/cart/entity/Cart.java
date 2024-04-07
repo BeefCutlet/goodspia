@@ -34,7 +34,7 @@ public class Cart extends BaseTimeEntity {
     @JoinColumn(name = "design_id")
     private Design design;
 
-    public static Cart createCart(int quantity, Member member, Goods goods, Design design) {
+    public static Cart from(int quantity, Member member, Goods goods, Design design) {
         return Cart.builder()
                 .quantity(quantity)
                 .member(member)

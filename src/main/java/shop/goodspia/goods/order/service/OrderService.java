@@ -53,7 +53,7 @@ public class OrderService {
                     .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다. : "
                             + orderSaveRequest.getGoodsId()));
             OrderGoods orderGoods = OrderGoods
-                    .createOrderGoods(
+                    .from(
                             goods,
                             orderSaveRequest.getQuantity(),
                             orderSaveRequest.getTotalPrice(),
@@ -61,7 +61,7 @@ public class OrderService {
             orderGoodsList.add(orderGoods);
         }
 
-        Orders orders = Orders.createOrder(member, orderGoodsList);
+        Orders orders = Orders.from(member, orderGoodsList);
         Orders savedOrder = orderRepository.save(orders);
         return savedOrder.getId();
     }

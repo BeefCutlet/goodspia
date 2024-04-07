@@ -35,10 +35,10 @@ public class GoodsService {
         return artistRepository.findById(artistId).map(
                 artist -> {
                     //굿즈 엔티티 생성
-                    Goods goods = Goods.createGoods(goodsSaveRequest, artist);
+                    Goods goods = Goods.from(goodsSaveRequest, artist);
                     //작성한 디자인 옵션의 엔티티 생성 후 DB에 저장
                     for (String design : goodsSaveRequest.getDesigns()) {
-                        designRepository.save(Design.createDesign(design, goods));
+                        designRepository.save(Design.from(design, goods));
                     }
                     return goodsRepository.save(goods).getId();
                 }
