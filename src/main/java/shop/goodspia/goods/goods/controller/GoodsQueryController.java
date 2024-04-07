@@ -31,8 +31,8 @@ public class GoodsQueryController {
     /**
      * 굿즈 상세 정보 조회 - 굿즈 상세페이지
      */
-    @GetMapping("/detail/{goodsId}")
-    public ResponseEntity<GoodsDetailResponse> getOneGoods(@PathVariable Long goodsId) {
+    @GetMapping("/{goodsId}")
+    public ResponseEntity<GoodsDetailResponse> getGoods(@PathVariable Long goodsId) {
         log.info("굿즈 상세 정보 조회, goodsId={}", goodsId);
         GoodsDetailResponse goods = goodsService.getGoods(goodsId);
         return ResponseEntity.ok(goods);
