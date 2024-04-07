@@ -6,8 +6,11 @@ import shop.goodspia.goods.artist.dto.ArtistSaveRequest;
 import shop.goodspia.goods.artist.dto.ArtistUpdateRequest;
 import shop.goodspia.goods.common.dto.AccountBank;
 import shop.goodspia.goods.common.entity.BaseTimeEntity;
+import shop.goodspia.goods.member.entity.Member;
 
 import javax.persistence.*;
+
+import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
@@ -21,19 +24,24 @@ public class Artist extends BaseTimeEntity {
     @Column(name = "artist_id")
     private Long id;
     private String nickname;
+    private String phoneNumber;
     private String profileImage;
     @Enumerated(EnumType.STRING)
     private AccountBank accountBank;
     private String accountNumber;
-    private String phoneNumber;
 
-    public static Artist createArtist(ArtistSaveRequest artistSaveRequest) {
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public static Artist from(Member member, ArtistSaveRequest artistSaveRequest) {
         return Artist.builder()
                 .nickname(artistSaveRequest.getNickname())
+                .phoneNumber(artistSaveRequest.getPhoneNumber())
                 .profileImage(artistSaveRequest.getProfileImage())
                 .accountBank(AccountBank.convertStringToBank(artistSaveRequest.getAccountBank()))
                 .accountNumber(artistSaveRequest.getAccountNumber())
-                .phoneNumber(artistSaveRequest.getPhoneNumber())
+                .member(member)
                 .build();
     }
 

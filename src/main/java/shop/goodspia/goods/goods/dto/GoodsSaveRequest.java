@@ -17,11 +17,13 @@ public class GoodsSaveRequest {
     @NotNull
     private String content;
 
-    private String thumbnail;
-
     @Min(1000)
     @Max(10000000)
     private int price;
+
+    private int stock;
+
+    private String thumbnail;
 
     @NotNull
     private List<String> designs;

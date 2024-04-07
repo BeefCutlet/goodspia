@@ -19,22 +19,17 @@ public class GoodsQueryController {
 
     /**
      * 최신 굿즈 리스트 - 메인페이지
-     * @param category
-     * @param pageable
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<GoodsListResponse> getGoodsList(@RequestParam(required = false) String category,
-                                                          Pageable pageable) {
+    public ResponseEntity<GoodsListResponse> getGoodsList(Pageable pageable) {
         log.info("전체 굿즈 리스트 조회, size={}, page={}", pageable.getPageSize(), pageable.getPageNumber());
-        GoodsListResponse goodsList = goodsService.getGoodsList(pageable, category);
+        GoodsListResponse goodsList = goodsService.getGoodsList(pageable);
         return ResponseEntity.ok(goodsList);
     }
 
     /**
      * 굿즈 상세 정보 조회 - 굿즈 상세페이지
-     * @param goodsId
-     * @return
      */
     @GetMapping("/detail/{goodsId}")
     public ResponseEntity<GoodsDetailResponse> getOneGoods(@PathVariable Long goodsId) {
@@ -45,9 +40,6 @@ public class GoodsQueryController {
 
     /**
      * 아티스트가 제작한 굿즈 리스트 - 아티스트 페이지
-     * @param artistId
-     * @param pageable
-     * @return
      */
     @GetMapping("/artist/{artistId}")
     public ResponseEntity<GoodsListResponse> getArtistGoodsList(@PathVariable Long artistId, Pageable pageable) {

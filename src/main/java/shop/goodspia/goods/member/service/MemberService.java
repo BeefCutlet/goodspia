@@ -25,19 +25,20 @@ public class MemberService {
      * @param memberSaveRequest
      * @return
      */
-    public Long saveMember(MemberSaveRequest memberSaveRequest) {
+    public void saveMember(MemberSaveRequest memberSaveRequest) {
         String findMember = memberSaveRequest.getEmail();
         if (memberRepository.findByEmailNotFetch(findMember).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
 
-        Member member = Member.builder()
-                .email(memberSaveRequest.getEmail())
-                .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
-                .nickname(memberSaveRequest.getNickname())
-                .isWithdraw(0)
-                .build();
-        return memberRepository.save(member).getId();
+        Member member = Member.from(memberSaveRequest, passwordEncoder);
+//        Member member = Member.builder()
+//                .email(memberSaveRequest.getEmail())
+//                .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
+//                .nickname(memberSaveRequest.getNickname())
+//                .isWithdraw(0)
+//                .build();
+        memberRepository.save(member);
     }
 
     /**

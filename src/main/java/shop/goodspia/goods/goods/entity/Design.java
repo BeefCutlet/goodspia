@@ -23,7 +23,7 @@ public class Design {
     @JoinColumn(name = "goods_id")
     private Goods goods;
 
-    public static Design createDesign(String design, Goods goods) {
+    public static Design from(String design, Goods goods) {
         return Design.builder()
                 .designName(design)
                 .goods(goods)

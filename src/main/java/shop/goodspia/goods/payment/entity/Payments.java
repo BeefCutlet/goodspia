@@ -10,6 +10,8 @@ import shop.goodspia.goods.payment.dto.PaymentRequest;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.*;
+
 @Entity
 @Getter
 @Builder
@@ -30,10 +32,11 @@ public class Payments {
     @CreatedDate
     private LocalDateTime createdTime;
 
-    @OneToOne(mappedBy = "payments")
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "orders_id")
     private Orders orders;
 
-    public static Payments createPayments(PaymentRequest paymentRequest) {
+    public static Payments from(PaymentRequest paymentRequest) {
         return Payments.builder()
                 .paymentUid(paymentRequest.getPaymentUid())
                 .amount(paymentRequest.getAmount())

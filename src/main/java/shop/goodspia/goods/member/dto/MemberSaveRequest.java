@@ -2,6 +2,8 @@ package shop.goodspia.goods.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import shop.goodspia.goods.common.validator.ValidEnum;
+import shop.goodspia.goods.member.entity.Gender;
 
 import javax.validation.constraints.*;
 
@@ -13,27 +15,26 @@ public class MemberSaveRequest {
     private String email;
 
     @NotEmpty
-    @Pattern(regexp = "[0-9a-zA-Z!@#$%]{6,20}")
+    @Pattern(regexp = "[0-9a-zA-Z!@#$%]{8,20}")
     private String password;
 
     @NotEmpty
-    @Pattern(regexp = "[0-9a-zA-Zㅏ-ㅣㄱ-ㅎ가-힣._]{2,12}")
     private String nickname;
 
     @NotEmpty
     private String name;
 
+    @ValidEnum(enumClass = Gender.class)
+    private Gender gender;
+
+    @Pattern(regexp = "[0-9]{10,11}")
+    private String phoneNumber;
+
+    @Pattern(regexp = "[0-9]{8}")
+    private String birthday;
+
     private String zipcode;
     private String address1;
     private String address2;
 
-    @NotEmpty
-    @Min(10)
-    @Max(11)
-    private String phoneNumber;
-
-    @NotEmpty
-    @Min(8)
-    @Max(8)
-    private String birthday;
 }

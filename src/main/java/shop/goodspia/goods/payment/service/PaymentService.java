@@ -26,7 +26,7 @@ public class PaymentService {
      */
     public Long addPaymentAndDelivery(PaymentRequest paymentRequest) {
         //결제 정보 저장
-        Payments payments = Payments.createPayments(paymentRequest);
+        Payments payments = Payments.from(paymentRequest);
         Long paymentId = paymentRepository.save(payments).getId();
         //주문 정보와 결제 정보 연관관계 생성
         Orders order = orderRepository.findByOrderUid(paymentRequest.getOrderUid());

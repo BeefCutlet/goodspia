@@ -37,14 +37,13 @@ public class Orders extends BaseTimeEntity {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private final List<OrderGoods> orderGoods = new ArrayList<>();
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "payments_id")
+    @OneToOne(mappedBy = "orders")
     private Payments payments;
 
     //주문 생성
-    public static Orders createOrder(Member member, List<OrderGoods> orderGoodsList) {
+    public static Orders from(Member member, List<OrderGoods> orderGoodsList) {
         Orders orders = Orders.builder()
-                .orderUid("ORDER_" + UUID.randomUUID().toString())
+                .orderUid("ORDER_" + UUID.randomUUID())
                 .orderStatus(OrderStatus.READY)
                 .member(member)
                 .build();
