@@ -46,11 +46,11 @@ public class SampleData {
 //            for (int k = 201; k <= 300; k++) {
 //                Member member = Member.builder()
 //                        .email("member" + k +"@email.com")
-//                        .password(passwordEncoder.encode("memberpassword" + k))
+//                        .password(passwordEncoder.encode("asdqwe123!" + k))
 //                        .nickname("닉네임" + k)
 //                        .name("김땡땡")
 //                        .gender((k % 2 == 0) ? Gender.MAN : Gender.WOMAN)
-//                        .birthday("20000101")
+//                        .birthday("2000-01-01")
 //                        .phoneNumber("010-1234-1234")
 //                        .address(Address.of(
 //                                "01234",
