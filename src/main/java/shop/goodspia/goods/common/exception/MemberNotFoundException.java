@@ -1,4 +1,4 @@
-package shop.goodspia.goods.exception;
+package shop.goodspia.goods.common.exception;
 
 public class MemberNotFoundException extends RuntimeException {
 

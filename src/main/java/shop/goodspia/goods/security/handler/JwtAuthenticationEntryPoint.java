@@ -1,15 +1,12 @@
 package shop.goodspia.goods.security.handler;
 
 import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import shop.goodspia.goods.common.dto.Response;
-import shop.goodspia.goods.exception.dto.ErrorCode;
-import shop.goodspia.goods.exception.dto.ErrorResponse;
+import shop.goodspia.goods.common.exception.dto.ErrorCode;
+import shop.goodspia.goods.common.exception.dto.ErrorResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

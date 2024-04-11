@@ -1,4 +1,4 @@
-package shop.goodspia.goods.exception.handler;
+package shop.goodspia.goods.common.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;

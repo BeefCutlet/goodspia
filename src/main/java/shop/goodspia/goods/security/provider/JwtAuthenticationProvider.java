@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import shop.goodspia.goods.exception.dto.ErrorCode;
+import shop.goodspia.goods.common.exception.dto.ErrorCode;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
 import shop.goodspia.goods.security.dto.MemberPrincipal;
