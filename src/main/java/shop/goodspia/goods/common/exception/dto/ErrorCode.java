@@ -1,4 +1,4 @@
-package shop.goodspia.goods.exception.dto;
+package shop.goodspia.goods.common.exception.dto;
 
 import org.springframework.http.HttpStatus;
 

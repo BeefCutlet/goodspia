@@ -8,12 +8,11 @@ import com.siot.IamportRestClient.response.Payment;
 import com.siot.IamportRestClient.response.Prepare;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import shop.goodspia.goods.payment.dto.PaymentPrepareRequest;
 import shop.goodspia.goods.payment.dto.PaymentPrepareResponse;
 import shop.goodspia.goods.payment.dto.PaymentRequest;
-import shop.goodspia.goods.exception.PaymentValidationFailureException;
+import shop.goodspia.goods.common.exception.PaymentValidationFailureException;
 import shop.goodspia.goods.order.repository.OrderQueryRepository;
 
 import java.io.IOException;

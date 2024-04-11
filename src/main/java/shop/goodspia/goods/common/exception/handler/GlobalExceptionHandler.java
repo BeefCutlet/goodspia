@@ -1,4 +1,4 @@
-package shop.goodspia.goods.exception.handler;
+package shop.goodspia.goods.common.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
