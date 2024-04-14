@@ -10,11 +10,11 @@ import javax.validation.constraints.*;
 @Getter @Setter
 public class MemberSaveRequest {
 
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 
-    @NotEmpty
+    @NotBlank
     @Pattern(regexp = "[0-9a-zA-Z!@#$%]{8,20}")
     private String password;
 
@@ -27,10 +27,10 @@ public class MemberSaveRequest {
     @ValidEnum(enumClass = Gender.class)
     private Gender gender;
 
-    @Pattern(regexp = "[0-9]{10,11}")
+    @Pattern(regexp = "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$")
     private String phoneNumber;
 
-    @Pattern(regexp = "[0-9]{8}")
+    @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
     private String birthday;
 
     private String zipcode;
