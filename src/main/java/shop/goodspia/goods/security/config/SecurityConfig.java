@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(
                         "/health-check",
-                        "/auth/login",
+                        "/auth/**",
                         "/goods/list",
                         "/goods/detail/*")
                 .permitAll()
