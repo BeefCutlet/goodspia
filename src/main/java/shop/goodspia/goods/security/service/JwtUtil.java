@@ -40,12 +40,13 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createRefreshToken() {
+    public String createRefreshToken(Long memberId) {
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer(TokenInfo.ISSUER)
                 .setIssuedAt(Timestamp.from(Instant.now()))
+                .claim(TokenInfo.CLAIM_ID, memberId)
                 .setExpiration(Timestamp.from(Instant.now().plus(TokenInfo.REFRESH_EXP, ChronoUnit.SECONDS)))
                 .compact();
     }

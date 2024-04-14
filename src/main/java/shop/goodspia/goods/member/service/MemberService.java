@@ -10,6 +10,10 @@ import shop.goodspia.goods.member.dto.MemberSaveRequest;
 import shop.goodspia.goods.member.dto.MemberUpdateRequest;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
+import shop.goodspia.goods.security.domain.Auth;
+import shop.goodspia.goods.security.dto.AuthResponse;
+import shop.goodspia.goods.security.repository.AuthRepository;
+import shop.goodspia.goods.security.service.JwtUtil;
 
 @Slf4j
 @Service
@@ -19,31 +23,31 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthRepository authRepository;
+    private final JwtUtil jwtUtil;
 
     /**
      * 회원 정보 저장
-     * @param memberSaveRequest
-     * @return
      */
-    public void saveMember(MemberSaveRequest memberSaveRequest) {
-        String findMember = memberSaveRequest.getEmail();
-        if (memberRepository.findByEmailNotFetch(findMember).isPresent()) {
+    public AuthResponse saveMember(MemberSaveRequest memberSaveRequest) {
+        //이메일로 회원 존재 여부 확인 - 존재하면 예외 발생
+        if (memberRepository.findByEmailNotFetch(memberSaveRequest.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
 
+        //회원 정보 DB에 저장
         Member member = Member.from(memberSaveRequest, passwordEncoder);
-//        Member member = Member.builder()
-//                .email(memberSaveRequest.getEmail())
-//                .password(passwordEncoder.encode(memberSaveRequest.getPassword()))
-//                .nickname(memberSaveRequest.getNickname())
-//                .isWithdraw(0)
-//                .build();
         memberRepository.save(member);
+
+        //액세스 토큰, 리프레시 토큰 발급
+        String accessToken = jwtUtil.createAccessToken(member.getId());
+        String refreshToken = createRefreshToken(member);
+
+        return AuthResponse.of(accessToken, refreshToken);
     }
 
     /**
      * 회원 정보 수정
-     * @param memberUpdateRequest
      */
     public void modifyMemberInfo(Long memberId, MemberUpdateRequest memberUpdateRequest) {
         Member member = memberRepository.findById(memberId)
@@ -53,12 +57,22 @@ public class MemberService {
 
     /**
      * 단일 회원 정보 조회용 메서드
-     * @param memberId
-     * @return
      */
     public MemberResponse getMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
         return MemberResponse.from(member);
+    }
+
+    //리프레시 토큰 발급
+    private String createRefreshToken(Member member) {
+        //리프레스 토큰 생성
+        String refreshToken = jwtUtil.createRefreshToken(member.getId());
+
+        //리프레시 토큰 DB에 저장
+        authRepository.save(Auth.of(refreshToken, member));
+
+        //리프레시 토큰 발급
+        return refreshToken;
     }
 }

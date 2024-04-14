@@ -2,6 +2,7 @@ package shop.goodspia.goods.security.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.SameSiteCookies;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private static final String BEARER_PREFIX = "Bearer ";
-
     private final LoginService loginService;
 
     /**
@@ -39,7 +38,7 @@ public class LoginController {
         AuthResponse authResponse = loginService.login(request);
         //리프레시 토큰 쿠키 생성 - HttpOnly, Secure 설정
         ResponseCookie refreshTokenCookie = createRefreshTokenCookie(authResponse.getRefreshToken());
-        log.info("AccessToken: {}", authResponse.getAccessToken());
+        log.info("AccessToken: {}", authResponse.getAccessToken().getAccessToken());
         log.info("RefreshToken: {}", authResponse.getRefreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
@@ -47,28 +46,41 @@ public class LoginController {
     }
 
     /**
-     * 리프레시 토큰 재발급
+     * 액세스 토큰 재발급
      */
     @PostMapping("/refresh-token")
     public ResponseEntity<AccessToken> getRefreshToken(HttpServletRequest request) {
         //리프레스 토큰 추출
         String refreshToken = resolveRefreshToken(request);
-        String accessToken = resolveAccessToken(request);
 
         //액세스 토큰 + 리프레시 토큰 재발급
-        AuthResponse authResponse = loginService.getNewTokens(accessToken, refreshToken);
+        AuthResponse authResponse = loginService.getNewTokens(refreshToken);
         //리프레시 토큰 쿠키 생성 - HttpOnly, Secure 설정
         ResponseCookie refreshTokenCookie = createRefreshTokenCookie(authResponse.getRefreshToken());
+        log.info("액세스 토큰 재발급 성공- 액세스 토큰: {}, 리프레시 토큰: {}", authResponse.getAccessToken(), authResponse.getRefreshToken());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                 .body(authResponse.getAccessToken());
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        //리프레시 토큰 추출
+        String refreshToken = resolveRefreshToken((request));
+        //리프레시 토큰 정보 삭제
+        loginService.deleteRefreshToken(refreshToken);
+        return ResponseEntity.ok().build();
+    }
+
     //Refresh 토큰 추출 메서드
     private String resolveRefreshToken(HttpServletRequest request) {
         String token = null;
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new IllegalArgumentException("리프레시 토큰을 담은 쿠키가 존재하지 않습니다.");
+        }
+
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(TokenInfo.REFRESH_TOKEN)) {
                 token = cookie.getValue();
@@ -82,20 +94,14 @@ public class LoginController {
         return token;
     }
 
-    //Access 토큰 추출 메서드
-    private String resolveAccessToken(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (!StringUtils.hasText(token) || !token.startsWith(BEARER_PREFIX)) {
-            return null;
-        }
-        return token.substring(BEARER_PREFIX.length());
-    }
-
     //Refresh 토큰 쿠키 생성 메서드 - HttpOnly, Secure 설정
     private ResponseCookie createRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from(TokenInfo.REFRESH_TOKEN, refreshToken)
                 .httpOnly(true)
                 .secure(true)
+                .sameSite(SameSiteCookies.STRICT.getValue())
+                .domain("goodspia.shop")
+                .maxAge(TokenInfo.REFRESH_EXP)
                 .build();
     }
 }
