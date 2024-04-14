@@ -7,6 +7,7 @@ build/
 application-local.yml
 application-dev.yml
 secret.properties
+keystore.p12
 
 ### STS ###
 .apt_generated
