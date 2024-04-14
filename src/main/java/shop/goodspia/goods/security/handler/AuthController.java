@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthController {
 
     private final LoginService loginService;
 
@@ -57,7 +57,7 @@ public class LoginController {
         AuthResponse authResponse = loginService.getNewTokens(refreshToken);
         //리프레시 토큰 쿠키 생성 - HttpOnly, Secure 설정
         ResponseCookie refreshTokenCookie = createRefreshTokenCookie(authResponse.getRefreshToken());
-        log.info("액세스 토큰 재발급 성공- 액세스 토큰: {}, 리프레시 토큰: {}", authResponse.getAccessToken(), authResponse.getRefreshToken());
+        log.info("액세스 토큰 재발급 성공- 액세스 토큰: {}, 리프레시 토큰: {}", authResponse.getAccessToken().getAccessToken(), authResponse.getRefreshToken());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.goodspia.goods.common.exception.InvalidTokenException;
 import shop.goodspia.goods.common.exception.dto.ErrorCode;
 import shop.goodspia.goods.common.exception.dto.ErrorResponse;
-import shop.goodspia.goods.security.handler.LoginController;
+import shop.goodspia.goods.security.handler.AuthController;
 
-@RestControllerAdvice(basePackageClasses = LoginController.class)
+@RestControllerAdvice(basePackageClasses = AuthController.class)
 public class AuthExceptionHandler {
 
     /**
