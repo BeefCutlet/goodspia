@@ -27,9 +27,6 @@ public class GoodsQueryRepository {
 
     /**
      * 굿즈 리스트 페이징 조회 (카테고리 입력 시 카테고리 분류)
-     * @param pageable
-     * @param category
-     * @return
      */
     public Page<GoodsResponse> findGoodsList(Pageable pageable) {
         List<GoodsResponse> goodsList = queryFactory
@@ -38,7 +35,7 @@ public class GoodsQueryRepository {
                         goods.name.as("goodsName"),
                         goods.price.as("price"),
                         goods.thumbnail.as("thumbnail"),
-                        goods.artist.nickname.as("artistName")))
+                        goods.artist.nickname.as("artistNickname")))
                 .from(goods)
                 .join(goods.artist, artist)
                 .orderBy(goods.id.desc())
@@ -56,8 +53,6 @@ public class GoodsQueryRepository {
 
     /**
      * 굿즈 단건 조회
-     * @param goodsId
-     * @return
      */
     public Goods findGoodsDetail(Long goodsId) {
         return queryFactory

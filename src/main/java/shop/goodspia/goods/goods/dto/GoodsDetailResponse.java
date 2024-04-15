@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 @Getter
 public class GoodsDetailResponse {
 
-    private Long goodsId;
-    private String name;
-    private String thumbnail;
-    private String content;
-    private int price;
-    private String artistName;
-    private List<DesignResponse> goodsDesigns;
+    private final Long goodsId;
+    private final String name;
+    private final String thumbnail;
+    private final String content;
+    private final int price;
+    private final String artistName;
+    private final List<DesignResponse> goodsDesigns;
 
     public GoodsDetailResponse(Goods goods) {
         this.goodsId = goods.getId();
@@ -26,7 +26,7 @@ public class GoodsDetailResponse {
         this.price = goods.getPrice();
         this.artistName = goods.getArtist().getNickname();
         this.goodsDesigns = goods.getDesigns().stream().map(
-                design -> new DesignResponse(design.getDesignName())
+                design -> new DesignResponse(design.getId(), design.getDesignName())
         ).collect(Collectors.toList());
     }
 }
