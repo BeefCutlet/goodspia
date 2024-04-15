@@ -1,18 +1,13 @@
 package shop.goodspia.goods.goods.dto.design;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 @Getter
+@AllArgsConstructor
 public class DesignResponse {
 
-    @NotNull
-    @Pattern(regexp = "[0-9a-zA-Z가-힣]")
-    private String designName;
+    private final Long designId;
 
-    public DesignResponse(String designName) {
-        this.designName = designName;
-    }
+    private final String designName;
 }
