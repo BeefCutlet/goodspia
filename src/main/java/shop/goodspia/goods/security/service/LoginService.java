@@ -5,15 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import shop.goodspia.goods.common.exception.InvalidTokenException;
 import shop.goodspia.goods.common.exception.PasswordNotMatchedException;
 import shop.goodspia.goods.common.exception.dto.ErrorCode;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
+import shop.goodspia.goods.security.domain.Auth;
 import shop.goodspia.goods.security.dto.AuthRequest;
 import shop.goodspia.goods.security.dto.AuthResponse;
 import shop.goodspia.goods.security.dto.TokenInfo;
-import shop.goodspia.goods.security.domain.Auth;
 import shop.goodspia.goods.security.repository.AuthRepository;
 
 import java.sql.Timestamp;
@@ -63,7 +64,7 @@ public class LoginService {
                 .orElseThrow(() -> new IllegalArgumentException("저장된 리프레시 토큰이 없습니다."));
 
         //리프레시 토큰 검증
-        if (validateRefreshToken(auth, refreshToken)) {
+        if (!validateRefreshToken(auth, refreshToken)) {
             throw new InvalidTokenException(ErrorCode.INVALID_TOKEN);
         }
 
@@ -105,19 +106,20 @@ public class LoginService {
     //리프레시 토큰 검증
     private boolean validateRefreshToken(Auth auth, String refreshToken) {
         ////토큰 서명 확인
-        boolean isRefreshValid = true;
+        boolean isRefreshTokenValid = true;
 
         //Refresh 토큰의 Claim 추출
         Claims refreshTokenClaims = jwtUtil.getClaims(refreshToken);
 
         ////토큰 서명 확인 + DB에 저장된 Refresh 토큰과 일치하는지 검사 + 만료 여부 검사
         //Refresh 토큰 만료 여부 체크
-        if (!jwtUtil.validateToken(refreshToken) ||
+        if (!StringUtils.hasText(auth.getRefreshToken()) ||
+                !jwtUtil.validateToken(refreshToken) ||
                 !auth.getRefreshToken().equals(refreshToken) ||
-                refreshTokenClaims.getExpiration().after(Timestamp.from(Instant.now()))) {
-            isRefreshValid = false;
+                refreshTokenClaims.getExpiration().before(Timestamp.from(Instant.now()))) {
+            isRefreshTokenValid = false;
         }
 
-        return isRefreshValid;
+        return isRefreshTokenValid;
     }
 }
