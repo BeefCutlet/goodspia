@@ -30,8 +30,7 @@ public class Auth {
                 .build();
     }
 
-    public Auth updateRefreshToken(String refreshToken) {
+    public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-        return this;
     }
 }

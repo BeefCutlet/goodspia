@@ -38,11 +38,10 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(
                         "/health-check",
-                        "/auth/**",
-                        "/goods/list",
-                        "/goods/detail/*")
+                        "/auth/**")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/members").permitAll()
+                .antMatchers(HttpMethod.GET, "/goods/*").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
