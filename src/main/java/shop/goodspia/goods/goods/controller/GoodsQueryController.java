@@ -19,7 +19,6 @@ public class GoodsQueryController {
 
     /**
      * 최신 굿즈 리스트 - 메인페이지
-     * @return
      */
     @GetMapping("/list")
     public ResponseEntity<GoodsListResponse> getGoodsList(Pageable pageable) {

@@ -1,15 +1,14 @@
 package shop.goodspia.goods.goods.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.goodspia.goods.artist.repository.ArtistRepository;
 import shop.goodspia.goods.goods.dto.*;
 import shop.goodspia.goods.goods.entity.Design;
 import shop.goodspia.goods.goods.entity.Goods;
-import shop.goodspia.goods.artist.repository.ArtistRepository;
 import shop.goodspia.goods.goods.repository.DesignRepository;
 import shop.goodspia.goods.goods.repository.GoodsQueryRepository;
 import shop.goodspia.goods.goods.repository.GoodsRepository;
@@ -30,19 +29,17 @@ public class GoodsService {
     /**
      * 굿즈 등록용 메서드
      */
-    public Long addGoods(Long artistId, GoodsSaveRequest goodsSaveRequest) {
+    public void addGoods(Long artistId, GoodsSaveRequest goodsSaveRequest) {
         //회원 조회 - 아티스트 등록 여부 파악용
-        return artistRepository.findById(artistId).map(
-                artist -> {
+        artistRepository.findById(artistId).map(artist -> {
                     //굿즈 엔티티 생성
                     Goods goods = Goods.from(goodsSaveRequest, artist);
                     //작성한 디자인 옵션의 엔티티 생성 후 DB에 저장
                     for (String design : goodsSaveRequest.getDesigns()) {
                         designRepository.save(Design.from(design, goods));
                     }
-                    return goodsRepository.save(goods).getId();
-                }
-        ).orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
+                    return goodsRepository.save(goods).getId();})
+                .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
     }
 
     /**
@@ -72,7 +69,7 @@ public class GoodsService {
     /**
      * 전체 굿즈리스트 조회 (최신순)
      */
-    @Cacheable(value = "goodsList", key = "#pageable.pageNumber")
+//    @Cacheable(value = "goodsList", key = "#pageable.pageNumber")
     public GoodsListResponse getGoodsList(Pageable pageable) {
         Page<GoodsResponse> goodsListPage = goodsQueryRepository.findGoodsList(pageable);
         List<GoodsResponse> goodsList = goodsListPage.getContent();
@@ -82,7 +79,7 @@ public class GoodsService {
     /**
      * 아티스트가 제작한 굿즈 리스트 조회 (최신순)
      */
-    public GoodsListResponse getArtistGoodsList(Pageable pageable, long artistId) {
+    public GoodsListResponse getArtistGoodsList(Pageable pageable, Long artistId) {
         Page<GoodsResponse> goodsListPage = goodsQueryRepository.findArtistGoodsList(pageable, artistId);
         List<GoodsResponse> goodsList = goodsListPage.getContent();
         return new GoodsListResponse(goodsList, goodsListPage.getTotalPages());
@@ -91,7 +88,7 @@ public class GoodsService {
     /**
      * 굿즈 상세 정보 조회
      */
-    public GoodsDetailResponse getGoods(long goodsId) {
+    public GoodsDetailResponse getGoods(Long goodsId) {
         Goods goodsDetail = goodsQueryRepository.findGoodsDetail(goodsId);
         return new GoodsDetailResponse(goodsDetail);
     }
