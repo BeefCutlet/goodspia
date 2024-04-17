@@ -2,11 +2,10 @@ package shop.goodspia.goods.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.cart.dto.CartResponse;
+import shop.goodspia.goods.cart.dto.CartSaveListRequest;
 import shop.goodspia.goods.cart.dto.CartSaveRequest;
 import shop.goodspia.goods.cart.entity.Cart;
 import shop.goodspia.goods.cart.entity.RedisCart;
@@ -21,11 +20,12 @@ import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepository;
@@ -37,30 +37,38 @@ public class CartService {
 
     /**
      * 장바구니 저장
-     * @param memberId, cartSaveRequest
-     * @return
      */
-    public Long addCart(Long memberId, CartSaveRequest cartSaveRequest) {
-        log.info("MySQL Cart Save Start");
+    public void addCarts(Long memberId, CartSaveListRequest cartSaveRequest) {
+        //회원 정보 존재 여부 확인
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-        Goods goods = goodsRepository.findById(cartSaveRequest.getGoodsId())
-                .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다."));
+        //선택된 장바구니 목록을 DB에 저장
+        cartSaveRequest.getCartList().forEach((cart) -> {
+            //굿즈 정보 존재 여부 확인
+            Goods goods = goodsRepository.findById(cart.getGoodsId())
+                    .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다."));
 
-        Design design = designRepository.findById(cartSaveRequest.getDesignId())
-                .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
+            //디자인 정보 존재 여부 확인
+            Design design = designRepository.findById(cart.getDesignId())
+                    .orElseThrow(() -> new IllegalArgumentException("디자인 정보를 찾을 수 없습니다."));
 
-        Cart cart = Cart.from(cartSaveRequest.getQuantity(), member, goods, design);
-        Long savedCartId = cartRepository.save(cart).getId();
-        log.info("MySQL Cart Save End");
-        return savedCartId;
+            //선택한 디자인이 이미 장바구니에 있는지 확인
+            Optional<Cart> findCart = cartRepository.findAddedCart(member.getId(), goods.getId(), design.getId());
+            if (findCart.isPresent()) {
+                //이미 존재하면 수량만 추가
+                int currentQuantity = findCart.get().getQuantity();
+                findCart.get().changeQuantity(currentQuantity + cart.getQuantity());
+            } else {
+                //존재하지 않으면 새로 추가
+                Cart saveCart = Cart.from(cart.getQuantity(), member, goods, design);
+                cartRepository.save(saveCart);
+            }
+        });
     }
 
     /**
      * 장바구니 저장 - Redis에 저장
-     * @param memberId, cartSaveRequest
-     * @return
      */
     public void addRedisCart(Long memberId, CartSaveRequest cartSaveRequest) {
         log.info("Redis Cart Save Start");
@@ -111,24 +119,18 @@ public class CartService {
     public void deleteCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니 정보를 찾을 수 없습니다."));
-        cartRepository.delete(cart);
+        cartRepository.deleteById(cart.getId());
     }
-
 
     /**
      * 장바구니 목록 페이징 조회
-     * @param memberId
-     * @param pageable
-     * @return
      */
-    public Page<CartResponse> getCartList(Long memberId, Pageable pageable) {
-        return cartQueryRepository.findCartList(memberId, pageable);
+    public List<CartResponse> getCartList(Long memberId) {
+        return cartQueryRepository.findCartList(memberId);
     }
 
     /**
      * Redis에서 특정 회원의 장바구니 목록 조회
-     * @param memberId
-     * @return
      */
     public List<RedisCart> getRedisCartList(Long memberId) {
         return cartRedisRepository.findAllByMemberId(memberId);
