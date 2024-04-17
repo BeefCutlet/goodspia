@@ -25,11 +25,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         log.error("Authorization Error, exception={}", authException.getMessage());
         //401 에러 반환
-        sendError(response);
+        sendError(response, authException.getMessage());
     }
 
-    private void sendError(HttpServletResponse response) throws IOException {
-        String errorResponse = gson.toJson(ErrorResponse.of(ErrorCode.BAD_CREDENTIALS));
+    private void sendError(HttpServletResponse response, String message) throws IOException {
+        String errorResponse = gson.toJson(ErrorResponse.from(ErrorCode.NOT_PERMITTED, message));
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());

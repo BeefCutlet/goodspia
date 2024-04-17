@@ -1,6 +1,7 @@
 package shop.goodspia.goods.security.provider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import shop.goodspia.goods.security.service.JwtUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -30,12 +32,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         //액세스 토큰 추출
         String accessToken = ((JwtAuthenticationToken) authentication).getAccessToken();
         //액세스 토큰 검증
-        if (validateAccessToken(accessToken)) {
+        if (!validateAccessToken(accessToken)) {
+            log.info("토큰 검증 에러");
             throw new BadCredentialsException(ErrorCode.BAD_CREDENTIALS.getMessage());
         }
 
         //액세스 토큰의 Claim에서 회원 번호를 추출하여 회원 정보 조회
         Long memberId = jwtUtil.getClaims(accessToken).get(TokenInfo.CLAIM_ID, Long.class);
+        log.info("memberId: {}", memberId);
         Member member = memberRepository.findById(memberId).orElseThrow(() -> {
             throw new UsernameNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage());
         });
@@ -50,7 +54,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(JwtAuthenticationProvider.class);
+        return authentication.equals(JwtAuthenticationToken.class);
     }
 
     private boolean validateAccessToken(String accessToken) {

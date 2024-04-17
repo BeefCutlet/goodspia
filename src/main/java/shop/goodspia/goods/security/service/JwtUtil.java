@@ -65,6 +65,9 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            log.info("이미 만료된 JWT 토큰입니다.");
+            e.printStackTrace();
         } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
             e.printStackTrace();
