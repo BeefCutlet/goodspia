@@ -14,6 +14,7 @@ public enum ErrorCode {
     METHOD_ARGS_NOT_VALID(HttpStatus.BAD_REQUEST, "요청 정보가 유효하지 않습니다."),
     HANDLER_NOT_FOUND(HttpStatus.BAD_REQUEST, "처리할 수 없는 요청입니다."),
     INVALID_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "잘못된 미디어 타입입니다."),
+    NOT_PERMITTED(HttpStatus.FORBIDDEN, "권한이 없습니다.")
     ;
 
     private final HttpStatus status;
