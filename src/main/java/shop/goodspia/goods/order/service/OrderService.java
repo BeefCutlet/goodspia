@@ -34,9 +34,8 @@ public class OrderService {
 
     /**
      * 주문 목록에 리스트 추가
-     * @param orderSaveListRequest
      */
-    public Long addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
+    public void addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
@@ -62,8 +61,7 @@ public class OrderService {
         }
 
         Orders orders = Orders.from(member, orderGoodsList);
-        Orders savedOrder = orderRepository.save(orders);
-        return savedOrder.getId();
+        orderRepository.save(orders);
     }
 
     public void removeOrder(Long orderGoodsId) {
