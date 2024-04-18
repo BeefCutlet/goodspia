@@ -1,30 +1,22 @@
 package shop.goodspia.goods.member.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
-@Getter @Setter
+@Getter
 public class MemberUpdateRequest {
 
-    @NotBlank
-    @Pattern(regexp = "[0-9a-zA-Z!@#$%]{6,20}")
-    private String password;
+    @NotEmpty
+    private String name;
 
-    @NotBlank
-    @Pattern(regexp = "[0-9a-zA-Zㅏ-ㅣㄱ-ㅎ가-힣._]{2,12}")
+    @NotEmpty
     private String nickname;
 
-    private String zipcode;
-    private String address1;
-    private String address2;
-
-    @NotEmpty
-    @Min(10)
-    @Max(11)
+    @Pattern(regexp = "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$")
     private String phoneNumber;
 
-    @NotEmpty
+    @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
     private String birthday;
 }
