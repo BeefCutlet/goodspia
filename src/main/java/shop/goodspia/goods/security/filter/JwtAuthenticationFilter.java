@@ -1,5 +1,6 @@
 package shop.goodspia.goods.security.filter;
 
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 setAuthenticationToContext(authentication);
                 log.info("Authentication End");
-            } catch (AuthenticationException e) {
+            } catch (AuthenticationException | JwtException | IllegalArgumentException e) {
                 log.info("Authentication Error: {}", e.getMessage());
                 SecurityContextHolder.clearContext();
             }
