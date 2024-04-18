@@ -56,7 +56,9 @@ public class Member extends BaseTimeEntity {
 //    }
 
     public void updateMember(MemberUpdateRequest memberUpdateRequest) {
-        this.password = memberUpdateRequest.getPassword();
+        this.name = memberUpdateRequest.getName();
         this.nickname = memberUpdateRequest.getNickname();
+        this.phoneNumber = memberUpdateRequest.getPhoneNumber();
+        this.birthday = memberUpdateRequest.getBirthday();
     }
 }

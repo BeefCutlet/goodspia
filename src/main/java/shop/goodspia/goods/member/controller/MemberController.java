@@ -57,7 +57,7 @@ public class MemberController {
                                               @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         Long memberId = memberPrincipal.getId();
         memberService.modifyMemberInfo(memberId, memberInfo);
-        return ResponseEntity.created(URI.create(baseUrl + "/members/info")).build();
+        return ResponseEntity.noContent().build();
     }
 
     //Refresh 토큰 쿠키 생성 메서드 - HttpOnly, Secure 설정
