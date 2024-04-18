@@ -28,6 +28,7 @@ public class CartQueryRepository {
                 .select(Projections.bean(CartResponse.class,
                         cart.id.as("cartId"),
                         cart.quantity.as("quantity"),
+                        cart.goods.id.as("goodsId"),
                         cart.goods.name.as("goodsName"),
                         cart.goods.price.as("price"),
                         cart.goods.thumbnail.as("thumbnail"),
