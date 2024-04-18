@@ -24,7 +24,7 @@ public class MemberResponse {
                 .nickname(member.getNickname())
                 .name(member.getName())
                 .gender(member.getGender())
-                .phoneNumber(member.getBirthday())
+                .phoneNumber(member.getPhoneNumber())
                 .birthday(member.getBirthday())
                 .address(member.getAddress())
                 .build();
