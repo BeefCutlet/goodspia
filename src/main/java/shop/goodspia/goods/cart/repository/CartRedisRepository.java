@@ -24,7 +24,6 @@ public class CartRedisRepository {
 
     /**
      * 장바구니 데이터 저장
-     * @param redisCart
      */
     public void save(Long memberId, RedisCart redisCart) {
         try {
@@ -40,7 +39,6 @@ public class CartRedisRepository {
 
     /**
      * 장바구니 데이터 List 조회
-     * @param memberId
      * @return
      */
     public List<RedisCart> findAllByMemberId(Long memberId) {
