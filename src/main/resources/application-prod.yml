@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${rds.hostname}:${rds.port}/${rds.db.name}
+    url: ${rds.url}
     username: ${rds.username}
     password: ${rds.password}
-  redis:
-    host: ${redis.host}
-    port: ${redis.port}
+#  redis:
+#    host: ${redis.host}
+#    port: ${redis.port}
   jpa:
     hibernate:
       ddl-auto: none
@@ -21,7 +21,7 @@ logging:
     org.hibernate.sql: info
 
 server:
-  port: 5000
+  port: 8080
 
 #IAMPORT REST API KEY
 iamport:
@@ -31,21 +31,8 @@ iamport:
   imp-uid: ${iamport.imp-uid}
 
 #BASE URL
-base-url: https://www.goodspia.shop
+base-url: https://api.goodspia.shop
 
 #JWT SECRET-KEY
 jwt:
   secret-key: ${jwt.secret-key}
-
-springdoc:
-  packages-to-scan: shop.goodspia.goods
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  swagger-ui:
-    path: /api-docs
-    tags-sorter: alpha
-    operations-sorter: alpha
-  api-docs:
-    path: /api-docs/json
-  cache:
-    disabled: true
