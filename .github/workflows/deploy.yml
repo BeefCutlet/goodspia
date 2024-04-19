@@ -15,7 +15,7 @@ env:
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: GoodsPiaDeployGroup
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
