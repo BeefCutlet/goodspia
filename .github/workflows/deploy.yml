@@ -3,12 +3,15 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 env:
-  S3_BUCKET_NAME: goodspia
+  S3_BUCKET_NAME: goodspia-api
   APP_NAME: goodspia
   RESOURCE_PATH: ./src/main/resources/application-prod.yml
-  CODE_DEPLOY_APPLICATION_NAME: GoodsPia
+  CODE_DEPLOY_APPLICATION_NAME: goodspia-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: GoodsPiaDeployGroup
 
 jobs:
@@ -30,7 +33,7 @@ jobs:
         with:
           files: ${{ env.RESOURCE_PATH }}
         env:
-          spring.datasource.url: ${{ secrets.RDS_HOST }}
+          spring.datasource.url: ${{ secrets.RDS_URL }}
           spring.datasource.username: ${{ secrets.RDS_USERNAME }}
           spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
           iamport.rest-api.key: ${{ secrets.IAMPORT_KEY }}
