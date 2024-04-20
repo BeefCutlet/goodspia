@@ -21,7 +21,7 @@ logging:
     org.hibernate.sql: info
 
 server:
-  port: 5000
+  port: 8080
 
 #IAMPORT REST API KEY
 iamport:
