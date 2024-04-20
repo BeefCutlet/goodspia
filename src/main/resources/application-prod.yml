@@ -4,9 +4,9 @@ spring:
     url: ${rds.url}
     username: ${rds.username}
     password: ${rds.password}
-#  redis:
-#    host: ${redis.host}
-#    port: ${redis.port}
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
   jpa:
     hibernate:
       ddl-auto: none
