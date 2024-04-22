@@ -1,28 +1,28 @@
 package shop.goodspia.goods.artist.dto;
 
 import lombok.Getter;
+import shop.goodspia.goods.common.dto.AccountBank;
+import shop.goodspia.goods.common.validator.ValidEnum;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Getter
 public class ArtistUpdateRequest {
 
-    @NotBlank
-    @Pattern(regexp = "[0-9a-zA-Zㅏ-ㅣㄱ-ㅎ가-힣._]{2,12}")
+    @NotEmpty
     private String nickname;
 
-    @Pattern(regexp = "([^\\s]+(?=\\.(jpg|jpeg|gif|png))\\.\\2)")
+    @Pattern(regexp = "^\\.(jpg|jpeg|gif|png)$")
     private String profileImage;
 
-    @NotNull
-    private String accountBank;
+    @ValidEnum(enumClass = AccountBank.class)
+    private AccountBank accountBank;
 
     @NotBlank
     private String accountNumber;
 
-    @NotBlank
     @Pattern(regexp = "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$")
     private String phoneNumber;
 
