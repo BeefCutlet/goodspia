@@ -27,6 +27,7 @@ public class Goods extends BaseTimeEntity {
     private String content;
     private int price;
     private int stock;
+    private int wishCount;
     private String thumbnail;
     private int isDeleted;
     private LocalDateTime deletedTime;
@@ -44,6 +45,7 @@ public class Goods extends BaseTimeEntity {
                 .content(goodsSaveRequest.getContent())
                 .price(goodsSaveRequest.getPrice())
                 .stock(goodsSaveRequest.getStock())
+                .wishCount(0)
                 .thumbnail(goodsSaveRequest.getThumbnail())
                 .isDeleted(0)
                 .artist(artist)
@@ -67,5 +69,20 @@ public class Goods extends BaseTimeEntity {
     public void delete() {
         this.isDeleted = 1;
         this.deletedTime = LocalDateTime.now();
+    }
+
+    //찜한 사람 수 검증 - 0개 이상이면 true, 0개 이하면 false
+    public boolean validateWishCount() {
+        return this.wishCount >= 0;
+    }
+
+    //찜한 사람 수 증가
+    public void increaseWishCount() {
+        this.wishCount++;
+    }
+
+    //찜한 사람 수 감소
+    public void decreaseWishCount() {
+        this.wishCount--;
     }
 }
