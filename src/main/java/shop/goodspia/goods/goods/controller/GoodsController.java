@@ -30,9 +30,6 @@ public class GoodsController {
     /**
      * 굿즈 관련 정보를 저장하는 API
      * 굿즈 메인 이미지, 이름, 요약, 설명, 카테고리 저장
-     * @param goods 굿즈 이름, 요약, 설명, 카테고리 저장
-     * @param thumbnail 굿즈 메인 이미지
-     * @return 이동할 URL 반환 - 아티스트 페이지
      */
     @PostMapping
     public ResponseEntity<?> addGoods(@RequestPart @Valid GoodsSaveRequest goods,
@@ -50,8 +47,6 @@ public class GoodsController {
 
     /**
      * 굿즈 설명에 들어가는 이미지를 저장하는 API
-     * @param contentImage
-     * @return 저장된 이미지 URL
      */
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> savePicture(@RequestPart MultipartFile contentImage) {
@@ -62,9 +57,6 @@ public class GoodsController {
 
     /**
      * 굿즈 관련 정보 수정 API
-     * @param goods
-     * @param thumbnail
-     * @return
      */
     @PutMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> modifyDetails(@PathVariable Long goodsId,
@@ -81,10 +73,8 @@ public class GoodsController {
 
     /**
      * 등록한 굿즈 삭제 API
-     * @param goodsId 삭제할 굿즈의 ID
-     * @return
      */
-    @PutMapping("/remove/{goodsId}")
+    @DeleteMapping("/remove/{goodsId}")
     public ResponseEntity<?> delete(@PathVariable Long goodsId) {
         goodsService.delete(goodsId);
         return ResponseEntity.noContent().build();

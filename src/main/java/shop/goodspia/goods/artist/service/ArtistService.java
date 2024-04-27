@@ -12,6 +12,8 @@ import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.artist.repository.ArtistRepository;
 import shop.goodspia.goods.member.repository.MemberRepository;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,23 +28,27 @@ public class ArtistService {
      */
     public ArtistResponse getArtistInfo(Long memberId) {
         Artist artist = artistRepository.findArtistByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("아티스트 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("아티스트로 등록되지 않았습니다."));
 
-        return new ArtistResponse(artist);
+        return ArtistResponse.from(artist);
     }
 
     /**
      * 아티스트 등록 메서드
      */
-    public Long registerArtist(Long memberId, ArtistSaveRequest artistSaveRequest) {
+    public void registerArtist(Long memberId, ArtistSaveRequest artistSaveRequest) {
         //회원 정보에 아티스트 번호 저장
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-        //아티스트 등록
-        Artist savedArtist = artistRepository.save(Artist.from(member, artistSaveRequest));
+        //이미 등록된 아티스트인지 확인
+        Optional<Artist> findArtist = artistRepository.findArtistByMemberId(memberId);
+        if (findArtist.isPresent()) {
+            throw new IllegalStateException("이미 등록된 아티스트입니다.");
+        }
 
-        return savedArtist.getId();
+        //아티스트 등록
+        artistRepository.save(Artist.from(member, artistSaveRequest));
     }
 
     /**

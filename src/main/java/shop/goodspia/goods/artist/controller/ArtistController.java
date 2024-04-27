@@ -13,9 +13,7 @@ import shop.goodspia.goods.artist.service.ArtistService;
 import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.security.dto.MemberPrincipal;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
 
 @Slf4j
 @RestController
@@ -32,33 +30,28 @@ public class ArtistController {
      * 아티스트 등록 API
      */
     @PostMapping
-    public ResponseEntity<?> register(@RequestPart @Valid ArtistSaveRequest artist,
-                                      @RequestPart(required = false) MultipartFile profile,
-                                      HttpServletRequest request) {
-        //아티스트의 프로필 이미지 저장
-        if (profile != null) {
-            String profileImageName = ImageUpload.uploadImage(profile);
-            artist.setProfileImage(profileImageName);
-        }
-
+    public ResponseEntity<?> registerArtist(@RequestBody @Valid ArtistSaveRequest artist,
+                                            @AuthenticationPrincipal MemberPrincipal principal) {
         //현재 로그인 중인 회원 확인
-        Long memberId = (Long) request.getAttribute("memberId");
+        Long memberId = principal.getId();
 
         //현재 로그인 중인 회원을 아티스트로 등록
-        Long artistId = artistService.registerArtist(memberId, artist);
-        return ResponseEntity.created(URI.create(baseUrl + "/artists/" + artistId)).build();
+        artistService.registerArtist(memberId, artist);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * 아티스트 정보 수정 API
      */
     @PutMapping
-    public ResponseEntity<?> modify(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                    @RequestPart @Valid ArtistUpdateRequest artist,
-                                    @RequestPart(required = false) MultipartFile profile) {
+    public ResponseEntity<?> modifyArtist(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
+                                          @RequestPart @Valid ArtistUpdateRequest artist,
+                                          @RequestPart(required = false) MultipartFile profile) {
         //아티스트의 프로필 이미지 저장(갱신)
-        String profileImageName = ImageUpload.uploadImage(profile);
-        artist.setProfileImage(profileImageName);
+        if (!profile.isEmpty()) {
+            String profileImageName = ImageUpload.uploadImage(profile);
+            artist.setProfileImage(profileImageName);
+        }
 
         //아티스트의 정보 수정
         artistService.modifyArtist(memberPrincipal.getId(), artist);

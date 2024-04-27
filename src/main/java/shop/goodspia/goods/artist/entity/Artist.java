@@ -38,8 +38,7 @@ public class Artist extends BaseTimeEntity {
         return Artist.builder()
                 .nickname(artistSaveRequest.getNickname())
                 .phoneNumber(artistSaveRequest.getPhoneNumber())
-                .profileImage(artistSaveRequest.getProfileImage())
-                .accountBank(AccountBank.convertStringToBank(artistSaveRequest.getAccountBank()))
+                .accountBank(artistSaveRequest.getAccountBank())
                 .accountNumber(artistSaveRequest.getAccountNumber())
                 .member(member)
                 .build();
@@ -48,7 +47,7 @@ public class Artist extends BaseTimeEntity {
     public void updateArtist(ArtistUpdateRequest artistUpdateRequest) {
         this.nickname = artistUpdateRequest.getNickname();
         this.profileImage = artistUpdateRequest.getProfileImage();
-        this.accountBank = AccountBank.convertStringToBank(artistUpdateRequest.getAccountBank());
+        this.accountBank = artistUpdateRequest.getAccountBank();
         this.accountNumber = artistUpdateRequest.getAccountNumber();
         this.phoneNumber = artistUpdateRequest.getPhoneNumber();
     }
