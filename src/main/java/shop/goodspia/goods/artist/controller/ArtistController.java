@@ -31,7 +31,7 @@ public class ArtistController {
      */
     @PostMapping
     public ResponseEntity<?> registerArtist(@RequestBody @Valid ArtistSaveRequest artist,
-                                      @AuthenticationPrincipal MemberPrincipal principal) {
+                                            @AuthenticationPrincipal MemberPrincipal principal) {
         //현재 로그인 중인 회원 확인
         Long memberId = principal.getId();
 
@@ -45,11 +45,13 @@ public class ArtistController {
      */
     @PutMapping
     public ResponseEntity<?> modifyArtist(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                    @RequestPart @Valid ArtistUpdateRequest artist,
-                                    @RequestPart(required = false) MultipartFile profile) {
+                                          @RequestPart @Valid ArtistUpdateRequest artist,
+                                          @RequestPart(required = false) MultipartFile profile) {
         //아티스트의 프로필 이미지 저장(갱신)
-        String profileImageName = ImageUpload.uploadImage(profile);
-        artist.setProfileImage(profileImageName);
+        if (!profile.isEmpty()) {
+            String profileImageName = ImageUpload.uploadImage(profile);
+            artist.setProfileImage(profileImageName);
+        }
 
         //아티스트의 정보 수정
         artistService.modifyArtist(memberPrincipal.getId(), artist);
