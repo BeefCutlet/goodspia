@@ -39,6 +39,10 @@ jobs:
           jwt.secret-key: ${{ secrets.JWT_SECRET_KEY }}
           spring.redis.host: ${{ secrets.REDIS_HOST }}
           spring.redis.port: ${{ secrets.REDIS_PORT }}
+          cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          cloud.aws.region.static: ${{ secrets.AWS_REGION }}
+          cloud.aws.s3.bucket: ${{ secrets.AWS_BUCKET }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
