@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import shop.goodspia.goods.common.util.ImagePath;
 import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.goods.dto.GoodsSaveRequest;
 import shop.goodspia.goods.goods.dto.GoodsUpdateRequest;
@@ -37,7 +38,7 @@ public class GoodsController {
                                       @RequestPart MultipartFile thumbnail,
                                       HttpServletRequest request) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
-        String imageUrl = imageUpload.uploadImage(thumbnail);
+        String imageUrl = imageUpload.uploadImage(thumbnail, ImagePath.GOODS_THUMBNAIL);
         goods.setThumbnail(imageUrl);
 
         //세션에서 아티스트 아이디 반환
@@ -52,7 +53,7 @@ public class GoodsController {
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> savePicture(@RequestPart MultipartFile contentImage) {
         //이미지 업로드 후 이미지 URL 반환
-        String imageUrl = imageUpload.uploadImage(contentImage);
+        String imageUrl = imageUpload.uploadImage(contentImage, ImagePath.GOODS_CONTENT);
         return ResponseEntity.ok(imageUrl);
     }
 
@@ -64,7 +65,7 @@ public class GoodsController {
                                            @RequestPart GoodsUpdateRequest goods,
                                            @RequestPart MultipartFile thumbnail) {
         //굿즈 썸네일 저장
-        String uploadedThumbnail = imageUpload.uploadImage(thumbnail);
+        String uploadedThumbnail = imageUpload.uploadImage(thumbnail, ImagePath.GOODS_THUMBNAIL);
         goods.setThumbnail(uploadedThumbnail);
 
         //굿즈 정보 수정

@@ -8,5 +8,5 @@ public interface ImageUpload {
      * @param multipartFile 이미지 파일
      * @return 저장된 이미지 경로
      */
-    String uploadImage(MultipartFile multipartFile);
+    String uploadImage(MultipartFile multipartFile, ImagePath imagePath);
 }

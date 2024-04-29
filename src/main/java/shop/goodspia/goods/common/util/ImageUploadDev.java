@@ -23,16 +23,14 @@ public class ImageUploadDev implements ImageUpload {
 
     private final AmazonS3Client amazonS3Client;
 
-    private static final String OBJECT_PATH = "profile-image";
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     @Override
-    public String uploadImage(MultipartFile multipartFile) {
+    public String uploadImage(MultipartFile multipartFile, ImagePath imagePath) {
         String filename = UUID.randomUUID().toString().substring(0, 8) + "-" +
                 URLEncoder.encode(Objects.requireNonNull(multipartFile.getOriginalFilename()), StandardCharsets.UTF_8);
-        String filePath = OBJECT_PATH + "/" + filename;
+        String filePath = imagePath + "/" + filename;
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();

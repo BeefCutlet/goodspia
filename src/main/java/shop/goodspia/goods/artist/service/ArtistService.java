@@ -10,6 +10,7 @@ import shop.goodspia.goods.artist.dto.ArtistSaveRequest;
 import shop.goodspia.goods.artist.dto.ArtistUpdateRequest;
 import shop.goodspia.goods.artist.entity.Artist;
 import shop.goodspia.goods.artist.repository.ArtistRepository;
+import shop.goodspia.goods.common.util.ImagePath;
 import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
@@ -61,7 +62,7 @@ public class ArtistService {
         //아티스트의 프로필 이미지 저장(갱신)
         String profileImageUrl = null;
         if (!profileImage.isEmpty()) {
-            profileImageUrl = imageUpload.uploadImage(profileImage);
+            profileImageUrl = imageUpload.uploadImage(profileImage, ImagePath.PROFILE_IMAGE);
         }
 
         Artist artist = artistRepository.findArtistByMemberId(memberId)

@@ -12,13 +12,11 @@ import java.util.UUID;
 @Component
 public class ImageUploadLocal implements ImageUpload {
 
-    private static final String OBJECT_PATH = "profile-image";
-
-    public String uploadImage(MultipartFile multipartFile) {
+    public String uploadImage(MultipartFile multipartFile, ImagePath imagePath) {
         String filename = UUID.randomUUID().toString().substring(0, 8) + "-" + multipartFile.getOriginalFilename();
 
         //로컬에 파일 저장
-        String localFilePath = System.getProperty("user.home") + "/" + OBJECT_PATH;
+        String localFilePath = System.getProperty("user.home") + "/" + imagePath;
         File dir = new File(localFilePath);
         if (!dir.exists()) {
             dir.mkdirs();
