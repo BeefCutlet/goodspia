@@ -23,6 +23,7 @@ import java.net.URI;
 public class GoodsController {
 
     private final GoodsService goodsService;
+    private final ImageUpload imageUpload;
 
     @Value("${base-url}")
     private String baseUrl;
@@ -36,7 +37,7 @@ public class GoodsController {
                                       @RequestPart MultipartFile thumbnail,
                                       HttpServletRequest request) {
         //굿즈 메인 이미지 업로드 후 저장 URL 반환
-        String imageUrl = ImageUpload.uploadImage(thumbnail);
+        String imageUrl = imageUpload.uploadImage(thumbnail);
         goods.setThumbnail(imageUrl);
 
         //세션에서 아티스트 아이디 반환
@@ -51,7 +52,7 @@ public class GoodsController {
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> savePicture(@RequestPart MultipartFile contentImage) {
         //이미지 업로드 후 이미지 URL 반환
-        String imageUrl = ImageUpload.uploadImage(contentImage);
+        String imageUrl = imageUpload.uploadImage(contentImage);
         return ResponseEntity.ok(imageUrl);
     }
 
@@ -63,7 +64,7 @@ public class GoodsController {
                                            @RequestPart GoodsUpdateRequest goods,
                                            @RequestPart MultipartFile thumbnail) {
         //굿즈 썸네일 저장
-        String uploadedThumbnail = ImageUpload.uploadImage(thumbnail);
+        String uploadedThumbnail = imageUpload.uploadImage(thumbnail);
         goods.setThumbnail(uploadedThumbnail);
 
         //굿즈 정보 수정

@@ -44,12 +44,14 @@ public class Artist extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateArtist(ArtistUpdateRequest artistUpdateRequest) {
+    public void updateArtist(ArtistUpdateRequest artistUpdateRequest, String profileImage) {
         this.nickname = artistUpdateRequest.getNickname();
-        this.profileImage = artistUpdateRequest.getProfileImage();
         this.accountBank = artistUpdateRequest.getAccountBank();
         this.accountNumber = artistUpdateRequest.getAccountNumber();
         this.phoneNumber = artistUpdateRequest.getPhoneNumber();
+        if (profileImage != null) {
+            this.profileImage = profileImage;
+        }
     }
 
 }

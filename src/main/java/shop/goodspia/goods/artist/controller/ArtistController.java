@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import shop.goodspia.goods.artist.dto.ArtistSaveRequest;
 import shop.goodspia.goods.artist.dto.ArtistUpdateRequest;
 import shop.goodspia.goods.artist.service.ArtistService;
-import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.security.dto.MemberPrincipal;
 
 import javax.validation.Valid;
@@ -44,17 +43,11 @@ public class ArtistController {
      * 아티스트 정보 수정 API
      */
     @PutMapping
-    public ResponseEntity<?> modifyArtist(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                          @RequestPart @Valid ArtistUpdateRequest artist,
-                                          @RequestPart(required = false) MultipartFile profile) {
-        //아티스트의 프로필 이미지 저장(갱신)
-        if (!profile.isEmpty()) {
-            String profileImageName = ImageUpload.uploadImage(profile);
-            artist.setProfileImage(profileImageName);
-        }
-
+    public ResponseEntity<?> modifyArtist(@RequestPart @Valid ArtistUpdateRequest artist,
+                                          @RequestPart(required = false) MultipartFile profileImage,
+                                          @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
         //아티스트의 정보 수정
-        artistService.modifyArtist(memberPrincipal.getId(), artist);
+        artistService.modifyArtist(memberPrincipal.getId(), artist, profileImage);
         return ResponseEntity.noContent().build();
     }
 }

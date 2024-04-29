@@ -14,9 +14,6 @@ public class ArtistUpdateRequest {
     @NotEmpty
     private String nickname;
 
-    @Pattern(regexp = "^\\.(jpg|jpeg|gif|png)$")
-    private String profileImage;
-
     @ValidEnum(enumClass = AccountBank.class)
     private AccountBank accountBank;
 
@@ -26,7 +23,4 @@ public class ArtistUpdateRequest {
     @Pattern(regexp = "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$")
     private String phoneNumber;
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
 }
