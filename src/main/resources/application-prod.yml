@@ -36,3 +36,16 @@ base-url: https://api.goodspia.shop
 #JWT SECRET-KEY
 jwt:
   secret-key: ${jwt.secret-key}
+
+#S3 AccessKey
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ${aws.region}
+    credentials:
+      access-key: ${aws.access-key}
+      secret-key: ${aws.secret-key}
+    s3:
+      bucket: ${aws.bucket}
