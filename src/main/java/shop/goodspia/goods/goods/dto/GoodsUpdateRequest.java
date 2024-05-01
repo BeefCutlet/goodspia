@@ -1,28 +1,39 @@
 package shop.goodspia.goods.goods.dto;
 
 import lombok.Getter;
-import lombok.Setter;
+import shop.goodspia.goods.goods.dto.design.DesignRequest;
 
-import javax.validation.constraints.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
-@Getter @Setter
+@Getter
 public class GoodsUpdateRequest {
 
+    @Min(1)
+    private Long goodsId;
+
     @NotNull
-    @Pattern(regexp = "[0-9a-zA-Z가-힣]")
-    @Size(min = 1, max = 50)
     private String name;
 
-    @NotNull
-    private String content;
-
-    private String thumbnail;
-
-    @Min(1000)
-    @Max(10000000)
+    @Min(0)
     private int price;
 
+    @Min(0)
+    private int stock;
+
     @NotNull
-    private List<String> designs;
+    private Boolean isLimited;
+
+    @NotNull
+    private String material;
+
+    @NotNull
+    private String size;
+
+    @Valid
+    @Size(min = 1)
+    private List<DesignRequest> designs;
 }

@@ -5,16 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import shop.goodspia.goods.common.util.ImagePath;
 import shop.goodspia.goods.common.util.ImageUpload;
 import shop.goodspia.goods.goods.dto.GoodsSaveRequest;
 import shop.goodspia.goods.goods.dto.GoodsUpdateRequest;
 import shop.goodspia.goods.goods.service.GoodsService;
+import shop.goodspia.goods.security.dto.MemberPrincipal;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
 
 @Slf4j
 @RestController
@@ -23,6 +24,7 @@ import java.net.URI;
 public class GoodsController {
 
     private final GoodsService goodsService;
+    private final ImageUpload imageUpload;
 
     @Value("${base-url}")
     private String baseUrl;
@@ -34,40 +36,27 @@ public class GoodsController {
     @PostMapping
     public ResponseEntity<?> addGoods(@RequestPart @Valid GoodsSaveRequest goods,
                                       @RequestPart MultipartFile thumbnail,
-                                      HttpServletRequest request) {
-        //굿즈 메인 이미지 업로드 후 저장 URL 반환
-        String imageUrl = ImageUpload.uploadImage(thumbnail);
-        goods.setThumbnail(imageUrl);
-
+                                      @RequestPart MultipartFile contentImage,
+                                      @AuthenticationPrincipal MemberPrincipal principal) {
         //세션에서 아티스트 아이디 반환
-        Long artistId = (Long) request.getAttribute("artistId");
-        goodsService.addGoods(artistId, goods);
-        return ResponseEntity.created(URI.create(baseUrl)).build();
-    }
+        Long memberId = principal.getId();
 
-    /**
-     * 굿즈 설명에 들어가는 이미지를 저장하는 API
-     */
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> savePicture(@RequestPart MultipartFile contentImage) {
-        //이미지 업로드 후 이미지 URL 반환
-        String imageUrl = ImageUpload.uploadImage(contentImage);
-        return ResponseEntity.ok(imageUrl);
+        //굿즈 정보(데이터, 이미지) 저장 -> DB, 스토리지
+        goodsService.addGoods(memberId, goods, thumbnail, contentImage);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * 굿즈 관련 정보 수정 API
      */
-    @PutMapping(value = "/{goodsId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> modifyDetails(@PathVariable Long goodsId,
-                                           @RequestPart GoodsUpdateRequest goods,
-                                           @RequestPart MultipartFile thumbnail) {
-        //굿즈 썸네일 저장
-        String uploadedThumbnail = ImageUpload.uploadImage(thumbnail);
-        goods.setThumbnail(uploadedThumbnail);
-
+    @PutMapping
+    public ResponseEntity<?> modifyDetails(@RequestPart GoodsUpdateRequest goods,
+                                           @RequestPart(required = false) MultipartFile thumbnail,
+                                           @RequestPart(required = false) MultipartFile contentImage,
+                                           @AuthenticationPrincipal MemberPrincipal principal) {
         //굿즈 정보 수정
-        goodsService.modifyGoods(goodsId, goods);
+        goodsService.modifyGoods(principal.getId(), goods, thumbnail, contentImage);
         return ResponseEntity.noContent().build();
     }
 

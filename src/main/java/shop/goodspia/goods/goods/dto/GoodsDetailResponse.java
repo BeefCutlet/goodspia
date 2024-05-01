@@ -15,6 +15,8 @@ public class GoodsDetailResponse {
     private final String thumbnail;
     private final String content;
     private final int price;
+    private final String material;
+    private final String size;
     private final String artistName;
     private final List<DesignResponse> goodsDesigns;
 
@@ -24,6 +26,8 @@ public class GoodsDetailResponse {
         this.thumbnail = goods.getThumbnail();
         this.content = goods.getContent();
         this.price = goods.getPrice();
+        this.material = goods.getMaterial();
+        this.size = goods.getSize();
         this.artistName = goods.getArtist().getNickname();
         this.goodsDesigns = goods.getDesigns().stream().map(
                 design -> new DesignResponse(design.getId(), design.getDesignName())

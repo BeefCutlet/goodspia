@@ -1,6 +1,7 @@
 package shop.goodspia.goods.goods.entity;
 
 import lombok.*;
+import org.springframework.util.StringUtils;
 import shop.goodspia.goods.artist.entity.Artist;
 import shop.goodspia.goods.common.entity.BaseTimeEntity;
 import shop.goodspia.goods.goods.dto.GoodsSaveRequest;
@@ -20,7 +21,8 @@ import static javax.persistence.FetchType.*;
 @Builder
 public class Goods extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "goods_id")
     private Long id;
     private String name;
@@ -28,7 +30,10 @@ public class Goods extends BaseTimeEntity {
     private int price;
     private int stock;
     private int wishCount;
+    private String material;
+    private String size;
     private String thumbnail;
+    private int isLimited;
     private int isDeleted;
     private LocalDateTime deletedTime;
 
@@ -37,32 +42,45 @@ public class Goods extends BaseTimeEntity {
     private Artist artist;
 
     @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
-    private final List<Design> designs = new ArrayList<>();
+    private List<Design> designs = new ArrayList<>();
 
-    public static Goods from(GoodsSaveRequest goodsSaveRequest, Artist artist) {
+    public static Goods from(GoodsSaveRequest goodsSaveRequest, Artist artist, String content, String thumbnail) {
         return Goods.builder()
                 .name(goodsSaveRequest.getName())
-                .content(goodsSaveRequest.getContent())
+                .content(content)
                 .price(goodsSaveRequest.getPrice())
                 .stock(goodsSaveRequest.getStock())
                 .wishCount(0)
-                .thumbnail(goodsSaveRequest.getThumbnail())
+                .material(goodsSaveRequest.getMaterial())
+                .size(goodsSaveRequest.getSize())
+                .thumbnail(thumbnail)
+                .isLimited(goodsSaveRequest.getIsLimited() ? 1 : 0)
                 .isDeleted(0)
                 .artist(artist)
                 .build();
     }
 
     //굿즈 정보 갱신용 메서드
-    public void updateGoods(GoodsUpdateRequest goodsUpdateRequest) {
+    public void updateGoods(GoodsUpdateRequest goodsUpdateRequest, String thumbnailImagePath, String contentImagePath) {
         this.name = goodsUpdateRequest.getName();
-        this.content = goodsUpdateRequest.getContent();
-        this.thumbnail = goodsUpdateRequest.getThumbnail();
         this.price = goodsUpdateRequest.getPrice();
+        this.stock = goodsUpdateRequest.getStock();
+        this.material = goodsUpdateRequest.getMaterial();
+        this.size = goodsUpdateRequest.getSize();
+        this.isLimited = goodsUpdateRequest.getIsLimited() ? 1 : 0;
+
+        if (StringUtils.hasText(thumbnailImagePath)) {
+            this.thumbnail = thumbnailImagePath;
+        }
+
+        if (StringUtils.hasText(contentImagePath)) {
+            this.content = contentImagePath;
+        }
     }
 
     //굿즈 디자인 추가 메서드
     public void addDesign(List<Design> designs) {
-        this.designs.addAll(designs);
+        this.designs = designs;
     }
 
     //굿즈 삭제용 메서드 - 삭제 여부 상태 변경
