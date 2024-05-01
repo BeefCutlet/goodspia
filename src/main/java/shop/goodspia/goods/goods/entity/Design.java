@@ -29,4 +29,8 @@ public class Design {
                 .goods(goods)
                 .build();
     }
+
+    public void modifyDesignName(String designName) {
+        this.designName = designName;
+    }
 }

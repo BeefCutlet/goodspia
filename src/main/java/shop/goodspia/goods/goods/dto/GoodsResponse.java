@@ -10,5 +10,6 @@ public class GoodsResponse {
     private String thumbnail;
     private String goodsName;
     private int price;
+    private int wishCount;
     private String artistNickname;
 }
