@@ -15,6 +15,10 @@ spring:
         default_batch_fetch_size: 100
   messages:
     basename: errors
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
 
 logging:
   level:
