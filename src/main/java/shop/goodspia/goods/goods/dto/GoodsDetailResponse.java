@@ -17,10 +17,11 @@ public class GoodsDetailResponse {
     private final int price;
     private final String material;
     private final String size;
+    private final int wishCount;
     private final String artistName;
     private final List<DesignResponse> goodsDesigns;
 
-    public GoodsDetailResponse(Goods goods) {
+    private GoodsDetailResponse(Goods goods) {
         this.goodsId = goods.getId();
         this.name = goods.getName();
         this.thumbnail = goods.getThumbnail();
@@ -28,9 +29,14 @@ public class GoodsDetailResponse {
         this.price = goods.getPrice();
         this.material = goods.getMaterial();
         this.size = goods.getSize();
+        this.wishCount = goods.getWishCount();
         this.artistName = goods.getArtist().getNickname();
         this.goodsDesigns = goods.getDesigns().stream().map(
                 design -> new DesignResponse(design.getId(), design.getDesignName())
         ).collect(Collectors.toList());
+    }
+
+    public static GoodsDetailResponse from(Goods goods) {
+        return new GoodsDetailResponse(goods);
     }
 }
