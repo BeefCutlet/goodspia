@@ -42,6 +42,7 @@ public class Goods extends BaseTimeEntity {
     private Artist artist;
 
     @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Design> designs = new ArrayList<>();
 
     public static Goods from(GoodsSaveRequest goodsSaveRequest, Artist artist, String content, String thumbnail) {

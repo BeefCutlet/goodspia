@@ -164,7 +164,7 @@ public class GoodsService {
      */
     public GoodsDetailResponse getGoods(Long goodsId) {
         Goods goodsDetail = goodsQueryRepository.findGoodsDetail(goodsId);
-        return new GoodsDetailResponse(goodsDetail);
+        return GoodsDetailResponse.from(goodsDetail);
     }
 
     /**
