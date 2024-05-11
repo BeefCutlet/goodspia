@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/members").permitAll()
                 .antMatchers(HttpMethod.GET, "/goods/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/wish/*").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
