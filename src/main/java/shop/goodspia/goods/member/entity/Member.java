@@ -25,6 +25,7 @@ public class Member extends BaseTimeEntity {
     private LocalDateTime lastPasswordChanged;
     private String nickname;
     private String name;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String phoneNumber;
     private String birthday;
