@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 application-local.yml
 application-dev.yml
+application-test.yml
 secret.properties
 keystore.p12
 
