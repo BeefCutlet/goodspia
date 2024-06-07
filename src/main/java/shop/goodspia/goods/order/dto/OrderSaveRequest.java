@@ -16,7 +16,7 @@ public class OrderSaveRequest {
     @Max(1000)
     private int quantity;
 
-    @Min(1000)
+    @Min(1)
     @Max(100000000)
     private int totalPrice;
 

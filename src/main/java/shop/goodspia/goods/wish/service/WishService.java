@@ -8,11 +8,13 @@ import shop.goodspia.goods.goods.repository.GoodsRepository;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
 import shop.goodspia.goods.wish.dto.CheckWishResponse;
+import shop.goodspia.goods.wish.dto.WishListResponse;
+import shop.goodspia.goods.wish.dto.WishResponse;
 import shop.goodspia.goods.wish.entity.Wish;
 import shop.goodspia.goods.wish.repository.WishQueryRepository;
 import shop.goodspia.goods.wish.repository.WishRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -80,5 +82,13 @@ public class WishService {
         }
 
         return new CheckWishResponse(true);
+    }
+
+    /**
+     * 사용자가 찜한 굿즈 목록 조회
+     */
+    public WishListResponse getWishList(Long memberId) {
+        List<WishResponse> wishList = wishQueryRepository.getWishList(memberId);
+        return WishListResponse.from(wishList);
     }
 }

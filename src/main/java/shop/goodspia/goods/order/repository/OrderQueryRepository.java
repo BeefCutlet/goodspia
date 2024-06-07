@@ -12,6 +12,7 @@ import shop.goodspia.goods.order.dto.OrderResponse;
 import shop.goodspia.goods.order.dto.OrderStatus;
 import shop.goodspia.goods.order.entity.OrderGoods;
 import shop.goodspia.goods.order.entity.Orders;
+import shop.goodspia.goods.order.entity.QOrders;
 import shop.goodspia.goods.payment.dto.PaymentStatus;
 
 import javax.persistence.EntityManager;
@@ -93,7 +94,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
-                .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE))
+                .where(goods.artist.id.eq(artistId), orders.orderStatus.eq(OrderStatus.COMPLETE))
                 .orderBy(orderGoods.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -105,7 +106,7 @@ public class OrderQueryRepository {
                 .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
                 .join(orderGoods.orders.payments, payments)
-                .where(goods.artist.id.eq(artistId), payments.paymentStatus.eq(PaymentStatus.COMPLETE));
+                .where(goods.artist.id.eq(artistId), orders.orderStatus.eq(OrderStatus.COMPLETE));
 
         return PageableExecutionUtils.getPage(orderGoodsList, pageable, countQuery::fetchOne);
     }
