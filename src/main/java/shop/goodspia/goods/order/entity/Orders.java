@@ -30,6 +30,8 @@ public class Orders extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    private Integer orderPrice;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -41,10 +43,11 @@ public class Orders extends BaseTimeEntity {
     private Payments payments;
 
     //주문 생성
-    public static Orders from(Member member, List<OrderGoods> orderGoodsList) {
+    public static Orders from(Member member, List<OrderGoods> orderGoodsList, int orderPrice) {
         Orders orders = Orders.builder()
                 .orderUid("ORDER_" + UUID.randomUUID())
                 .orderStatus(OrderStatus.READY)
+                .orderPrice(orderPrice)
                 .member(member)
                 .build();
 
@@ -56,9 +59,8 @@ public class Orders extends BaseTimeEntity {
         return orders;
     }
 
-    //결제 생성 후 연결
-    public void addPayments(Payments payments) {
-        this.payments = payments;
-        payments.addOrder(this);
+    //주문 상태 변경
+    public void completeOrder() {
+        this.orderStatus = OrderStatus.COMPLETE;
     }
 }

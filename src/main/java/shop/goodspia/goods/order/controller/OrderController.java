@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import shop.goodspia.goods.order.dto.OrderSaveListRequest;
+import shop.goodspia.goods.order.dto.OrderSaveResponse;
 import shop.goodspia.goods.order.service.OrderService;
 import shop.goodspia.goods.security.dto.MemberPrincipal;
 
@@ -28,19 +29,19 @@ public class OrderController {
      * 굿즈 상세페이지의 주문하기 버튼, 장바구니의 주문하기 버튼 클릭 시 동작
      */
     @PostMapping
-    public ResponseEntity<?> addOrders(@RequestBody @Valid OrderSaveListRequest orderList,
-                                       @AuthenticationPrincipal MemberPrincipal principal) {
+    public ResponseEntity<OrderSaveResponse> addOrders(@RequestBody @Valid OrderSaveListRequest orderList,
+                                                       @AuthenticationPrincipal MemberPrincipal principal) {
         Long memberId = principal.getId();
-        orderService.addOrders(orderList, memberId);
-        return ResponseEntity.noContent().build();
+        OrderSaveResponse orderSaveResponse = orderService.addOrders(orderList, memberId);
+        return ResponseEntity.ok(orderSaveResponse);
     }
 
     /**
      * 주문 굿즈 목록에서 주문 굿즈 삭제
      */
-    @DeleteMapping("/{orderGoodsId}")
-    public ResponseEntity<String> deleteOrder(@PathVariable Long orderGoodsId) {
-        orderService.removeOrder(orderGoodsId);
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
+        orderService.removeOrder(orderId);
         return ResponseEntity.noContent().build();
     }
 }

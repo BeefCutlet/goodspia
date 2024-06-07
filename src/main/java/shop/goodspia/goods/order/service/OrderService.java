@@ -10,10 +10,9 @@ import shop.goodspia.goods.goods.entity.Goods;
 import shop.goodspia.goods.goods.repository.GoodsRepository;
 import shop.goodspia.goods.member.entity.Member;
 import shop.goodspia.goods.member.repository.MemberRepository;
+import shop.goodspia.goods.order.dto.*;
 import shop.goodspia.goods.order.entity.OrderGoods;
 import shop.goodspia.goods.order.entity.Orders;
-import shop.goodspia.goods.order.dto.*;
-import shop.goodspia.goods.order.repository.OrderGoodsRepository;
 import shop.goodspia.goods.order.repository.OrderQueryRepository;
 import shop.goodspia.goods.order.repository.OrderRepository;
 
@@ -29,13 +28,12 @@ public class OrderService {
     private final GoodsRepository goodsRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
-    private final OrderGoodsRepository orderGoodsRepository;
     private final OrderQueryRepository orderQueryRepository;
 
     /**
      * 주문 목록에 리스트 추가
      */
-    public void addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
+    public OrderSaveResponse addOrders(OrderSaveListRequest orderSaveListRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
@@ -43,29 +41,40 @@ public class OrderService {
         Orders readyOrder = orderQueryRepository.findReadyOrderUid(memberId);
         if (readyOrder != null) {
             //기존에 결제되지 않은 주문이 존재하면 삭제
-            orderRepository.deleteById(readyOrder.getId());
+            orderRepository.delete(readyOrder);
         }
 
+        int orderPrice = 0;
         List<OrderGoods> orderGoodsList = new ArrayList<>();
         for (OrderSaveRequest orderSaveRequest : orderSaveListRequest.getOrders()) {
             Goods goods = goodsRepository.findById(orderSaveRequest.getGoodsId())
                     .orElseThrow(() -> new IllegalArgumentException("굿즈 정보를 찾을 수 없습니다. : "
                             + orderSaveRequest.getGoodsId()));
-            OrderGoods orderGoods = OrderGoods
-                    .from(
+            OrderGoods orderGoods = OrderGoods.from(
                             goods,
                             orderSaveRequest.getQuantity(),
                             orderSaveRequest.getTotalPrice(),
                             orderSaveRequest.getGoodsDesign());
             orderGoodsList.add(orderGoods);
+            orderPrice += orderSaveRequest.getTotalPrice();
         }
 
-        Orders orders = Orders.from(member, orderGoodsList);
-        orderRepository.save(orders);
+        Orders orders = Orders.from(member, orderGoodsList, orderPrice);
+        Orders savedOrder = orderRepository.save(orders);
+        log.info("saved Order ID: {}", savedOrder.getId());
+        log.info("saved Order Price: {}", savedOrder.getOrderPrice());
+
+        return OrderSaveResponse.from(savedOrder);
     }
 
-    public void removeOrder(Long orderGoodsId) {
-        orderGoodsRepository.deleteById(orderGoodsId);
+    /**
+     * 주문 정보 및 주문 굿즈 정보 삭제
+     */
+    public void removeOrder(Long orderId) {
+        Orders foundOrder = orderRepository.findById(orderId).orElseThrow(() -> {
+            throw new IllegalArgumentException("주문 정보가 존재하지 않습니다.");
+        });
+        orderRepository.delete(foundOrder);
     }
 
     //현재 주문 목록 조회

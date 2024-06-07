@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.goodspia.goods.order.entity.Orders;
 import shop.goodspia.goods.order.repository.OrderRepository;
-import shop.goodspia.goods.payment.dto.PaymentRequest;
+import shop.goodspia.goods.payment.dto.PaymentResponse;
 import shop.goodspia.goods.payment.entity.Payments;
 import shop.goodspia.goods.payment.repository.PaymentRepository;
 
@@ -20,19 +19,17 @@ public class PaymentService {
     private final OrderRepository orderRepository;
 
     /**
-     * 결제 정보 저장
-     * @param paymentRequest
-     * @return
+     * 사용자가 결제한 결제 정보 단건 조회
      */
-    public Long addPaymentAndDelivery(PaymentRequest paymentRequest) {
-        //결제 정보 저장
-        Payments payments = Payments.from(paymentRequest);
-        Long paymentId = paymentRepository.save(payments).getId();
-        //주문 정보와 결제 정보 연관관계 생성
-        Orders order = orderRepository.findByOrderUid(paymentRequest.getOrderUid());
-        order.addPayments(payments);
+    public PaymentResponse getPayment(Long memberId, Long paymentId) {
+        Payments foundPayment = paymentRepository.findPaymentsById(paymentId).orElseThrow(() -> {
+            throw new IllegalArgumentException("결제 정보가 존재하지 않습니다.");
+        });
 
-        return paymentId;
+        if (!foundPayment.getOrders().getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("결제 당사자가 아닙니다.");
+        }
+
+        return PaymentResponse.from(foundPayment);
     }
-
 }

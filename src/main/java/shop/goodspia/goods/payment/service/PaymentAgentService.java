@@ -8,5 +8,5 @@ public interface PaymentAgentService {
 
     PaymentPrepareResponse reservePayment(PaymentPrepareRequest paymentPrepareRequest)
             throws Exception;
-    PaymentRequest validatePayment(String paymentUid) throws Exception;
+    Long completePayment(PaymentRequest paymentRequest) throws Exception;
 }
