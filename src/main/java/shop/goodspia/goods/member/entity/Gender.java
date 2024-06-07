@@ -5,8 +5,8 @@ import shop.goodspia.goods.common.exception.InvalidRequestException;
 import shop.goodspia.goods.common.exception.dto.ErrorCode;
 
 public enum Gender {
-    MAN("남성"),
-    WOMAN("여성")
+    MALE("남성"),
+    FEMALE("여성"),
     ;
 
     private final String description;
