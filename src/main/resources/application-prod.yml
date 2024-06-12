@@ -53,3 +53,16 @@ cloud:
       secret-key: ${aws.secret-key}
     s3:
       bucket: ${aws.bucket}
+
+#Prometheus Micrometer Config
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+    enabled-by-default: false
