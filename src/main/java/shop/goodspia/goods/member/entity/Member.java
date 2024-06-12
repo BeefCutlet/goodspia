@@ -33,6 +33,8 @@ public class Member extends BaseTimeEntity {
     private Address address;
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private LocalDateTime withdrawTime;
 
     public static Member from(MemberSaveRequest memberSaveRequest, PasswordEncoder passwordEncoder) {
@@ -49,6 +51,7 @@ public class Member extends BaseTimeEntity {
                         memberSaveRequest.getAddress1(),
                         memberSaveRequest.getAddress2()))
                 .status(MemberStatus.ACTIVE)
+                .role(Role.USER)
                 .build();
     }
 
@@ -61,5 +64,20 @@ public class Member extends BaseTimeEntity {
         this.nickname = memberUpdateRequest.getNickname();
         this.phoneNumber = memberUpdateRequest.getPhoneNumber();
         this.birthday = memberUpdateRequest.getBirthday();
+    }
+
+    public enum Role {
+        USER("ROLE_USER"), ADMIN("ROLE_ADMIN"),
+        ;
+
+        private final String roleName;
+
+        Role(final String roleName) {
+            this.roleName = roleName;
+        }
+
+        public String getRoleName() {
+            return roleName;
+        }
     }
 }

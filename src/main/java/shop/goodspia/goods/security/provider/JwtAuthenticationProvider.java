@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import shop.goodspia.goods.common.exception.dto.ErrorCode;
@@ -18,6 +19,7 @@ import shop.goodspia.goods.security.service.JwtUtil;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collections;
 
 @Slf4j
 @Component
@@ -49,7 +51,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return new JwtAuthenticationToken(
                 memberPrincipal,
                 authentication.getCredentials(),
-                authentication.getAuthorities());
+                Collections.singleton(new SimpleGrantedAuthority(member.getRole().getRoleName())));
     }
 
     @Override
