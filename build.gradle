@@ -65,6 +65,11 @@ dependencies {
 	//AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	//Spring Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//Prometheus Monitoring
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
