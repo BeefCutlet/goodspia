@@ -44,7 +44,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rntwmvldk/**").hasRole(Member.Role.ADMIN.toString())
+                .antMatchers("/actuator/**").hasRole(Member.Role.ADMIN.toString())
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/members").permitAll()
                 .antMatchers(HttpMethod.GET, "/goods/*").permitAll()
