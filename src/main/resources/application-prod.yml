@@ -26,6 +26,9 @@ logging:
 
 server:
   port: 8080
+  tomcat:
+    mbeanregistry:
+      enabled: true
 
 #IAMPORT REST API KEY
 iamport:
