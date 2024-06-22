@@ -2,6 +2,7 @@ package shop.goodspia.goods.api.coupon.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import shop.goodspia.goods.api.coupon.entity.Coupon;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class CouponSaveRequest {
 
     private Long goodsId;

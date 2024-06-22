@@ -70,6 +70,18 @@ public class Coupon extends BaseTimeEntity {
     }
 
     public enum RoundingPlace {
-        UNITS, TENS //일의 자리, 십의 자리
+        UNITS(1), //일의 자리
+        TENS(2),
+        ; //십의 자리
+
+        private int digit;
+
+        RoundingPlace(final int digit) {
+            this.digit = digit;
+        }
+
+        public int getDigit() {
+            return digit;
+        }
     }
 }
