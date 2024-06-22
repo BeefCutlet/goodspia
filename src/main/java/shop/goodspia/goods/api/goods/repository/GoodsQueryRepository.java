@@ -61,7 +61,7 @@ public class GoodsQueryRepository {
                 .select(goods)
                 .from(goods)
                 .join(goods.artist, artist)
-                .where(goods.id.eq(goodsId))
+                .where(goods.id.eq(goodsId).and(goods.isDeleted.eq(0)))
                 .fetchOne();
     }
 

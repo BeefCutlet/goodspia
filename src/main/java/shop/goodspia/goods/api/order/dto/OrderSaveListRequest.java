@@ -12,4 +12,5 @@ import java.util.List;
 public class OrderSaveListRequest {
 
     private List<OrderSaveRequest> orders;
+    private Long couponId;
 }

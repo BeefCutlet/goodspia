@@ -2,9 +2,9 @@ package shop.goodspia.goods.api.order.entity;
 
 import lombok.*;
 import shop.goodspia.goods.api.member.entity.Member;
-import shop.goodspia.goods.global.common.entity.BaseTimeEntity;
 import shop.goodspia.goods.api.order.dto.OrderStatus;
 import shop.goodspia.goods.api.payment.entity.Payments;
+import shop.goodspia.goods.global.common.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Orders extends BaseTimeEntity {
     private Payments payments;
 
     //주문 생성
-    public static Orders from(Member member, List<OrderGoods> orderGoodsList, int orderPrice) {
+    public static Orders of(Member member, List<OrderGoods> orderGoodsList, int orderPrice) {
         Orders orders = Orders.builder()
                 .orderUid("ORDER_" + UUID.randomUUID())
                 .orderStatus(OrderStatus.READY)
