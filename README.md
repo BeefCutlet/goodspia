@@ -13,24 +13,16 @@
    - [회원가입/로그인 프로세스](#회원가입/로그인-프로세스)
    - [인증 프로세스](#인증-프로세스)
    - [배포 자동화 프로세스](#배포-자동화-프로세스)
+   - [전략 패턴으로 쿠폰 할인 정책 적용](#전략-패턴으로-쿠폰-할인-정책-적용)
    - [API 성능테스트](#API-성능테스트)
-
-
-
-## 프로젝트 목적
-
-- 성능은 사용자의 만족도를 높이고 이탈을 방지하는 중요한 요소입니다.
-- API의 성능을 테스트하고, 성능을 개선하기 위한 방법을 연구하는 것이 중요하다고 판단하였습니다.
-- CRUD를 구성한 뒤, 성능 개선에 초점을 두는 방향으로 해당 프로젝트를 진행하였습니다.
 
 
 
 ## 개요
 
 - 일반 사용자가 굿즈판매자로 등록하면 굿즈를 판매할 수 있는 굿즈 판매 플랫폼의 API 입니다.
-- 굿즈 등록/조회/삭제, 장바구니 등록/조회 등 간단한 CRUD로 이루어져 있습니다.
 - RESTful한 API를 만들기 위하여 URL을 설정할 때, 행위는 GET / POST / PUT / DELETE와 같은 HTTP 메서드를 이용하여 표현하고, 행위의 대상이 되는 리소스는 명사형으로 표현하였습니다.
-- 성능 테스트 툴을 사용하여 API의 성능테스트를 진행하고, 캐싱/로드밸런싱으로 성능을 개선하였습니다.
+- 성능 테스트 툴을 사용하여 API의 성능테스트를 진행하고, 캐싱으로 성능을 개선하였습니다.
 - 로그인을 하면 JWT를 생성하여 전달하고, 인증이 필요한 요청 시에 JWT에 기록된 정보를 바탕으로 인증을 처리합니다.
 - GithubActions를 이용하여 Github에 Push 이벤트가 발생하면 배포 작업을 자동으로 수행합니다.
 
@@ -38,44 +30,37 @@
 
 ## 기술스택
 
-- Language
+- Backend
     - Java 11
-
-- Development
     - Spring Boot 2.7.14.
     - Spring MVC
     - Spring Security
     - Spring Data JPA
-
-- DB
     - AWS S3
     - AWS RDS
-
+- Frontend
+   - Javascript
+   - Vue3
+   - Pinia
 - Deploy
     - Amazon EC2
     - AWS Code Deploy
     - Github Actions
-
-
+    - Amazon S3
+    - Vercel
 
 
 ## 아키텍처
 
-![GoodsPia_Architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/1eb18951-2532-4814-a638-2dd000bfb389)
-
-
+![architecture](https://github.com/BeefCutlet/goodspia/assets/77325024/7d8e5e8a-e592-4d81-b20f-9e6391a607ea)
 
 
 ## ERD
 
-![GoodsPia_ERD](https://github.com/BeefCutlet/goodspia/assets/77325024/dfdc2142-ee0d-4877-859d-1f81341892c3)
-
-
+![erd](https://github.com/BeefCutlet/goodspia/assets/77325024/00d3b22c-d368-467b-9b29-c0dd7c15c5a5)
 
 
 ## 세부구현
-
-
 
 ### 회원가입/로그인 프로세스
 
@@ -116,7 +101,6 @@
 
 
 
-
 ### 배포 자동화 프로세스
 
 ![GoodsPia_Deploy_Process](https://github.com/BeefCutlet/goodspia/assets/77325024/7c30e351-bb6d-4ace-965d-512ab8135d72)
@@ -133,8 +117,20 @@
   - Github에 Push 이벤트가 동작하면 application.yml에 Github Secrets로부터 파라미터를 넣은 다음, zip 파일로 압축하여 Amazon S3에 업로드합니다.
   - Amazon CodeDeploy에 요청을 하여 S3에서 업로드한 zip 파일을 EC2 인스턴스에 다운로드합니다.
   - EC2 인스턴스에 zip 파일을 압축 해제하고, 프로그램을 빌드 후 배포합니다.
- 
 
+
+### 전략 패턴으로 쿠폰 할인 정책 적용
+
+주문 정보를 저장할 때, 주문 가격에 대해 적용된 할인 쿠폰이 있다면 할인된 주문 가격을 저장하도록 하였습니다.\
+처음에는 주문 정보 저장 메소드에 쿠폰 할인에 대한 로직을 그대로 넣었는데, 쿠폰 할인을 위한 검증 및 계산 로직이 비대하여 private 메소드를 만들어서 분리하더라도 OrderService 클래스와 메소드의 크기가 비대해졌습니다.\
+또한, 쿠폰은 정액 할인인지 정률 할인인지에 따라 다른 검증과 계산을 해야했기에 쿠폰 종류에 따라 switch(혹은 if)문을 통해 다른 로직을 작성해야 했습니다.\
+카테고리 쿠폰, 브랜드 쿠폰 등 다른 쿠폰이 추가된다면 조건문은 더 커질 것이 자명했습니다.\
+이를 해결하기 위해 쿠폰 할인을 계산하는 로직을 분리하고, 쿠폰 정책을 전략 패턴으로 구현한다면 추후에 새로운 쿠폰 정책이 추가되더라도 유연하게 추가할 수 있을 거라고 생각했습니다.
+
+![CouponPolicy](https://github.com/BeefCutlet/goodspia/assets/77325024/c40b3170-090c-4991-ba84-752a8685cbc1)
+
+ 
+위와 같은 구조로 구현한 결과, 새로운 쿠폰을 적용할 때에는 CouponPolicy 인터페이스를 상속받은 클래스를 구현하기만 하고, CouponDiscountCalculator에 쿠폰 타입에 따라 해당 정책을 선택하는 로직을 추가 작성하면 다른 로직을 건드리지 않고 새로운 쿠폰 정책을 추가할 수 있게 되었습니다.
 
 
 ### API 성능테스트
@@ -144,8 +140,6 @@
 - 테스트는 트래픽이 몰릴 가능성이 있는 API 중 2가지를 대상으로 진행하였습니다.
    - 선택한 상품을 장바구니에 등록하는 API(INSERT) => 인기 굿즈로 알려져서 여러 사용자가 동시에 특정 상품을 장바구니에 담는 상황에 트래픽이 몰릴 수 있습니다.
    - 메인페이지에서 최신 굿즈를 조회하는 API(SELECT) => 메인페이지는 사이트에 접속하는 모든 사용자가 가장 처음 보게 되는 페이지이기 때문에 가장 많이 요청될 수 있습니다.
-
-
 
 
 **(1) 장바구니 등록 API**
@@ -180,28 +174,6 @@ Redis를 이용하여 데이터를 저장하면 In-Memory DB 특유의 빠른 �
 평균적으로 약 10% 정도 속도가 빨라졌고, 응답 시간의 편차도 줄어들었지만 생각보다 큰 개선이 이루어지지 않았습니다.
 테스트하는 과정에서 EC2 서버의 CPU 사용률을 확인한 결과, 꾸준히 100%를 유지하고 있었는데 Redis 사용으로 인해 DB 처리속도는 빨라졌지만 서버에서 부하가 걸려서 크게 개선되지 않았다는 가설을 내릴 수 있었습니다.
 ![cart-200vus-1m-redis-v2-loop](https://github.com/BeefCutlet/goodspia/assets/77325024/cb2bab7f-81bd-4c27-aa21-6d85cfe744e3)
-
-
-
-**3) 200 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
-
-EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Load Balancing 서비스를 이용하여 부하 분산을 시도하였습니다.
-서버가 2대로 늘어난만큼 서버에 가해지는 부하가 반으로 줄어들 것이라고 기대하였습니다.
-
-테스트 결과,
-- 1분 동안 2344개의 요청을 처리
-- 평균 응답 시간 약 424ms
-- 최대 응답 시간은 3초
-- 상위 10%의 요청이 877ms를 초과
-
-하는 결과가 나왔습니다.
-
-최대 응답 시간은 3초 정도로 느리게 나왔지만 응답 시간 기준 상위 10%의 요청이 877ms로 이전 테스트에서 확인했던 905ms보다 약간 빨라졌습니다.
-특히 평균 응답 시간은 약 324ms가 단축되어 약 43%의 속도 개선이 있었습니다.
-![cart-200vus-1m-redis-v2-loop-ELB](https://github.com/BeefCutlet/goodspia/assets/77325024/54fb7af2-10c3-41cc-b6ca-9fbd96d00a06)
-
-
-
 
 
 **(2) 굿즈 조회 API**
@@ -240,51 +212,3 @@ EC2 인스턴스를 하나 더 연결한 뒤, AWS에서 제공하는 Elastic Loa
 
 캐싱을 하지 않았을 때보다 약 91%라는 상당한 속도 개선이 있었습니다.
 ![goodslist-600vus-1m-cache](https://github.com/BeefCutlet/goodspia/assets/77325024/f76f6a33-ae38-40e0-8c60-26e4464b63dc)
-
-
-
-**3) 600 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
-
-AWS의 Elastic Load Balancing을 이용한 부하 분산을 한 뒤, 같은 조건으로 테스트를 해보았습니다.
-서버의 개수가 2배로 늘어났기 때문에 서버의 부하가 감소하여 추가적인 속도 개선이 있을 것으로 기대하였습니다.
-
-테스트 결과,
-- 1분 동안 34323개의 요청을 처리
-- 평균 응답 시간 약 17ms
-- 최대 응답 시간은 약 410ms
-- 상위 10%의 요청이 약 26ms를 초과
-
-하는 결과가 나왔습니다.
-
-최대 응답 시간은 410ms 정도로 비슷했지만 90%의 요청이 26ms를 초과하지 않았고, 평균 응답 시간은 17ms 정도로 부하 분산을 하기 전보다 약 70% 빨라졌습니다.
-![goodslist-600vus-1m-ELB](https://github.com/BeefCutlet/goodspia/assets/77325024/cd535d3e-ce38-4aaa-a0c9-e5a0fc9cb941)
-
-
-**4) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 1개**
-
-보다 크게 체감을 할 수 있도록 요청수를 늘려서 테스트해보았습니다.
-
-VUS 수를 2000으로 늘리고 테스트한 결과,
-- 1분 동안 30280개의 요청을 처리
-- 평균 응답 시간 1초
-- 최대 응답 시간은 2.49초
-- 상위 10%의 요청이 1.06초를 초과
-
-하는 결과가 나왔습니다.
-
-테스트 진행 도중 EC2 서버의 CPU 사용률은 100%를 유지하였고, 600VUS로 처리할 때보다 처리 속도가 현저히 저하되었습니다.
-![goodslist-2000vus-1m-cache](https://github.com/BeefCutlet/goodspia/assets/77325024/01987abd-78b5-47e7-a9d3-6e6fcf79ffed)
-
-
-**5) 2000 VUS + 1분 + Amazon ElastiCache (Redis) + EC2 2개**
-
-서버를 2대로 늘려서 테스트한 결과,
-- 1분 동안 65848개의 요청을 처리
-- 평균 응답 시간 약 268ms
-- 최대 응답 시간은 약 792ms
-- 상위 10%의 요청이 약 579ms를 초과
-
-하는 결과가 나왔습니다.
-
-서버의 부하가 줄어들어서 1대의 서버로 처리할 때보다 같은 시간 내 요청 처리량이 2배 이상으로 늘었고, 처리 속도도 70% 이상 빨라졌습니다.
-![goodslist-2000vus-1m-ELB](https://github.com/BeefCutlet/goodspia/assets/77325024/13f7b164-09e5-4255-8f0b-95396834c590)
