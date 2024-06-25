@@ -1,8 +1,10 @@
 package shop.goodspia.goods.api.coupon.service.policy;
 
+import org.springframework.stereotype.Component;
 import shop.goodspia.goods.api.coupon.entity.Coupon;
 
-public class PercentagePolicy implements CouponDiscountPolicy {
+@Component
+public class PercentagePolicy implements CouponPolicy {
     @Override
     public int discount(final int originOrderPrice, final Coupon coupon) {
         int discountOrderPrice = originOrderPrice;

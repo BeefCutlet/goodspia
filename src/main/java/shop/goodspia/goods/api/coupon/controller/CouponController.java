@@ -8,18 +8,20 @@ import shop.goodspia.goods.api.coupon.dto.CouponSaveRequest;
 import shop.goodspia.goods.api.coupon.service.CouponService;
 import shop.goodspia.goods.global.security.dto.MemberPrincipal;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/coupons")
 @RequiredArgsConstructor
 public class CouponController {
 
-    private CouponService couponService;
+    private final CouponService couponService;
 
     /**
      * 쿠폰 등록
      */
     @PostMapping
-    public ResponseEntity<Void> registerCoupon(@RequestBody final CouponSaveRequest request,
+    public ResponseEntity<Void> registerCoupon(@RequestBody @Valid final CouponSaveRequest request,
                                                @AuthenticationPrincipal final MemberPrincipal principal) {
         Long memberId = principal.getId();
         couponService.registerCoupon(memberId, request);

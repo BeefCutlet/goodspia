@@ -1,36 +1,40 @@
 package shop.goodspia.goods.api.coupon.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import shop.goodspia.goods.api.coupon.entity.Coupon;
-import shop.goodspia.goods.api.coupon.service.policy.CouponDiscountPolicy;
+import shop.goodspia.goods.api.coupon.service.policy.CouponPolicy;
 import shop.goodspia.goods.api.coupon.service.policy.FixedAmountPolicy;
 import shop.goodspia.goods.api.coupon.service.policy.PercentagePolicy;
 
 @Component
+@RequiredArgsConstructor
 public class CouponDiscountCalculator {
+
+    private final PercentagePolicy percentagePolicy;
+    private final FixedAmountPolicy fixedAmountPolicy;
 
     public int discount(int originOrderPrice, Coupon coupon) {
         validateCoupon(originOrderPrice, coupon);
 
-        CouponDiscountPolicy couponDiscountPolicy = selectDiscountPolicy(coupon.getDiscountPolicy());
-        return couponDiscountPolicy.discount(originOrderPrice, coupon);
+        CouponPolicy couponPolicy = selectCouponPolicy(coupon.getDiscountPolicy());
+        return couponPolicy.discount(originOrderPrice, coupon);
     }
 
-    private CouponDiscountPolicy selectDiscountPolicy(Coupon.DiscountPolicy discountPolicy) {
-        CouponDiscountPolicy couponDiscountPolicy = null;
+    private CouponPolicy selectCouponPolicy(Coupon.DiscountPolicy discountPolicy) {
+        CouponPolicy couponPolicy;
         switch (discountPolicy) {
             case PERCENTAGE:
-                couponDiscountPolicy = new PercentagePolicy();
+                couponPolicy = percentagePolicy;
                 break;
             case FIXED_AMOUNT:
-                couponDiscountPolicy = new FixedAmountPolicy();
+                couponPolicy = fixedAmountPolicy;
+                break;
+            default:
+                throw new IllegalArgumentException("쿠폰 정책이 선택되지 않았습니다.");
         }
 
-        if (couponDiscountPolicy == null) {
-            throw new IllegalArgumentException("쿠폰 정책이 선택되지 않았습니다.");
-        }
-
-        return couponDiscountPolicy;
+        return couponPolicy;
     }
 
     private void validateCoupon(int originOrderPrice, Coupon coupon) {
