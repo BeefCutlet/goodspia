@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import shop.goodspia.goods.api.coupon.dto.CouponReceiveSaveRequest;
 import shop.goodspia.goods.api.coupon.dto.CouponSaveRequest;
 import shop.goodspia.goods.api.coupon.service.CouponService;
 import shop.goodspia.goods.global.security.dto.MemberPrincipal;
@@ -25,6 +26,17 @@ public class CouponController {
                                                @AuthenticationPrincipal final MemberPrincipal principal) {
         Long memberId = principal.getId();
         couponService.registerCoupon(memberId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 쿠폰 수령
+     */
+    @PostMapping("/member")
+    public ResponseEntity<Void> receiveCoupon(@RequestBody @Valid CouponReceiveSaveRequest request,
+                                              @AuthenticationPrincipal final MemberPrincipal principal) {
+        Long memberId = principal.getId();
+        couponService.receiveCoupon(memberId, request);
         return ResponseEntity.noContent().build();
     }
 

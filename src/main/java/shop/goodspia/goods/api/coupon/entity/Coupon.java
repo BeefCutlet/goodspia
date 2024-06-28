@@ -45,7 +45,7 @@ public class Coupon extends BaseTimeEntity {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    public static Coupon of(CouponSaveRequest couponSaveRequest, Goods goods) {
+    public static Coupon of(CouponSaveRequest couponSaveRequest, Goods goods, Artist artist) {
         return Coupon.builder()
                 .name(couponSaveRequest.getName())
                 .code(UUID.randomUUID().toString())
@@ -58,7 +58,12 @@ public class Coupon extends BaseTimeEntity {
                 .isExpired(0)
                 .expiryTime(couponSaveRequest.getExpiryTime())
                 .goods(goods)
+                .artist(artist)
                 .build();
+    }
+
+    public void expire() {
+        this.isExpired = 1;
     }
 
     public enum DiscountPolicy {
