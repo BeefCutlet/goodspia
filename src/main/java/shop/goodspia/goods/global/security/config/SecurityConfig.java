@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/actuator/**").hasRole(Member.Role.ADMIN.toString())
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/coupons/goods/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/members").permitAll()
                 .antMatchers(HttpMethod.GET, "/goods/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/wish/*").permitAll()

@@ -1,9 +1,14 @@
 package shop.goodspia.goods.api.coupon.entity;
 
-import javax.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
-@Embeddable
+@Getter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class MemberCouponId implements Serializable {
 
     private Long memberId;

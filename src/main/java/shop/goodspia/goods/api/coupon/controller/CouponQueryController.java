@@ -41,6 +41,17 @@ public class CouponQueryController {
     }
 
     /**
+     * 굿즈에 등록된 쿠폰 목록 조회
+     */
+    @GetMapping("/goods/{goodsId}")
+    public ResponseEntity<CouponListResponse> getGoodsCoupons(@PathVariable final Long goodsId,
+                                                              @AuthenticationPrincipal final MemberPrincipal principal) {
+        Long memberId = principal.getId();
+        CouponListResponse responseData = couponService.getGoodsCoupons(memberId, goodsId);
+        return ResponseEntity.ok(responseData);
+    }
+
+    /**
      * 아티스트가 등록한 쿠폰 목록 조회
      */
     @GetMapping("/artist")
