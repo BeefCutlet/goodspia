@@ -1,19 +1,22 @@
 package shop.goodspia.goods.api.order.entity;
 
 import lombok.*;
-import shop.goodspia.goods.global.common.entity.BaseTimeEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import shop.goodspia.goods.api.goods.entity.Goods;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class OrderGoods extends BaseTimeEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class OrderGoods {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_goods_id")
@@ -30,6 +33,8 @@ public class OrderGoods extends BaseTimeEntity {
     private int quantity;
     private int totalPrice;
     private String goodsDesign;
+    @CreatedDate
+    private LocalDateTime createdTime;
 
     public static OrderGoods from(Goods goods, int quantity, int totalPrice, String goodsDesign) {
         return OrderGoods.builder()

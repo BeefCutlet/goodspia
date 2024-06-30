@@ -1,15 +1,17 @@
 package shop.goodspia.goods.api.order.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import shop.goodspia.goods.api.member.entity.Member;
 import shop.goodspia.goods.api.order.dto.OrderStatus;
 import shop.goodspia.goods.api.payment.entity.Payments;
-import shop.goodspia.goods.global.common.entity.BaseTimeEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -18,7 +20,8 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Orders extends BaseTimeEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class Orders {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orders_id")
@@ -31,6 +34,9 @@ public class Orders extends BaseTimeEntity {
     private OrderStatus orderStatus;
 
     private Integer orderPrice;
+
+    @CreatedDate
+    private LocalDateTime createdTime;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -45,7 +51,7 @@ public class Orders extends BaseTimeEntity {
     //주문 생성
     public static Orders of(Member member, List<OrderGoods> orderGoodsList, int orderPrice) {
         Orders orders = Orders.builder()
-                .orderUid("ORDER_" + UUID.randomUUID())
+                .orderUid("ORDER-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")))
                 .orderStatus(OrderStatus.READY)
                 .orderPrice(orderPrice)
                 .member(member)
