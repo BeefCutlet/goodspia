@@ -8,6 +8,7 @@ import com.siot.IamportRestClient.response.Prepare;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shop.goodspia.goods.api.order.entity.Orders;
 import shop.goodspia.goods.api.order.repository.OrderRepository;
 import shop.goodspia.goods.api.payment.repository.PaymentRepository;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Service
+@Transactional
 public class IamportService implements PaymentAgentService {
 
     private final IamportClient iamportClient;

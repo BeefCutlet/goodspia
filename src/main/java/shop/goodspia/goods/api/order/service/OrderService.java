@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.goodspia.goods.api.artist.entity.Artist;
+import shop.goodspia.goods.api.artist.repository.ArtistRepository;
 import shop.goodspia.goods.api.coupon.entity.Coupon;
 import shop.goodspia.goods.api.coupon.repository.CouponQueryRepository;
 import shop.goodspia.goods.api.coupon.service.CouponDiscountCalculator;
@@ -30,6 +32,7 @@ public class OrderService {
 
     private final GoodsRepository goodsRepository;
     private final MemberRepository memberRepository;
+    private final ArtistRepository artistRepository;
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final CouponQueryRepository couponQueryRepository;
@@ -119,8 +122,12 @@ public class OrderService {
     /**
      * 아티스트에게 들어온 주문 목록 조회
      */
-    public OrderPageResponse<OrderReceivedResponse> getReceivedOrders(Long artistId, Pageable pageable) {
-        Page<OrderReceivedResponse> orderGoods = orderQueryRepository.findArtistOrderGoodsList(artistId, pageable);
+    public OrderPageResponse<OrderReceivedResponse> getReceivedOrders(Long memberId, Pageable pageable, String year, String month) {
+        Artist foundArtist = artistRepository.findArtistByMemberId(memberId).orElseThrow(() -> {
+            throw new IllegalArgumentException("아티스트 정보가 존재하지 않습니다.");
+        });
+
+        Page<OrderReceivedResponse> orderGoods = orderQueryRepository.findArtistOrderGoodsList(foundArtist.getId(), pageable, year, month);
         if (orderGoods == null || !orderGoods.hasContent()) {
             throw new IllegalArgumentException("주문 정보를 찾을 수 없습니다.");
         }

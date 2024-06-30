@@ -11,8 +11,9 @@ public class OrderSaveResponse {
 
     private Long orderId;
     private int amount;
+    private String orderUid;
 
     public static OrderSaveResponse from(Orders order) {
-        return new OrderSaveResponse(order.getId(), order.getOrderPrice());
+        return new OrderSaveResponse(order.getId(), order.getOrderPrice(), order.getOrderUid());
     }
 }

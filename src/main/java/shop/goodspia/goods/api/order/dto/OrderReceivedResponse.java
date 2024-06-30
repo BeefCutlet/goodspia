@@ -1,30 +1,21 @@
 package shop.goodspia.goods.api.order.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import shop.goodspia.goods.global.common.entity.Address;
+import lombok.*;
+import shop.goodspia.goods.api.member.entity.Address;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderReceivedResponse {
 
-    private Long goodsId;
-
+    private int orderQuantity;
+    private int orderPrice;
     private String goodsName;
-
-    private String goodsDesign;
-
     private int goodsPrice;
-
+    private LocalDateTime orderDate;
     private String memberNickname;
-
-    private LocalDateTime paymentTime;
-
-    private int quantity;
-
-    private int totalPrice;
-
     private Address address;
 }

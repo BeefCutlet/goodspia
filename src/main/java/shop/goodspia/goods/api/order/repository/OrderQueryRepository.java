@@ -3,6 +3,7 @@ package shop.goodspia.goods.api.order.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -16,12 +17,13 @@ import shop.goodspia.goods.api.order.entity.Orders;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static shop.goodspia.goods.api.artist.entity.QArtist.artist;
 import static shop.goodspia.goods.api.goods.entity.QGoods.goods;
 import static shop.goodspia.goods.api.member.entity.QMember.member;
 import static shop.goodspia.goods.api.order.entity.QOrderGoods.orderGoods;
 import static shop.goodspia.goods.api.order.entity.QOrders.orders;
-import static shop.goodspia.goods.api.payment.entity.QPayments.payments;
 
+@Slf4j
 @Repository
 public class OrderQueryRepository {
 
@@ -45,6 +47,7 @@ public class OrderQueryRepository {
 
     //회원이 결제하지 않은 상품들 목록
     public Page<OrderGoods> findReadyOrders(Long memberId, Pageable pageable) {
+        log.info("member ID: {}, page: {}, size: {}", memberId, pageable.getPageNumber(), pageable.getPageSize());
         List<OrderGoods> orderGoodsList = queryFactory
                 .select(orderGoods)
                 .from(orderGoods)
@@ -68,6 +71,7 @@ public class OrderQueryRepository {
 
     //회원이 결제하지 않은 주문 여부 확인
     public Orders findReadyOrderUid(Long memberId) {
+        log.info("member ID: {}", memberId);
         return queryFactory
                 .select(orders)
                 .from(orders)
@@ -76,23 +80,26 @@ public class OrderQueryRepository {
     }
 
     //아티스트가 받은 주문 목록 조회
-    public Page<OrderReceivedResponse> findArtistOrderGoodsList(Long artistId, Pageable pageable) {
+    public Page<OrderReceivedResponse> findArtistOrderGoodsList(Long artistId, Pageable pageable, String year, String month) {
+        log.info("artist ID: {}, page: {}, size: {}, year: {}, month: {}", artistId, pageable.getPageNumber(), pageable.getPageSize(), year, month);
         List<OrderReceivedResponse> orderGoodsList = queryFactory
                 .select(Projections.fields(OrderReceivedResponse.class,
-                        goods.id.as("goodsId"),
+                        orderGoods.quantity.as("orderQuantity"),
+                        orderGoods.totalPrice.as("orderPrice"),
                         goods.name.as("goodsName"),
                         goods.price.as("goodsPrice"),
-                        orders.member.nickname.as("memberNickname"),
-                        payments.createdTime.as("paymentTime"),
-                        orderGoods.goodsDesign.as("goodsDesign"),
-                        orderGoods.quantity.as("quantity"),
-                        orderGoods.totalPrice.as("totalPrice")
+                        orderGoods.createdTime.as("orderDate"),
+                        member.nickname.as("memberNickname"),
+                        member.address.as("address")
                 ))
                 .from(orderGoods)
-                .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
-                .join(orderGoods.orders.payments, payments)
-                .where(goods.artist.id.eq(artistId), orders.orderStatus.eq(OrderStatus.COMPLETE))
+                .join(orders.member, member)
+                .join(orderGoods.goods, goods)
+                .join(goods.artist, artist)
+                .where(orderGoods.goods.artist.id.eq(artistId),
+                        orders.orderStatus.eq(OrderStatus.COMPLETE),
+                        orderGoods.createdTime.yearMonth().eq(Integer.valueOf(year + month)))
                 .orderBy(orderGoods.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -101,10 +108,12 @@ public class OrderQueryRepository {
         JPAQuery<Long> countQuery = queryFactory
                 .select(orderGoods.count())
                 .from(orderGoods)
-                .join(orderGoods.goods, goods)
                 .join(orderGoods.orders, orders)
-                .join(orderGoods.orders.payments, payments)
-                .where(goods.artist.id.eq(artistId), orders.orderStatus.eq(OrderStatus.COMPLETE));
+                .join(orderGoods.goods, goods)
+                .join(orderGoods.goods.artist, artist)
+                .where(orderGoods.goods.artist.id.eq(artistId),
+                        orders.orderStatus.eq(OrderStatus.COMPLETE),
+                        orderGoods.createdTime.yearMonth().eq(Integer.valueOf(year + month)));
 
         return PageableExecutionUtils.getPage(orderGoodsList, pageable, countQuery::fetchOne);
     }

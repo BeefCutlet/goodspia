@@ -55,10 +55,6 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
-//    public void registerArtist(Artist artist) {
-//        this.artist = artist;
-//    }
-
     public void updateMember(MemberUpdateRequest memberUpdateRequest) {
         this.name = memberUpdateRequest.getName();
         this.nickname = memberUpdateRequest.getNickname();
