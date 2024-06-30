@@ -1,21 +1,21 @@
-package shop.goodspia.goods;
-
+package shop.goodspia.goods.global.test.data;
+//
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.context.annotation.Profile;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.stereotype.Component;
 //import org.springframework.transaction.annotation.Transactional;
-//import shop.goodspia.goods.artist.entity.Artist;
-//import shop.goodspia.goods.cart.entity.Cart;
-//import shop.goodspia.goods.common.dto.AccountBank;
-//import shop.goodspia.goods.goods.entity.Design;
-//import shop.goodspia.goods.goods.entity.Goods;
-//import shop.goodspia.goods.member.entity.Address;
-//import shop.goodspia.goods.member.entity.Gender;
-//import shop.goodspia.goods.member.entity.Member;
-//import shop.goodspia.goods.member.entity.MemberStatus;
-//import shop.goodspia.goods.order.entity.OrderGoods;
-//import shop.goodspia.goods.order.entity.Orders;
+//import shop.goodspia.goods.api.artist.entity.Artist;
+//import shop.goodspia.goods.api.cart.entity.Cart;
+//import shop.goodspia.goods.global.common.dto.AccountBank;
+//import shop.goodspia.goods.api.goods.entity.Design;
+//import shop.goodspia.goods.api.goods.entity.Goods;
+//import shop.goodspia.goods.api.member.entity.Address;
+//import shop.goodspia.goods.api.member.entity.Gender;
+//import shop.goodspia.goods.api.member.entity.Member;
+//import shop.goodspia.goods.api.member.entity.MemberStatus;
+//import shop.goodspia.goods.api.order.entity.OrderGoods;
+//import shop.goodspia.goods.api.order.entity.Orders;
 //
 //import javax.annotation.PostConstruct;
 //import javax.persistence.EntityManager;
@@ -49,7 +49,7 @@ public class SampleData {
 //                        .password(passwordEncoder.encode("asdqwe123!" + k))
 //                        .nickname("닉네임" + k)
 //                        .name("김땡땡")
-//                        .gender((k % 2 == 0) ? Gender.MAN : Gender.WOMAN)
+//                        .gender((k % 2 == 0) ? Gender.MALE : Gender.FEMALE)
 //                        .birthday("2000-01-01")
 //                        .phoneNumber("010-1234-1234")
 //                        .address(Address.of(
@@ -113,7 +113,7 @@ public class SampleData {
 //                    orderGoodsList.add(orderGoods1);
 //                    orderGoodsList.add(orderGoods2);
 //
-//                    Orders order = Orders.from(member, orderGoodsList);
+//                    Orders order = Orders.of(member, orderGoodsList);
 //                    em.persist(order);
 //                }
 //                em.flush();
