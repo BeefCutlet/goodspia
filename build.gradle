@@ -77,6 +77,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	//EASY RANDOM
+	implementation 'org.jeasy:easy-random-core:5.0.0'
+	testImplementation 'org.jeasy:easy-random-core:5.0.0'
+
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
