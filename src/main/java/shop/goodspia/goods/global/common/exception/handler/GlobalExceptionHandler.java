@@ -2,6 +2,7 @@ package shop.goodspia.goods.global.common.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +14,8 @@ import shop.goodspia.goods.global.common.exception.InvalidRequestException;
 import shop.goodspia.goods.global.common.exception.dto.ErrorCode;
 import shop.goodspia.goods.global.common.exception.dto.ErrorResponse;
 
+import java.util.Objects;
+
 @Slf4j
 @RestControllerAdvice(basePackages = "shop.goodspia.goods")
 public class GlobalExceptionHandler {
@@ -21,7 +24,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validationException(MethodArgumentNotValidException e) {
-        log.info("유효하지 않은 요청 정보");
+        BindingResult bindingResult = e.getBindingResult();
+        log.info("유효하지 않은 요청 정보. target={}, failedParam={}, rejectedValue={}, defaultMessage={}",
+                bindingResult.getTarget(),
+                Objects.requireNonNull(e.getFieldError()).getField(),
+                Objects.requireNonNull(bindingResult.getFieldError()).getRejectedValue(),
+                Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage()
+        );
+
         return ErrorResponse.of(ErrorCode.METHOD_ARGS_NOT_VALID);
     }
 
@@ -51,6 +61,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse invalidRequestException(InvalidRequestException e) {
         return ErrorResponse.of(e.getErrorCode());
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse nullPointerException(NullPointerException e) {
+        return ErrorResponse.of(ErrorCode.DATA_NOT_FOUND);
     }
 
 }
