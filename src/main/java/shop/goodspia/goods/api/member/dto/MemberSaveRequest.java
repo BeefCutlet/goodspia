@@ -1,15 +1,17 @@
 package shop.goodspia.goods.api.member.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import shop.goodspia.goods.api.member.entity.Gender;
 import shop.goodspia.goods.global.common.validator.ValidEnum;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-@Getter @Setter
+@Getter
+@Builder
 public class MemberSaveRequest {
 
     @Email
@@ -33,8 +35,13 @@ public class MemberSaveRequest {
     @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
     private String birthday;
 
+    @Pattern(regexp = "^[0-9]{5}$")
     private String zipcode;
+
+    @NotNull
     private String address1;
+
+    @NotNull
     private String address2;
 
 }
