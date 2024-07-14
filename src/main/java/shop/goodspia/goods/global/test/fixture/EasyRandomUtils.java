@@ -2,7 +2,6 @@ package shop.goodspia.goods.global.test.fixture;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
 
 import java.util.Map;
 
